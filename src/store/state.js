@@ -6,13 +6,13 @@ const PAGE_DATA = () => {
     members: [],
     filterWord: '',
     teamChats: [],
-  };
-};
+  }
+}
 
 const state = {
   email: '',
   token: '',
   page: PAGE_DATA(),
-};
+}
 
-export default state;
+export default state
