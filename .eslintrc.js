@@ -1,3 +1,11 @@
+/**
+ * eslint & prettier
+ *
+ * date : 2021-08-04
+ *
+ * @see : https://eslint.org/
+ * @see : https://prettier.io/
+ * */
 module.exports = {
   root: true,
   env: {
@@ -10,6 +18,17 @@ module.exports = {
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+
+    "prettier/prettier": ['error', {
+      singleQuote: true,
+      semi: true,
+      useTabs: false,
+      tabWidth: 2,
+      trailingComma: 'all',
+      printWidth: 80,
+      bracketSpacing: true,
+      arrowParens: 'avoid',
+    }],
   },
   overrides: [
     {
