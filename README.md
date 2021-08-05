@@ -24,7 +24,6 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
-
 📌 프로젝트 세팅
 -
 * [뷰 절대 경로 세팅](./jsconfig.json)
@@ -40,7 +39,13 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 * 2021-08-04 : vue-router
 * 2021-08-05 : vuetify
 * 2021-08-05 : sass@~1.32 & sass-loader & deepmerge
+* 2021-08-05 : vue-toast-notification
 
+📌 공통 검포넌트
+-
+* [토스트](./md/toast.md)
+
+---
 
 type(타입) : title(제목)
 

@@ -1,0 +1,16 @@
+.v-toast > div {
+    width: 500px;
+    height: 100px;
+}
+
+.v-toast > .v-toast__item--success {
+    background-color: #2284F5;
+}
+
+.v-toast > .v-toast__item--warning {
+    background-color: #FB8C00;
+}
+
+.v-toast > .v-toast__item--error {
+    background-color: #BB002F;
+}
