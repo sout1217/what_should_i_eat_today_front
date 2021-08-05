@@ -1,5 +1,8 @@
 <template>
-  <div><button @click="toast">click</button></div>
+  <div>
+    <button @click="toast">click</button>
+    <p>Hello <span>world</span></p>
+  </div>
 </template>
 
 <script>
@@ -15,4 +18,10 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss">
+p {
+  span {
+    color: red;
+  }
+}
+</style>
