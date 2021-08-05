@@ -38,6 +38,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 * 2021-08-04 : prettier
 * 2021-08-04 : axios
 * 2021-08-04 : vue-router
+* 2021-08-05 : vuetify
+* 2021-08-05 : sass@~1.32 & sass-loader & deepmerge
+
 
 type(타입) : title(제목)
 
@@ -50,7 +53,6 @@ See also : #issue, ...(참고 이슈, 생략 가능)
 
 📌 깃 메시지 종류
 -
-<pre>
 types = {
   Feat : 새로운 기능에 대한 커밋
   Fix : 버그 수정에 대한 커밋
@@ -62,4 +64,3 @@ types = {
   Refactor :  코드 리팩토링에 대한 커밋
   Test : 테스트 코드 수정에 대한 커밋
 }
-</pre>
