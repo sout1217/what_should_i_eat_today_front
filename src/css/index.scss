@@ -1,0 +1,137 @@
+$brand-primary-blue: #2284F5 !important;
+$brand-primary-black: #171717 !important;
+
+$secondary-blue-1: #5F5FC4 !important;
+$secondary-blue-2: #283593 !important;
+$secondary-blue-3: #001064 !important;
+
+$secondary-heart: #EF4242 !important;
+$secondary-wine-1: #FF5983 !important;
+$secondary-wine-2: #F50057 !important;
+$secondary-wine-3: #BB002F !important;
+$secondary-wine-4: #CC3B3B !important;
+
+$secondary-black-1: #484848 !important;
+$secondary-black-2: #212121 !important;
+$secondary-black-3: #000000 !important;
+
+$secondary-orange-1: #FFBD45 !important;
+$secondary-orange-2: #FB8C00 !important;
+$secondary-orange-3: #C25E00 !important;
+
+$grayscale-black-1: #121212 !important;
+$grayscale-black-2: #21212150 !important;
+$grayscale-black-3: #4E4E4E !important;
+$grayscale-black-4: #999999 !important;
+$grayscale-black-5: #B3B3B3 !important;
+$grayscale-black-6: #DCDCDC !important;
+$grayscale-black-7: #F5F5F5 !important;
+$grayscale-white: #FFFFFF !important;
+
+$system-error: #BB002F !important;
+$system-warn: #FB8C00 !important;
+$system-success: #2284f5;
+
+.brand-primary-blue {
+  color: $brand-primary-blue
+}
+.brand-primary-black {
+  color: $brand-primary-black
+}
+.secondary-blue-1 {
+  color: $secondary-blue-1
+}
+.secondary-blue-2 {
+  color: $secondary-blue-2
+}
+.secondary-blue-3 {
+  color: $secondary-blue-3
+}
+.secondary-heart {
+  color: $secondary-heart
+}
+.secondary-wine-1 {
+  color: $secondary-wine-1
+}
+.secondary-wine-2 {
+  color: $secondary-wine-2
+}
+.secondary-wine-3 {
+  color: $secondary-wine-3
+}
+.secondary-wine-4 {
+  color: $secondary-wine-4
+}
+.secondary-black-1 {
+  color: $secondary-black-1
+}
+.secondary-black-2 {
+  color: $secondary-black-2
+}
+.secondary-black-3 {
+  color: $secondary-black-3
+}
+.secondary-orange-1 {
+  color: $secondary-orange-1
+}
+.secondary-orange-2 {
+  color: $secondary-orange-2
+}
+.secondary-orange-3 {
+  color: $secondary-orange-3
+}
+.grayscale-black-1 {
+  color: $grayscale-black-1;
+}
+.grayscale-black-2 {
+  color: $grayscale-black-2;
+}
+.grayscale-black-3 {
+  color: $grayscale-black-3;
+}
+.grayscale-black-4 {
+  color: $grayscale-black-4;
+}
+.grayscale-black-5 {
+  color: $grayscale-black-5;
+}
+.grayscale-black-6 {
+  color: $grayscale-black-6;
+}
+.grayscale-black-7 {
+  color: $grayscale-black-7;
+}
+.grayscale-white {
+  color: $grayscale-white;
+}
+.system-error {
+  color: $system-error;
+}
+.system-warn {
+  color: $system-warn;
+}
+.system-success {
+  color: $system-success;
+}
+
+
+/* toast css */
+.v-toast {
+  div {
+    width: 500px;
+    height: 100px;
+  }
+
+  .v-toast__item--success {
+    background-color: $system-success
+  }
+
+  .v-toast__item--warning {
+    background-color: $system-warn;
+  }
+
+  .v-toast__item--error {
+    background-color: $system-error;
+  }
+}
+

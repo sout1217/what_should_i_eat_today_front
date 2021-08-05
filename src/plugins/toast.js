@@ -1,7 +1,6 @@
 import VueToast from 'vue-toast-notification'
 import Vue from 'vue'
 import 'vue-toast-notification/dist/theme-sugar.css'
-import '@/css/toast.css'
 
 // 훅이 필요할 때 사용합니다.
 const swichers = {

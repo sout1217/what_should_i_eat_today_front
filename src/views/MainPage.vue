@@ -2,6 +2,7 @@
   <div>
     <button @click="toast">click</button>
     <p>Hello <span>world</span></p>
+    <p>Hello <span class="secondary-heart">bye</span></p>
   </div>
 </template>
 
