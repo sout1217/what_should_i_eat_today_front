@@ -7,12 +7,16 @@
       <v-btn elevation="2" @click="toasts">토스트 확인하기</v-btn>
     </div>
     <mdicon name="react" />
+
+    <LoginPopover />
   </div>
 </template>
 
 <script>
+import LoginPopover from '@/components/LoginPopover'
 export default {
   name: 'ComponentPage',
+  components: { LoginPopover },
   methods: {
     toasts() {
       this.$toastSuccess('Success')
