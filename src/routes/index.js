@@ -20,5 +20,9 @@ export default new VueRouter({
       path: '/components',
       component: () => import('@/views/ComponentPage.vue'),
     },
+    {
+      path: '/category',
+      component: () => import('@/components/admin/layout/AdminMenu'),
+    },
   ],
 })
