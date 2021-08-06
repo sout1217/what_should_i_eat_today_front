@@ -37,9 +37,11 @@ $system-success: #2284f5;
 .brand-primary-blue {
   color: $brand-primary-blue
 }
+
 .brand-primary-black {
   color: $brand-primary-black
 }
+
 .secondary-blue-1 {
   color: $secondary-blue-1
 }
@@ -115,6 +117,92 @@ $system-success: #2284f5;
 .system-success {
   color: $system-success;
 }
+
+.bg-brand-primary-blue {
+  background-color: $brand-primary-blue
+}
+
+.bg-brand-primary-black {
+  background-color: $brand-primary-black
+}
+
+.bg-secondary-blue-1 {
+  background-color: $secondary-blue-1
+}
+.bg-secondary-blue-2 {
+  background-color: $secondary-blue-2
+}
+.bg-secondary-blue-3 {
+  background-color: $secondary-blue-3
+}
+.bg-secondary-heart {
+  background-color: $secondary-heart
+}
+.bg-secondary-wine-1 {
+  background-color: $secondary-wine-1
+}
+.bg-secondary-wine-2 {
+  background-color: $secondary-wine-2
+}
+.bg-secondary-wine-3 {
+  background-color: $secondary-wine-3
+}
+.bg-secondary-wine-4 {
+  background-color: $secondary-wine-4
+}
+.bg-secondary-black-1 {
+  background-color: $secondary-black-1
+}
+.bg-secondary-black-2 {
+  background-color: $secondary-black-2
+}
+.bg-secondary-black-3 {
+  background-color: $secondary-black-3
+}
+.bg-secondary-orange-1 {
+  background-color: $secondary-orange-1
+}
+.bg-secondary-orange-2 {
+  background-color: $secondary-orange-2
+}
+.bg-secondary-orange-3 {
+  background-color: $secondary-orange-3
+}
+.bg-grayscale-black-1 {
+  background-color: $grayscale-black-1;
+}
+.bg-grayscale-black-2 {
+  background-color: $grayscale-black-2;
+}
+.bg-grayscale-black-3 {
+  background-color: $grayscale-black-3;
+}
+.bg-grayscale-black-4 {
+  background-color: $grayscale-black-4;
+}
+.bg-grayscale-black-5 {
+  background-color: $grayscale-black-5;
+}
+.bg-grayscale-black-6 {
+  background-color: $grayscale-black-6;
+}
+.bg-grayscale-black-7 {
+  background-color: $grayscale-black-7;
+}
+.bg-grayscale-white {
+  background-color: $grayscale-white;
+}
+.bg-system-error {
+  background-color: $system-error;
+}
+.bg-system-warn {
+  background-color: $system-warn;
+}
+.bg-system-success {
+  background-color: $system-success;
+}
+
+
 
 body {
   font-family: NanumGothic, Malgun Gothic, serif;
