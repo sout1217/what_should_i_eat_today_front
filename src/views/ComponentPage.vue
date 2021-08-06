@@ -7,12 +7,16 @@
       <v-btn elevation="2" @click="toasts">토스트 확인하기</v-btn>
     </div>
     <mdicon name="react" />
+
+    <Header />
   </div>
 </template>
 
 <script>
+import Header from '@/components/common/Header'
 export default {
   name: 'ComponentPage',
+  components: { Header },
   methods: {
     toasts() {
       this.$toastSuccess('Success')
