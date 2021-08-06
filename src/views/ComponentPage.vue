@@ -6,6 +6,7 @@
     <div>
       <v-btn elevation="2" @click="toasts">토스트 확인하기</v-btn>
     </div>
+    <mdicon name="react" />
   </div>
 </template>
 

@@ -4,6 +4,7 @@ import router from '@/routes/index'
 import store from '@/store/index'
 import vuetify from '@/plugins/vuetify'
 import '@/plugins/toast'
+import '@/plugins/mdivue'
 
 Vue.config.productionTip = false
 

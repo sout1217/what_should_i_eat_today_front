@@ -40,10 +40,14 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 * 2021-08-05 : vuetify
 * 2021-08-05 : sass@~1.32 & sass-loader & deepmerge
 * 2021-08-05 : vue-toast-notification
+* 2021-08-05 : sass-loader
+* 2021-08-05 : @mdi/font - 2021.08.06 삭제
+* 2021-08-05 : @mdi/js
+* 2021-08-06 : mdi-vue
 
 📌 공통 검포넌트
 -
-* [토스트](./md/toast.md)
+* [토스트](md/001.toast.md)
 
 ---
 
