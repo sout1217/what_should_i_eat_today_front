@@ -14,6 +14,19 @@
     <LoginPopover />
 
     <news-popover />
+
+    <br />
+    <br />
+
+    <card-list />
+
+    <br />
+    <br />
+
+    <card-list-group :cards="cards" groupName="추천글" />
+    <card-list-group :cards="cards" groupName="최근 올라온 글" class="mt-5" />
+    <card-list :cards="cards" />
+    <card-item :card="cards[0]" />
   </div>
 </template>
 
@@ -22,9 +35,69 @@ import AutoComplete from '@/components/admin/common/AutoComplete'
 import LoginPopover from '@/components/LoginPopover'
 import Header from '@/components/common/header/Header'
 import NewsPopover from '@/components/common/header/NewsPopover'
+import CardList from '@/components/common/card/CardList'
+import CardListGroup from '@/components/common/card/CardListGroup'
+import CardItem from '@/components/common/card/CardItem'
 export default {
   name: 'ComponentPage',
+  data() {
+    return {
+      cards: [
+        {
+          groupName: '추천글',
+          title: 'Pre-fab homes',
+          src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+          flex: 12,
+        },
+        {
+          groupName: '추천글',
+          title: 'Pre-fab homes',
+          src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+          flex: 12,
+        },
+        {
+          groupName: '추천글',
+          title: 'Pre-fab homes',
+          src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+          flex: 12,
+        },
+        {
+          groupName: '추천글',
+          title: 'Pre-fab homes',
+          src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+          flex: 12,
+        },
+        {
+          groupName: '추천글',
+          title: 'Pre-fab homes',
+          src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+          flex: 12,
+        },
+        {
+          groupName: '추천글',
+          title: 'Pre-fab homes',
+          src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+          flex: 12,
+        },
+        {
+          groupName: '추천글',
+          title: 'Pre-fab homes',
+          src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+          flex: 12,
+        },
+        {
+          groupName: '추천글',
+          title: 'Pre-fab homes',
+          src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+          flex: 12,
+        },
+      ],
+    }
+  },
   components: {
+    CardItem,
+    CardListGroup,
+    CardList,
     AutoComplete,
     Header,
     LoginPopover,
