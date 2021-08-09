@@ -8,16 +8,19 @@
     </div>
     <AutoComplete></AutoComplete>
     <mdicon name="react" />
+
+    <Header />
   </div>
 </template>
 
 <script>
+import Header from '@/components/common/Header'
 import AutoComplete from '@/components/admin/common/AutoComplete'
 
 export default {
   name: 'ComponentPage',
   components: {
-    AutoComplete,
+    AutoComplete, Header,
   },
   methods: {
     toasts() {
