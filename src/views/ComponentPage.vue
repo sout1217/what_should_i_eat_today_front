@@ -6,13 +6,19 @@
     <div>
       <v-btn elevation="2" @click="toasts">토스트 확인하기</v-btn>
     </div>
+    <AutoComplete></AutoComplete>
     <mdicon name="react" />
   </div>
 </template>
 
 <script>
+import AutoComplete from '@/components/admin/common/AutoComplete'
+
 export default {
   name: 'ComponentPage',
+  components: {
+    AutoComplete,
+  },
   methods: {
     toasts() {
       this.$toastSuccess('Success')
