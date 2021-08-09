@@ -41,7 +41,7 @@ export default {
     categories: {
       type: Array,
       required: true,
-    },
+    },asdasdasd
   },
   methods: {
     activeCategory(event) {
