@@ -10,6 +10,8 @@
     <mdicon name="react" />
 
     <Header />
+
+    <LoginPopover />
   </div>
 </template>
 
@@ -17,10 +19,11 @@
 import Header from '@/components/common/Header'
 import AutoComplete from '@/components/admin/common/AutoComplete'
 
+import LoginPopover from '@/components/LoginPopover'
 export default {
   name: 'ComponentPage',
   components: {
-    AutoComplete, Header,
+    AutoComplete, Header, LoginPopover
   },
   methods: {
     toasts() {

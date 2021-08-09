@@ -1,23 +1,16 @@
 <template>
-  <div id="app">
+  <v-app>
     <router-link to="/login">로그인</router-link>
     <router-link to="/signup">회원가입 </router-link>
     <router-link to="/components">컴포넌트 구경하기</router-link>
     <router-link to="/category">카테고리 컴포넌트 구경하기</router-link>
 
-    <router-view></router-view>
-  </div>
+    <v-main>
+      <router-view />
+    </v-main>
+  </v-app>
 </template>
 
 <script></script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>
