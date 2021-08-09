@@ -24,7 +24,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '../../css/index';
+@import 'src/css/index';
 .header {
   //background-color: $brand-primary-black;
   color: $grayscale-black-6;
