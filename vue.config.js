@@ -7,11 +7,4 @@ module.exports = {
   devServer: {
     overlay: false,
   },
-  /** 웹 팩 설정*/
-  configureWebpack: {
-    entry: {
-      app: './src/main.js',
-      style: ['./src/css/index.scss'],
-    },
-  },
 }
