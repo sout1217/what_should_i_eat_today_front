@@ -13,7 +13,7 @@
         <template v-slot:activator>
           <v-list-item-content style="text-align: left">
             <v-list-item-title class="h3">
-              <div class="icon"><mdicon :name="category.icon" /></div>
+              <v-icon>{{ category.icon }}</v-icon>
               {{ category.name }}</v-list-item-title
             >
           </v-list-item-content>
