@@ -30,90 +30,93 @@ $grayscale-white: #FFFFFF !important;
 
 $system-error: #BB002F !important;
 $system-warn: #FB8C00 !important;
-$system-success: #2284f5;
+$system-success: #2284f5 !important;
 
 .brand-primary-blue {
-  color: $brand-primary-blue
+  background-color: $brand-primary-blue
 }
 
 .brand-primary-black {
-  color: $brand-primary-black
+  background-color: $brand-primary-black
 }
 
 .secondary-blue-1 {
-  color: $secondary-blue-1
+  background-color: $secondary-blue-1
 }
 .secondary-blue-2 {
-  color: $secondary-blue-2
+  background-color: $secondary-blue-2
 }
 .secondary-blue-3 {
-  color: $secondary-blue-3
+  background-color: $secondary-blue-3
 }
 .secondary-heart {
-  color: $secondary-heart
+  background-color: $secondary-heart
 }
 .secondary-wine-1 {
-  color: $secondary-wine-1
+  background-color: $secondary-wine-1
 }
 .secondary-wine-2 {
-  color: $secondary-wine-2
+  background-color: $secondary-wine-2
 }
 .secondary-wine-3 {
-  color: $secondary-wine-3
+  background-color: $secondary-wine-3
 }
 .secondary-wine-4 {
-  color: $secondary-wine-4
+  background-color: $secondary-wine-4
 }
 .secondary-black-1 {
-  color: $secondary-black-1
+  background-color: $secondary-black-1
 }
 .secondary-black-2 {
-  color: $secondary-black-2
+  background-color: $secondary-black-2
 }
 .secondary-black-3 {
-  color: $secondary-black-3
+  background-color: $secondary-black-3
 }
 .secondary-orange-1 {
-  color: $secondary-orange-1
+  background-color: $secondary-orange-1
 }
 .secondary-orange-2 {
-  color: $secondary-orange-2
+  background-color: $secondary-orange-2
 }
 .secondary-orange-3 {
-  color: $secondary-orange-3
+  background-color: $secondary-orange-3
 }
 .grayscale-black-1 {
-  color: $grayscale-black-1;
+  background-color: $grayscale-black-1;
 }
 .grayscale-black-2 {
-  color: $grayscale-black-2;
+  background-color: $grayscale-black-2;
 }
 .grayscale-black-3 {
-  color: $grayscale-black-3;
+  background-color: $grayscale-black-3;
 }
 .grayscale-black-4 {
-  color: $grayscale-black-4;
+  background-color: $grayscale-black-4;
 }
 .grayscale-black-5 {
-  color: $grayscale-black-5;
+  background-color: $grayscale-black-5;
 }
 .grayscale-black-6 {
-  color: $grayscale-black-6;
+  background-color: $grayscale-black-6;
 }
 .grayscale-black-7 {
-  color: $grayscale-black-7;
+  background-color: $grayscale-black-7;
 }
 .grayscale-white {
+  background-color: $grayscale-white;
+}
+.grayscale-white--text {
   color: $grayscale-white;
 }
 .system-error {
-  color: $system-error;
+  background-color: $system-error;
 }
 .system-warn {
-  color: $system-warn;
+  background-color: $system-warn;
 }
 .system-success {
-  color: $system-success;
+  background-color: $system-success;
 }
 
 .bg-brand-primary-blue {

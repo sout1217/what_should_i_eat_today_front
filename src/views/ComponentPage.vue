@@ -27,6 +27,8 @@
     <card-list-group :cards="cards" groupName="최근 올라온 글" class="mt-5" />
     <card-list :cards="cards" />
     <card-item :card="cards[0]" />
+
+    <alert message="답글을 정말 삭제하시겠습니까?" ok="삭제" no="취소" />
   </div>
 </template>
 
@@ -38,6 +40,7 @@ import NewsPopover from '@/components/common/header/NewsPopover'
 import CardList from '@/components/common/card/CardList'
 import CardListGroup from '@/components/common/card/CardListGroup'
 import CardItem from '@/components/common/card/CardItem'
+import Alert from '@/components/common/alert/Alert'
 export default {
   name: 'ComponentPage',
   data() {
@@ -95,6 +98,7 @@ export default {
     }
   },
   components: {
+    Alert,
     CardItem,
     CardListGroup,
     CardList,
