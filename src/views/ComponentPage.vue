@@ -27,8 +27,10 @@
     <card-list-group :cards="cards" groupName="최근 올라온 글" class="mt-5" />
     <card-list :cards="cards" />
     <card-item :card="cards[0]" />
+    <naver-icon fill="mediumseagreen" />
+    <google-icon />
+    <kakao-icon fill="orange" width="100" height="100" />
 
-    <alert message="답글을 정말 삭제하시겠습니까?" ok="삭제" no="취소" />
   </div>
 </template>
 
@@ -40,7 +42,10 @@ import NewsPopover from '@/components/common/header/NewsPopover'
 import CardList from '@/components/common/card/CardList'
 import CardListGroup from '@/components/common/card/CardListGroup'
 import CardItem from '@/components/common/card/CardItem'
-import Alert from '@/components/common/alert/Alert'
+import NaverIcon from '@/components/common/share/NaverIcon'
+import GoogleIcon from '@/components/common/share/GoogleIcon'
+import KakaoIcon from '@/components/common/share/KakaoIcon'
+
 export default {
   name: 'ComponentPage',
   data() {
@@ -98,7 +103,9 @@ export default {
     }
   },
   components: {
-    Alert,
+    KakaoIcon,
+    GoogleIcon,
+    NaverIcon,
     CardItem,
     CardListGroup,
     CardList,
