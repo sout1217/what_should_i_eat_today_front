@@ -27,8 +27,10 @@
     <card-list-group :cards="cards" groupName="최근 올라온 글" class="mt-5" />
     <card-list :cards="cards" />
     <card-item :card="cards[0]" />
-
     <popover :items="items" />
+    <naver-icon fill="mediumseagreen" />
+    <google-icon />
+    <kakao-icon fill="orange" width="100" height="100" />
   </div>
 </template>
 
@@ -41,6 +43,10 @@ import CardList from '@/components/common/card/CardList'
 import CardListGroup from '@/components/common/card/CardListGroup'
 import CardItem from '@/components/common/card/CardItem'
 import Popover from '@/components/common/popover/Popover'
+import NaverIcon from '@/components/common/share/NaverIcon'
+import GoogleIcon from '@/components/common/share/GoogleIcon'
+import KakaoIcon from '@/components/common/share/KakaoIcon'
+
 export default {
   name: 'ComponentPage',
   data() {
@@ -106,6 +112,9 @@ export default {
   },
   components: {
     Popover,
+    KakaoIcon,
+    GoogleIcon,
+    NaverIcon,
     CardItem,
     CardListGroup,
     CardList,

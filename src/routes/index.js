@@ -21,8 +21,8 @@ export default new VueRouter({
       component: () => import('@/views/ComponentPage.vue'),
     },
     {
-      path: '/category',
-      component: () => import('@/components/admin/layout/AdminMenu'),
+      path: '/components2',
+      component: () => import('@/views/ComponentPage2.vue'),
     },
   ],
 })

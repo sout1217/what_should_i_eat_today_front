@@ -4,6 +4,7 @@
     <router-link to="/signup">회원가입 </router-link> |
     <router-link to="/components">컴포넌트 구경하기</router-link> |
     <router-link to="/category">카테고리 컴포넌트 구경하기</router-link>
+    <router-link to="/components2">카테고리 컴포넌트 구경하기</router-link>
 
     <v-main>
       <router-view />
