@@ -1,5 +1,5 @@
 <template>
-  <v-card dark elevation="16" max-width="400" class="darken-1">
+  <v-card dark elevation="16" max-width="400" class="bg-black-opacity">
     <v-virtual-scroll
       :bench="benched"
       :items="items"
@@ -122,10 +122,6 @@ export default {
 
 <style scoped lang="scss">
 @import './src/css/index';
-.darken-1 {
-  background-color: rgba(21, 21, 21, 0.8);
-}
-
 .px-2 {
   padding: 0 8px;
 }
