@@ -30,6 +30,7 @@
     <naver-icon fill="mediumseagreen" />
     <google-icon />
     <kakao-icon fill="orange" width="100" height="100" />
+
   </div>
 </template>
 
@@ -44,6 +45,7 @@ import CardItem from '@/components/common/card/CardItem'
 import NaverIcon from '@/components/common/share/NaverIcon'
 import GoogleIcon from '@/components/common/share/GoogleIcon'
 import KakaoIcon from '@/components/common/share/KakaoIcon'
+
 export default {
   name: 'ComponentPage',
   data() {
