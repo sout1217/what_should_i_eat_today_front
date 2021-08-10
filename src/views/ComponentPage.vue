@@ -27,6 +27,8 @@
     <card-list-group :cards="cards" groupName="최근 올라온 글" class="mt-5" />
     <card-list :cards="cards" />
     <card-item :card="cards[0]" />
+
+    <popover :items="items" />
   </div>
 </template>
 
@@ -38,6 +40,7 @@ import NewsPopover from '@/components/common/header/NewsPopover'
 import CardList from '@/components/common/card/CardList'
 import CardListGroup from '@/components/common/card/CardListGroup'
 import CardItem from '@/components/common/card/CardItem'
+import Popover from '@/components/common/popover/Popover'
 export default {
   name: 'ComponentPage',
   data() {
@@ -92,9 +95,17 @@ export default {
           flex: 12,
         },
       ],
+      items: [
+        { name: '글 작성' },
+        { name: '마이페이지' },
+        { name: '소식 모아보기' },
+        { name: '설정' },
+        { name: '로그아웃' },
+      ],
     }
   },
   components: {
+    Popover,
     CardItem,
     CardListGroup,
     CardList,
