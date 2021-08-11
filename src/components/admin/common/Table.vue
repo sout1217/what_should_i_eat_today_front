@@ -62,9 +62,12 @@
       :headers="headers"
       :items="desserts"
       class="elevation-1"
+      item-key="name"
       hide-default-footer
-      show-select
+      :single-select="singleSelect"
+      :show-select="true"
     >
+      <!--키 값을 명시해 주어야 만, select 시 1개만 정상 select 됩니다. -->
       <template v-slot:items="props">
         <td>{{ props.item.name }}</td>
         <td class="text-xs-right">{{ props.item.calories }}</td>
@@ -78,9 +81,9 @@
           <v-icon small @click="deleteItem(props.item)"> delete </v-icon>
         </td>
       </template>
-      <template v-slot:no-data>
+      <!--<template v-slot:no-data>
         <v-btn color="primary" @click="initialize">Reset</v-btn>
-      </template>
+      </template>-->
     </v-data-table>
   </div>
 </template>
@@ -136,6 +139,9 @@ export default {
   },
 
   methods: {
+    singleSelect(event) {
+      console.log(event)
+    },
     initialize() {
       this.desserts = [
         {
