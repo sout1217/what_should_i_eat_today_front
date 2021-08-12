@@ -27,7 +27,7 @@
     <card-list-group :cards="cards" groupName="최근 올라온 글" class="mt-5" />
     <card-list :cards="cards" />
     <card-item :card="cards[0]" />
-    <popover :items="items" />
+    <popover text="클릭" :items="items" />
     <naver-icon fill="mediumseagreen" />
     <google-icon />
     <kakao-icon fill="orange" width="100" height="100" />

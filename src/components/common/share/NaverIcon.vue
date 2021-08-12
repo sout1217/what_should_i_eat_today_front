@@ -19,8 +19,8 @@ export default {
   name: 'NaverIcon',
   props: {
     fill: { type: String, default: 'white' },
-    width: { type: Number, default: 24, required: false },
-    height: { type: Number, default: 24, required: false },
+    width: { type: String, default: '24', required: false },
+    height: { type: String, default: '24', required: false },
   },
 }
 </script>

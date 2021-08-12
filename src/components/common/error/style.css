@@ -7,7 +7,7 @@
   --cyan: #7ed1e2;
 }
 
-body {
+#cat {
   height: 100vh;
   width: 100vw;
   background: var(--bg);
@@ -15,7 +15,7 @@ body {
   display: flex;
   place-content: center;
   -webkit-box-align: end;
-          align-items: flex-end;
+  align-items: flex-end;
 }
 
 .container {

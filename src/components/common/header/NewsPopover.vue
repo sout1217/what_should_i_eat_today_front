@@ -7,7 +7,7 @@
       item-height="64"
     >
       <template v-slot:default="{ item }">
-        <v-list-item :key="item" to="/" class="px-2">
+        <v-list-item :key="item.id" to="/" class="px-2">
           <v-list-item-avatar>
             <v-img :src="item.avatar"></v-img>
           </v-list-item-avatar>
@@ -42,6 +42,7 @@ export default {
     items() {
       return [
         {
+          id: 1,
           avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
           title: 'Nibh felis',
           subtitle: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquid animi culpa cum delectus eveniet exercitationem facilis fuga inventore itaque molestiae nam nisi nobis odio odit provident, quam quasi quis quo ratione, repellendus repudiandae sit sunt tenetur voluptatibus. Aspernatur aut ducimus fuga labore magnam magni maiores modi molestiae molestias natus necessitatibus, neque quam quidem quos repellendus soluta voluptatibus. Alias, animi error in, minus neque odio officia qui quo quos totam, ut veritatis voluptates. Accusamus modi quasi quo quos recusandae? Aspernatur autem, blanditiis eius laboriosam modi nam nihil non reiciendis rerum velit. Commodi cupiditate deserunt error necessitatibus, neque quisquam ullam. Debitis.`,
@@ -49,6 +50,7 @@ export default {
           time: '15분 전',
         },
         {
+          id: 2,
           avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
           title: 'Nibh felis',
           subtitle: `asdasddasd.`,
@@ -56,6 +58,7 @@ export default {
           time: '15분 전',
         },
         {
+          id: 3,
           avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
           title: 'Oui oui',
           subtitle: 'asdasdasdasda',
@@ -63,6 +66,7 @@ export default {
           time: '15분 전',
         },
         {
+          id: 4,
           avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
           title: 'Birthday gift',
           subtitle: 'asdasdasd',
@@ -70,6 +74,7 @@ export default {
           time: '15분 전',
         },
         {
+          id: 5,
           avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
           title: 'Recipe to try',
           subtitle: 'asdasd',
@@ -77,6 +82,7 @@ export default {
           time: '15분 전',
         },
         {
+          id: 6,
           avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
           title: 'Recipe to try',
           subtitle: 'asdasd',
@@ -84,6 +90,7 @@ export default {
           time: '15분 전',
         },
         {
+          id: 7,
           avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
           title: 'Recipe to try',
           subtitle: 'asdaㄷsd',
@@ -91,6 +98,7 @@ export default {
           time: '15분 전',
         },
         {
+          id: 8,
           avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
           title: 'Recipe to try',
           subtitle: 'asdasd',
@@ -98,6 +106,7 @@ export default {
           time: '15분 전',
         },
         {
+          id: 9,
           avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
           title: 'Recipe to try',
           subtitle: 'asdasd',
@@ -105,6 +114,7 @@ export default {
           time: '15분 전',
         },
         {
+          id: 10,
           avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
           title: 'Recipe to try',
           subtitle: 'asdasd',

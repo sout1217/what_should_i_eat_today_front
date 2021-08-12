@@ -1,7 +1,7 @@
 <template>
   <v-slide-group v-model="model" center-active show-arrows small>
-    <template v-for="card in cards">
-      <card-item :card="card" :key="card" />
+    <template v-for="(card, index) in cards">
+      <card-item :card="card" :key="`card-list-${index}`" />
     </template>
   </v-slide-group>
 </template>

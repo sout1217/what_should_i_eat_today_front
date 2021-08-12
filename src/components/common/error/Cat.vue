@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div id="cat" class="container">
     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 785.5 465.8">
       <g id="bongo-cat">
         <g class="head">
@@ -361,22 +361,17 @@
 </template>
 
 <script>
-import '@/components/common/error/normalize.min.css'
-import '@/components/common/error/style.css'
-
 export default {
   name: 'Cat',
-  mounted() {
-    const a = () => import('@/components/common/error/gsap-latest-beta.min')
-    const b = () => import('@/components/common/error/DrawSVGPlugin3.min')
-    const c = () => import('@/components/common/error/lodash.min')
-    const d = () => import('@/components/common/error/script.js')
-    a()
-    b()
-    c()
-    d()
+  async mounted() {
+    await import('@/components/common/error/gsap-latest-beta.min')
+    await import('@/components/common/error/DrawSVGPlugin3.min')
+    await import('@/components/common/error/lodash.min')
+    await import('@/components/common/error/script.js')
   },
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@import './style.css';
+</style>
