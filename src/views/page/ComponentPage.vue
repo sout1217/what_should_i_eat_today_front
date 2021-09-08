@@ -35,17 +35,17 @@
 </template>
 
 <script>
-import AutoComplete from '@/components/admin/common/AutoComplete'
-import LoginPopover from '@/components/LoginPopover'
-import Header from '@/components/common/header/Header'
-import NewsPopover from '@/components/common/header/NewsPopover'
-import CardList from '@/components/common/card/CardList'
-import CardListGroup from '@/components/common/card/CardListGroup'
-import CardItem from '@/components/common/card/CardItem'
-import Popover from '@/components/common/popover/Popover'
-import NaverIcon from '@/components/common/share/NaverIcon'
-import GoogleIcon from '@/components/common/share/GoogleIcon'
-import KakaoIcon from '@/components/common/share/KakaoIcon'
+import AutoComplete from '@/views/components/admin/common/AutoComplete'
+import LoginPopover from '@/views/components/LoginPopover'
+import Header from '@/views/components/common/header/Header'
+import NewsPopover from '@/views/components/common/header/NewsPopover'
+import CardList from '@/views/components/common/card/CardList'
+import CardListGroup from '@/views/components/common/card/CardListGroup'
+import CardItem from '@/views/components/common/card/CardItem'
+import Popover from '@/views/components/common/popover/Popover'
+import NaverIcon from '@/views/components/common/share/NaverIcon'
+import GoogleIcon from '@/views/components/common/share/GoogleIcon'
+import KakaoIcon from '@/views/components/common/share/KakaoIcon'
 
 export default {
   name: 'ComponentPage',
@@ -132,11 +132,3 @@ export default {
   },
 }
 </script>
-
-<style scoped lang="scss">
-@import './src/css/index';
-.component-page {
-  background-color: $brand-primary-black;
-  padding: 100px 16px;
-}
-</style>

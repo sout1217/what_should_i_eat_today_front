@@ -131,7 +131,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import './src/css/index';
+@import 'src/css/index';
 .px-2 {
   padding: 0 8px;
 }

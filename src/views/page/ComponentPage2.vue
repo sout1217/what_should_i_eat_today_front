@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Profile from '@/components/common/profile/Profile'
+import Profile from '@/views/components/common/profile/Profile'
 
 export default {
   name: 'ComponentPage2',
@@ -13,4 +13,4 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="scss"></style>

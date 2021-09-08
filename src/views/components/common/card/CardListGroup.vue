@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import CardList from '@/components/common/card/CardList'
+import CardList from '@/views/components/common/card/CardList'
 
 export default {
   name: 'CardListGroup',

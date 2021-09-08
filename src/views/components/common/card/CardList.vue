@@ -6,7 +6,7 @@
   </v-slide-group>
 </template>
 <script>
-import CardItem from '@/components/common/card/CardItem'
+import CardItem from '@/views/components/common/card/CardItem'
 
 export default {
   name: 'card-list',

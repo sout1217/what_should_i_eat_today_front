@@ -364,9 +364,9 @@
 export default {
   name: 'Cat',
   async mounted() {
-    await import('@/components/common/error/gsap-latest-beta.min')
-    await import('@/components/common/error/DrawSVGPlugin3.min')
-    await import('@/components/common/error/lodash.min')
+    await import('@/views/components/common/error/gsap-latest-beta.min')
+    await import('@/views/components/common/error/DrawSVGPlugin3.min')
+    await import('@/views/components/common/error/lodash.min')
 
     // Inspired By
     // https://codepen.io/abeatrize/pen/LJqYey
@@ -497,5 +497,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import './style.css';
+@import '../error/style.css';
 </style>
