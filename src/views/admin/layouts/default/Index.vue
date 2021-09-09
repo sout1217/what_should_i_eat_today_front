@@ -1,4 +1,4 @@
-<template>index</template>
+<template><div>index</div></template>
 
 <script>
 export default {
