@@ -1,5 +1,5 @@
 <template>
-  <div id="cat" class="container">
+  <div id="cat" class="cat-container">
     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 785.5 465.8">
       <g id="bongo-cat">
         <g class="head">
