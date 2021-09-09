@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import AdminCategory from '@/components/admin/common/AdminCategory'
+import AdminCategory from '@/views/components/admin/common/AdminCategory'
 
 export default {
   name: 'AdminMenu',
