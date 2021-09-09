@@ -10,6 +10,13 @@ const opts = {
       customProperties: true,
     },
     themes: {
+      light: {
+        primary: '#2284f5',
+        secondary: '#6c757d',
+        accent: '#FB8C00',
+        error: '#BB002F',
+        background: '#FAFAFA',
+      },
       dark: {
         primary: '#2284f5',
         secondary: '#6c757d',
