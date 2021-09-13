@@ -1,0 +1,30 @@
+$root: admin-;
+
+.#{$root}container {
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.#{$root}content-wrapper {
+  justify-content: center;
+  vertical-align: middle;
+  width: 100%;
+  height: fit-content;
+}
+
+.#{$root}content {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+
+.#{$root}search::before {
+  display: none;
+}
+
+.#{$root}search::after {
+  display: none;
+}
