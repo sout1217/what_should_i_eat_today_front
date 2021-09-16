@@ -41,7 +41,6 @@
               item-key="name"
               hide-default-footer
               :single-select="true"
-              :show-select="true"
             >
               <!--키 값을 명시해 주어야 만, select 시 1개만 정상 select 됩니다. -->
               <template v-slot:items="props">
@@ -75,6 +74,8 @@
 </template>
 
 <script>
+import { getReports } from '@/api/admin/report'
+
 export default {
   name: 'Report',
   data: () => ({
@@ -82,16 +83,15 @@ export default {
     dialog: false,
     headers: [
       {
-        text: 'Dessert (100g serving)',
+        text: '아이디',
         align: 'left',
         sortable: false,
-        value: 'name',
+        value: 'id',
       },
-      { text: 'Calories', value: 'calories' },
-      { text: 'Fat (g)', value: 'fat' },
-      { text: 'Carbs (g)', value: 'carbs' },
-      { text: 'Protein (g)', value: 'protein' },
-      { text: 'Actions', value: 'name', sortable: false },
+      { text: '제목', value: 'title' },
+      { text: '내용', value: 'content' },
+      { text: '신고유형', value: 'type' },
+      { text: '처리상태', value: 'status' },
     ],
     desserts: [],
     editedIndex: -1,
@@ -151,90 +151,24 @@ export default {
     initialize() {
       this.desserts = [
         {
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-        },
-        {
-          name: 'Eclair',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-        },
-        {
-          name: 'Cupcake',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-        },
-        {
-          name: 'Lollipop',
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-        },
-        {
-          name: 'Honeycomb',
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-        },
-        {
-          name: 'Donut',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
+          id: 'Frozen Yogurt',
+          title: 159,
+          content: 6.0,
+          type: 24,
+          status: 4.0,
         },
       ]
     },
-
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
-
     deleteItem(item) {
       const index = this.desserts.indexOf(item)
       confirm('Are you sure you want to delete this item?') &&
         this.desserts.splice(index, 1)
     },
-
     close() {
       this.dialog = false
       setTimeout(() => {
@@ -242,7 +176,6 @@ export default {
         this.editedIndex = -1
       }, 300)
     },
-
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.desserts[this.editedIndex], this.editedItem)
@@ -251,6 +184,12 @@ export default {
       }
       this.close()
     },
+  },
+  mounted() {
+    let result = getReports()
+    result.then(value => {
+      console.log(value)
+    })
   },
 }
 </script>
