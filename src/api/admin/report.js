@@ -3,7 +3,7 @@ import { getInstanceWithAuth } from '@/api'
 let instance = getInstanceWithAuth()
 
 function getReports(page = 0, size = 10, title = '', reportStatus = '') {
-  return instance.get('api/v1/reports', {
+  return instance.get('v1/reports', {
     params: {
       page: page,
       size: size,

@@ -24,34 +24,59 @@
       <v-divider />
 
       <v-list nav expand>
-        <template v-for="([icon, text, child], i) in items">
-          <v-list-group :prepend-icon="icon" :key="i">
+        <template v-for="(route, i) in items">
+          <!-- if -->
+          <v-list-group
+            v-if="route.children"
+            :prepend-icon="route.meta.icon"
+            :key="`parent-${i}`"
+          >
             <template v-slot:activator>
               <v-list-item-content>
-                <v-list-item-title> {{ text }} </v-list-item-title>
+                <v-list-item-title> {{ route.meta.title }} </v-list-item-title>
               </v-list-item-content>
             </template>
-            <template>
+            <template v-for="(children, i) in route.children">
               <v-list-item
-                v-for="[c_text, c_link] in child"
-                :key="c_text"
                 link
-                :to="c_link"
-                class=""
+                :to="children.meta.fullPath"
+                exact
                 active-class="error white--text"
+                :key="i"
               >
                 <v-list-item-icon>
-                  <v-icon> checkbox-blank-circle </v-icon>
+                  <v-icon> {{ children.meta.icon }} </v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title>{{ c_text }}</v-list-item-title>
+                  <v-list-item-title>
+                    {{ children.meta.title }}
+                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </template>
           </v-list-group>
+          <!-- else -->
+          <v-list-item
+            v-else
+            link
+            exact
+            :to="route.meta.fullPath"
+            active-class="error white--text"
+            :key="`children-${i}`"
+          >
+            <v-list-item-icon>
+              <v-icon> {{ route.meta.icon }} </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ route.meta.title }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
         </template>
       </v-list>
     </v-navigation-drawer>
+
     <v-main>
       <router-view />
     </v-main>
@@ -59,7 +84,6 @@
 </template>
 
 <script>
-let root = '/admin'
 export default {
   name: 'Index',
   data() {
@@ -67,34 +91,56 @@ export default {
       drawer: true,
       mini: true,
       items: [
-        ['mdi-email', '카테고리 관리', [['카테고리 관리', `${root}/category`]]],
-        [
-          'mdi-account-supervisor-circle',
-          '태그관리',
-          [['태그관리', `${root}/tag`]],
-        ],
-        ['mdi-clock-start', '음식 관리', [['음식 관리', `${root}/food`]]],
-        [
-          'mdi-microsoft-xbox',
-          '질문으로 관리',
-          [
-            ['질문 관리', `${root}/question`],
-            ['묶음 관리', `${root}/package`],
-            ['과정 관리', `${root}/course`],
+        {
+          path: '/',
+          name: 'DashBoardPage',
+          meta: {
+            icon: 'mdi-view-dashboard',
+            title: '대시보드',
+            fullPath: '/admin',
+          },
+        },
+        {
+          path: '/category',
+          meta: {
+            icon: 'mdi-view-dashboard',
+            title: '카테고리',
+            fullPath: '/admin/category',
+          },
+          children: [
+            {
+              path: '/',
+              meta: {
+                icon: 'mdi-view-dashboard',
+                title: '목록보기',
+                fullPath: '/admin/category',
+              },
+            },
+            {
+              path: '/write',
+              meta: {
+                icon: 'mdi-view-dashboard',
+                title: '등록하기',
+                fullPath: '/admin/category/write',
+              },
+            },
           ],
-        ],
-        ['mdi-microsoft-edge', 'QNA 관리', [['QNA 관리', `${root}/qna`]]],
-        ['mdi-bullhorn', '신고 관리', [['신고 관리', `${root}/report`]]],
+        },
+
+        {
+          path: '/report',
+          name: '신고관리',
+          meta: {
+            icon: 'mdi-view-dashboard',
+            title: '신고관리',
+            fullPath: '/admin/report',
+          },
+        },
       ],
     }
   },
   mounted() {
     this.$vuetify.theme.dark = false
-  },
-  methods: {
-    test() {
-      alert('hello')
-    },
   },
 }
 </script>

@@ -207,7 +207,9 @@ $system-success: #2284f5 !important;
 }
 
 
-
+html {
+  overflow-y: auto;
+}
 
 body {
   font-family: NanumGothic, Malgun Gothic, serif;
@@ -320,7 +322,7 @@ body {
   box-shadow: 0 24px 24px rgba(0, 0, 0, 0.25) !important;
 }
 
-/* toast css */
+/* toast css ( md ↑) */
 .v-toast {
   div {
     width: 500px;
@@ -340,3 +342,28 @@ body {
   }
 }
 
+// xs
+@media screen and (max-width: 960px) {
+  .v-toast {
+    div {
+      width: 350px;
+      height: 70px;
+    }
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .v-toast--top {
+    padding: 32px;
+  }
+}
+
+// sm
+@media screen and (max-width: 600px) {
+  .v-toast {
+    div {
+      width: 260px;
+      height: 60px;
+    }
+  }
+}
