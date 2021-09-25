@@ -6,6 +6,8 @@ import vuetify from '@/plugins/vuetify'
 import '@/plugins/toast'
 import '@/plugins/mdivue'
 import '@/css/index.scss'
+import '@/plugins/vee-validation'
+import '@/filter'
 
 Vue.config.productionTip = false
 

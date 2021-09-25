@@ -1,10 +1,16 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import ko from 'vuetify/lib/locale/ko'
 
 Vue.use(Vuetify)
 
 const opts = {
+  /** 한글 설정 https://vuetifyjs.com/en/features/internationalization/#getting-started */
+  lang: {
+    locales: { ko },
+    current: 'ko',
+  },
   theme: {
     options: {
       customProperties: true,
