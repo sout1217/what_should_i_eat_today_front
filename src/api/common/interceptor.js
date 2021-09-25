@@ -1,4 +1,4 @@
-import store from '@/store/index'
+// import store from '@/store/index'
 
 export function setInterceptors(instance) {
   // Add a request interceptor
@@ -6,7 +6,10 @@ export function setInterceptors(instance) {
     function (config) {
       // Do something before request is sent
       // console.log(config);
-      config.headers['Authorization'] = `bearer ${store.state.token}`
+      // config.headers['Authorization'] = `bearer ${store.state.token}`
+      config.headers[
+        'Authorization'
+      ] = `Bearer ${process.env.VUE_APP_TEMP_ADMIN_TOKEN}`
       return config
     },
     function (error) {
