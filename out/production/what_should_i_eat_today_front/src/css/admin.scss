@@ -1,0 +1,22 @@
+$root: admin-;
+
+.#{$root}container {
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+}
+
+.#{$root}content-wrapper {
+  vertical-align: middle;
+  width: 100%;
+  height: fit-content;
+}
+
+.#{$root}content {
+  margin: auto;
+}
+
+

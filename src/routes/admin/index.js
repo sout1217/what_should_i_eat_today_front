@@ -13,6 +13,15 @@ export const AdminLayout = {
       },
     },
     {
+      path: 'report',
+      name: 'Report',
+      component: () => import('@/views/admin/page/Report'),
+
+      meta: {
+        icon: 'mdi-view-dashboard',
+      },
+    },
+    {
       path: 'category',
       component: () => import('@/views/admin/page/category/Category'),
       meta: {

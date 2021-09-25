@@ -7,8 +7,6 @@ import '@/plugins/toast'
 import '@/plugins/mdivue'
 import '@/css/index.scss'
 import '@/css/admin.scss'
-import '@/plugins/vee-validation'
-import '@/filter'
 
 Vue.config.productionTip = false
 

@@ -14,7 +14,7 @@
           <v-img :src="require('@/assets/logo.png')"></v-img>
         </v-list-item-avatar>
 
-        <v-list-item-title>John Leider</v-list-item-title>
+        <v-list-item-title>관리 서비스</v-list-item-title>
 
         <v-btn icon @click.stop="mini = !mini">
           <v-icon>mdi-chevron-left</v-icon>
@@ -36,7 +36,6 @@
                 <v-list-item-title> {{ route.meta.title }} </v-list-item-title>
               </v-list-item-content>
             </template>
-
             <template v-for="(children, i) in route.children">
               <v-list-item
                 link
@@ -46,7 +45,7 @@
                 :key="i"
               >
                 <v-list-item-icon>
-                  <v-icon> mdi-close </v-icon>
+                  <v-icon> {{ children.meta.icon }} </v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title>
@@ -126,6 +125,16 @@ export default {
               },
             },
           ],
+        },
+
+        {
+          path: '/report',
+          name: '신고관리',
+          meta: {
+            icon: 'mdi-view-dashboard',
+            title: '신고관리',
+            fullPath: '/admin/report',
+          },
         },
       ],
     }

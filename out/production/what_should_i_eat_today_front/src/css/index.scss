@@ -1,0 +1,342 @@
+$brand-primary-blue: #2284F5 !important;
+$brand-primary-black: #171717;
+
+$secondary-blue-1: #5F5FC4 !important;
+$secondary-blue-2: #283593 !important;
+$secondary-blue-3: #001064 !important;
+
+$secondary-heart: #EF4242 !important;
+$secondary-wine-1: #FF5983 !important;
+$secondary-wine-2: #F50057 !important;
+$secondary-wine-3: #BB002F !important;
+$secondary-wine-4: #CC3B3B !important;
+
+$secondary-black-1: #121212;
+$secondary-black-2: #212121 !important;
+$secondary-black-3: #000000 !important;
+
+$secondary-orange-1: #FFBD45 !important;
+$secondary-orange-2: #FB8C00 !important;
+$secondary-orange-3: #C25E00 !important;
+
+$grayscale-black-1: #121212 !important;
+$grayscale-black-2: #21212150 !important;
+$grayscale-black-3: #4E4E4E !important;
+$grayscale-black-4: #999999 !important;
+$grayscale-black-5: #B3B3B3 !important;
+$grayscale-black-6: #DCDCDC !important;
+$grayscale-black-7: #FAFAFA !important;
+$grayscale-white: #FFFFFF !important;
+
+$system-error: #BB002F !important;
+$system-warn: #FB8C00 !important;
+$system-success: #2284f5 !important;
+
+.brand-primary-blue {
+  background-color: $brand-primary-blue
+}
+
+.brand-primary-black {
+  background-color: $brand-primary-black
+}
+
+.secondary-blue-1 {
+  background-color: $secondary-blue-1
+}
+.secondary-blue-2 {
+  background-color: $secondary-blue-2
+}
+.secondary-blue-3 {
+  background-color: $secondary-blue-3
+}
+.secondary-heart {
+  background-color: $secondary-heart
+}
+.secondary-wine-1 {
+  background-color: $secondary-wine-1
+}
+.secondary-wine-2 {
+  background-color: $secondary-wine-2
+}
+.secondary-wine-3 {
+  background-color: $secondary-wine-3
+}
+.secondary-wine-4 {
+  background-color: $secondary-wine-4
+}
+.secondary-black-1 {
+  background-color: $secondary-black-1
+}
+.secondary-black-2 {
+  background-color: $secondary-black-2
+}
+.secondary-black-3 {
+  background-color: $secondary-black-3
+}
+.secondary-orange-1 {
+  background-color: $secondary-orange-1
+}
+.secondary-orange-2 {
+  background-color: $secondary-orange-2
+}
+.secondary-orange-3 {
+  background-color: $secondary-orange-3
+}
+.grayscale-black-1 {
+  background-color: $grayscale-black-1;
+}
+.grayscale-black-2 {
+  background-color: $grayscale-black-2;
+}
+.grayscale-black-3 {
+  background-color: $grayscale-black-3;
+}
+.grayscale-black-4 {
+  background-color: $grayscale-black-4;
+}
+.grayscale-black-5 {
+  background-color: $grayscale-black-5;
+}
+.grayscale-black-6 {
+  background-color: $grayscale-black-6;
+}
+.grayscale-black-7 {
+  background-color: $grayscale-black-7;
+}
+.grayscale-white {
+  background-color: $grayscale-white;
+}
+.grayscale-white--text {
+  color: $grayscale-white;
+}
+.system-error {
+  background-color: $system-error;
+}
+.system-warn {
+  background-color: $system-warn;
+}
+.system-success {
+  background-color: $system-success;
+}
+
+.bg-brand-primary-blue {
+  background-color: $brand-primary-blue
+}
+
+.bg-brand-primary-black {
+  background-color: $brand-primary-black
+}
+
+.bg-secondary-blue-1 {
+  background-color: $secondary-blue-1
+}
+.bg-secondary-blue-2 {
+  background-color: $secondary-blue-2
+}
+.bg-secondary-blue-3 {
+  background-color: $secondary-blue-3
+}
+.bg-secondary-heart {
+  background-color: $secondary-heart
+}
+.bg-secondary-wine-1 {
+  background-color: $secondary-wine-1
+}
+.bg-secondary-wine-2 {
+  background-color: $secondary-wine-2
+}
+.bg-secondary-wine-3 {
+  background-color: $secondary-wine-3
+}
+.bg-secondary-wine-4 {
+  background-color: $secondary-wine-4
+}
+.bg-secondary-black-1 {
+  background-color: $secondary-black-1
+}
+.bg-secondary-black-2 {
+  background-color: $secondary-black-2
+}
+.bg-secondary-black-3 {
+  background-color: $secondary-black-3
+}
+.bg-secondary-orange-1 {
+  background-color: $secondary-orange-1
+}
+.bg-secondary-orange-2 {
+  background-color: $secondary-orange-2
+}
+.bg-secondary-orange-3 {
+  background-color: $secondary-orange-3
+}
+.bg-grayscale-black-1 {
+  background-color: $grayscale-black-1;
+}
+.bg-grayscale-black-2 {
+  background-color: $grayscale-black-2;
+}
+.bg-grayscale-black-3 {
+  background-color: $grayscale-black-3;
+}
+.bg-grayscale-black-4 {
+  background-color: $grayscale-black-4;
+}
+.bg-grayscale-black-5 {
+  background-color: $grayscale-black-5;
+}
+.bg-grayscale-black-6 {
+  background-color: $grayscale-black-6;
+}
+.bg-grayscale-black-7 {
+  background-color: $grayscale-black-7;
+}
+.bg-grayscale-white {
+  background-color: $grayscale-white;
+}
+.bg-system-error {
+  background-color: $system-error;
+}
+.bg-system-warn {
+  background-color: $system-warn;
+}
+.bg-system-success {
+  background-color: $system-success;
+}
+.bg-black-opacity {
+  background-color: rgba(21, 21, 21, 0.9) !important;
+}
+
+
+
+
+body {
+  font-family: NanumGothic, Malgun Gothic, serif;
+}
+
+/* font style */
+.jumbotron {
+  font-family: NanumGothic, Malgun Gothic, serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 50px;
+  line-height: 62px;
+}
+
+.h1, h1 {
+  font-family: NanumGothic, Malgun Gothic, serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 32px;
+  line-height: 40px;
+}
+
+.h2, h2 {
+  font-family: NanumGothic, Malgun Gothic, serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 30px;
+}
+
+.h3, h3 {
+  font-family: NanumGothic, Malgun Gothic, serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.t1 {
+  font-family: NanumGothic, Malgun Gothic, serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.t2 {
+  font-family: NanumGothic, Malgun Gothic, serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.b1, p, span {
+  font-family: NanumGothic, Malgun Gothic, serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.b2 {
+  font-family: NanumGothic, Malgun Gothic, serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.b3 {
+  font-family: NanumGothic, Malgun Gothic, serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.c1 {
+  font-family: NanumGothic, Malgun Gothic, serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 12px;
+}
+
+.u1, u {
+  font-family: NanumGothic, Malgun Gothic, serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  text-decoration-line: underline;
+}
+
+/* shadow css */
+.shadow-1 {
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25) !important;
+}
+.shadow-2 {
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25) !important;
+}
+.shadow-3 {
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.25) !important;
+}
+.shadow-4 {
+  box-shadow: 0 16px 16px rgba(0, 0, 0, 0.25) !important;
+}
+.shadow-5 {
+  box-shadow: 0 24px 24px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* toast css */
+.v-toast {
+  div {
+    width: 500px;
+    height: 100px;
+  }
+
+  .v-toast__item--success {
+    background-color: $system-success
+  }
+
+  .v-toast__item--warning {
+    background-color: $system-warn;
+  }
+
+  .v-toast__item--error {
+    background-color: $system-error;
+  }
+}
+
