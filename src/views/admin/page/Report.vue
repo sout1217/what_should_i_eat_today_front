@@ -11,6 +11,7 @@
               outlined
               dense
               hide-details
+              v-model="condition.title"
               @keydown="searchIfPressEnter"
             >
               <v-icon slot="append" color="black" @click="search">
@@ -36,7 +37,7 @@
           <v-col align-self="center">
             <v-data-table
               :headers="headers"
-              :items="desserts"
+              :items="data"
               class="elevation-1"
               item-key="name"
               hide-default-footer
@@ -67,7 +68,7 @@
       </v-container>
 
       <div class="text-center">
-        <v-pagination v-model="page" :length="6"></v-pagination>
+        <v-pagination v-model="page" :length="length"></v-pagination>
       </div>
     </div>
   </div>
@@ -80,10 +81,12 @@ export default {
   name: 'Report',
   data: () => ({
     page: 1,
+    size: 10,
+    length: 10,
     dialog: false,
     headers: [
       {
-        text: '아이디',
+        text: '신고자',
         align: 'left',
         sortable: false,
         value: 'id',
@@ -93,47 +96,52 @@ export default {
       { text: '신고유형', value: 'type' },
       { text: '처리상태', value: 'status' },
     ],
-    desserts: [],
+    data: [],
+    condition: {
+      title: '',
+      reportStatus: '',
+    },
     editedIndex: -1,
     editedItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+      id: '',
+      title: '',
+      content: '',
+      type: '',
+      status: '',
     },
     defaultItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+      id: '',
+      title: '',
+      content: '',
+      type: '',
+      status: '',
     },
     selectItems: [
-      { text: '처리', value: true },
-      { text: '미처리', value: false },
+      { text: '처리', value: 'APPROVED' },
+      { text: '미처리', value: 'NOT_APPROVED' },
+      { text: '모두', value: '' },
     ],
   }),
 
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-    },
-  },
+  computed: {},
 
   watch: {
     dialog(val) {
       val || this.close()
     },
+    page() {
+      this.getReportList()
+    },
   },
 
-  created() {
-    this.initialize()
-  },
+  // created() {
+  //   this.initialize()
+  // },
 
   methods: {
-    searchWithSelect(event) {
-      console.log(event)
+    searchWithSelect(approved) {
+      this.condition.reportStatus = approved
+      this.search()
     },
     searchIfPressEnter(event) {
       let key = event.key || event.keyCode
@@ -143,31 +151,49 @@ export default {
       }
     },
     search() {
-      console.log('search')
+      this.page = 1
+      this.getReportList()
     },
     singleSelect(event) {
       console.log(event)
     },
-    initialize() {
-      this.desserts = [
-        {
-          id: 'Frozen Yogurt',
-          title: 159,
-          content: 6.0,
-          type: 24,
-          status: 4.0,
-        },
-      ]
+    initialize(gotData) {
+      this.data = []
+      if (gotData.length == 0) {
+        return
+      }
+      for (let d of gotData) {
+        this.data.push({
+          id: d.member.email,
+          title: d.title,
+          content: d.content,
+          type: { PROFILE: '프로필', REVIEW: '리뷰', POST: '포스트' }[d.type],
+          status: { NOT_APPROVED: '미승인', APPROVED: '승인' }[d.status],
+        })
+      }
+    },
+    getReportList() {
+      let result = getReports(
+        this.page - 1,
+        this.size,
+        this.condition.title,
+        this.condition.reportStatus,
+      )
+      result.then(value => {
+        console.log(value.data)
+        this.length = value.data.totalPages
+        this.initialize(value.data.content)
+      })
     },
     editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item)
+      this.editedIndex = this.data.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
     deleteItem(item) {
-      const index = this.desserts.indexOf(item)
+      const index = this.data.indexOf(item)
       confirm('Are you sure you want to delete this item?') &&
-        this.desserts.splice(index, 1)
+        this.data.splice(index, 1)
     },
     close() {
       this.dialog = false
@@ -178,18 +204,15 @@ export default {
     },
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        Object.assign(this.data[this.editedIndex], this.editedItem)
       } else {
-        this.desserts.push(this.editedItem)
+        this.data.push(this.editedItem)
       }
       this.close()
     },
   },
   mounted() {
-    let result = getReports()
-    result.then(value => {
-      console.log(value)
-    })
+    this.getReportList()
   },
 }
 </script>

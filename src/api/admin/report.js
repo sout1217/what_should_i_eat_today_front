@@ -2,8 +2,15 @@ import { getInstanceWithAuth } from '@/api'
 
 let instance = getInstanceWithAuth()
 
-function getReports() {
-  return instance.get('api/v1/reports')
+function getReports(page = 0, size = 10, title = '', reportStatus = '') {
+  return instance.get('api/v1/reports', {
+    params: {
+      page: page,
+      size: size,
+      title: title,
+      reportStatus: reportStatus,
+    },
+  })
 }
 
 export { getReports }
