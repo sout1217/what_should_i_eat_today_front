@@ -44,6 +44,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 * 2021-08-05 : @mdi/font - 2021.08.06 삭제
 * 2021-08-05 : @mdi/js
 * 2021-08-06 : mdi-vue
+* 2021-09-24 : vee-validate ^3.4.11
+* 2021-09-24 : js-joda ^1.11.0
+
 
 📌 공통 검포넌트
 -

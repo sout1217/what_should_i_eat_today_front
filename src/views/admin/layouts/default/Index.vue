@@ -24,27 +24,60 @@
       <v-divider />
 
       <v-list nav expand>
-        <template v-for="([icon, text], i) in items">
-          <v-list-group :prepend-icon="icon" :key="i">
+        <template v-for="(route, i) in items">
+          <!-- if -->
+          <v-list-group
+            v-if="route.children"
+            :prepend-icon="route.meta.icon"
+            :key="`parent-${i}`"
+          >
             <template v-slot:activator>
               <v-list-item-content>
-                <v-list-item-title> {{ text }} </v-list-item-title>
+                <v-list-item-title> {{ route.meta.title }} </v-list-item-title>
               </v-list-item-content>
             </template>
-            <template>
-              <v-list-item link class="" active-class="error white--text">
+
+            <template v-for="(children, i) in route.children">
+              <v-list-item
+                link
+                :to="children.meta.fullPath"
+                exact
+                active-class="error white--text"
+                :key="i"
+              >
                 <v-list-item-icon>
                   <v-icon> mdi-close </v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title>리스트 아이템</v-list-item-title>
+                  <v-list-item-title>
+                    {{ children.meta.title }}
+                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </template>
           </v-list-group>
+          <!-- else -->
+          <v-list-item
+            v-else
+            link
+            exact
+            :to="route.meta.fullPath"
+            active-class="error white--text"
+            :key="`children-${i}`"
+          >
+            <v-list-item-icon>
+              <v-icon> {{ route.meta.icon }} </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ route.meta.title }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
         </template>
       </v-list>
     </v-navigation-drawer>
+
     <v-main>
       <router-view />
     </v-main>
@@ -59,21 +92,46 @@ export default {
       drawer: true,
       mini: true,
       items: [
-        ['mdi-email', '카테고리 관리'],
-        ['mdi-account-supervisor-circle', '태그관리'],
-        ['mdi-clock-start', '음식관리'],
-        ['mdi-microsoft-xbox', '질문으로 관리하기'],
-        ['mdi-microsoft-edge', 'QNA 관리하기'],
+        {
+          path: '/',
+          name: 'DashBoardPage',
+          meta: {
+            icon: 'mdi-view-dashboard',
+            title: '대시보드',
+            fullPath: '/admin',
+          },
+        },
+        {
+          path: '/category',
+          meta: {
+            icon: 'mdi-view-dashboard',
+            title: '카테고리',
+            fullPath: '/admin/category',
+          },
+          children: [
+            {
+              path: '/',
+              meta: {
+                icon: 'mdi-view-dashboard',
+                title: '목록보기',
+                fullPath: '/admin/category',
+              },
+            },
+            {
+              path: '/write',
+              meta: {
+                icon: 'mdi-view-dashboard',
+                title: '등록하기',
+                fullPath: '/admin/category/write',
+              },
+            },
+          ],
+        },
       ],
     }
   },
   mounted() {
     this.$vuetify.theme.dark = false
-  },
-  methods: {
-    test() {
-      alert('hello')
-    },
   },
 }
 </script>
