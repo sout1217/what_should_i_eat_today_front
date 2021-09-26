@@ -1,4 +1,5 @@
 // icon : https://pictogrammers.github.io/@mdi/font/5.4.55/
+// icon : https://vuetifyjs.com/en/features/icon-fonts/#installing-icon-fonts
 export const DefaultLayout = {
   path: '/',
   component: () => import('@/views/layouts/default/Index'),

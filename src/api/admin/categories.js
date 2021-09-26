@@ -1,5 +1,6 @@
-import { getInstance } from '../index'
-const axios = getInstance()
+import { getInstanceWithAuth } from '../index'
+
+const axios = getInstanceWithAuth()
 
 /** 카테고리 생성하기 */
 function create(payload) {

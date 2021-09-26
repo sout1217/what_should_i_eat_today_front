@@ -10,46 +10,59 @@ export const AdminLayout = {
       meta: {
         icon: 'mdi-view-dashboard',
         title: '대시보드',
-      },
-    },
-    {
-      path: 'report',
-      name: 'Report',
-      component: () => import('@/views/admin/page/Report'),
-
-      meta: {
-        icon: 'mdi-view-dashboard',
+        fullPath: '/admin',
+        visible: true,
+        auth: true,
       },
     },
     {
       path: 'category',
       component: () => import('@/views/admin/page/category/Category'),
       meta: {
-        icon: 'mdi-view-dashboard',
+        icon: 'mdi-view-list',
         title: '카테고리',
+        visible: true,
       },
       children: [
         {
           path: '',
-          name: 'CategoryListPage',
+          name: 'CategoryList',
           component: () =>
             import('@/views/admin/page/category/CategoryListPage'),
           meta: {
-            icon: 'mdi-view-dashboard',
+            icon: 'mdi-form-select',
             title: '목록보기',
+            fullPath: '/admin/category',
+            visible: true,
+            auth: true,
           },
         },
         {
           path: 'write',
-          name: 'CategoryWritePage',
+          name: 'CategoryWrite',
           component: () =>
             import('@/views/admin/page/category/CategoryWritePage'),
           meta: {
-            icon: 'mdi-view-dashboard',
+            icon: 'mdi-square-edit-outline',
             title: '작성하기',
+            fullPath: '/admin/category/write',
+            visible: false,
+            auth: true,
           },
         },
       ],
+    },
+    {
+      path: 'report',
+      name: 'Report',
+      component: () => import('@/views/admin/page/Report'),
+      meta: {
+        icon: 'mdi-view-dashboard',
+        title: '신고관리',
+        fullPath: '/admin/report',
+        visible: true,
+        auth: true,
+      },
     },
   ],
 }
