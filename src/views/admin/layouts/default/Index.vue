@@ -30,6 +30,7 @@
             v-if="route.children"
             :prepend-icon="route.meta.icon"
             :key="`parent-${i}`"
+            :title="route.meta.title"
           >
             <template v-slot:activator>
               <v-list-item-content>
@@ -43,6 +44,7 @@
                 exact
                 active-class="error white--text"
                 :key="i"
+                :title="children.meta.title"
               >
                 <v-list-item-icon>
                   <v-icon> {{ children.meta.icon }} </v-icon>
@@ -63,6 +65,7 @@
             :to="route.meta.fullPath"
             active-class="error white--text"
             :key="`children-${i}`"
+            :title="route.meta.title"
           >
             <v-list-item-icon>
               <v-icon> {{ route.meta.icon }} </v-icon>
@@ -84,59 +87,14 @@
 </template>
 
 <script>
+import { AdminLayout } from '@/routes/admin'
 export default {
   name: 'Index',
   data() {
     return {
       drawer: true,
       mini: true,
-      items: [
-        {
-          path: '/',
-          name: 'DashBoardPage',
-          meta: {
-            icon: 'mdi-view-dashboard',
-            title: '대시보드',
-            fullPath: '/admin',
-          },
-        },
-        {
-          path: '/category',
-          meta: {
-            icon: 'mdi-view-dashboard',
-            title: '카테고리',
-            fullPath: '/admin/category',
-          },
-          children: [
-            {
-              path: '/',
-              meta: {
-                icon: 'mdi-view-dashboard',
-                title: '목록보기',
-                fullPath: '/admin/category',
-              },
-            },
-            {
-              path: '/write',
-              meta: {
-                icon: 'mdi-view-dashboard',
-                title: '등록하기',
-                fullPath: '/admin/category/write',
-              },
-            },
-          ],
-        },
-
-        {
-          path: '/report',
-          name: '신고관리',
-          meta: {
-            icon: 'mdi-view-dashboard',
-            title: '신고관리',
-            fullPath: '/admin/report',
-          },
-        },
-      ],
+      items: AdminLayout.children.filter(route => route.meta.visible),
     }
   },
   mounted() {

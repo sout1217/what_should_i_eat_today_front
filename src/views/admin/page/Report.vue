@@ -34,7 +34,7 @@
 
       <v-container class="d-flex justify-center">
         <v-row>
-          <v-col align-self="center">
+          <v-col cols="12" align-self="center">
             <v-data-table
               :headers="headers"
               :items="data"
@@ -64,12 +64,11 @@
           </template>-->
             </v-data-table>
           </v-col>
+          <v-col cols="12">
+            <v-pagination v-model="page" :length="length"></v-pagination>
+          </v-col>
         </v-row>
       </v-container>
-
-      <div class="text-center">
-        <v-pagination v-model="page" :length="length"></v-pagination>
-      </div>
     </div>
   </div>
 </template>

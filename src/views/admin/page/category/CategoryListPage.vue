@@ -1,54 +1,106 @@
 <template>
-  <v-row class="fill-height" align-content="center">
-    <v-col>
-      <h3 class="mb-5">카테고리 목록</h3>
+  <v-row class="fill-height px-lg-16" align="center">
+    <v-col cols="12">
+      <v-row align="center" class="mb-4">
+        <v-col cols="12" sm="auto" md="auto">
+          <h1>카테고리 목록</h1>
+        </v-col>
+        <v-spacer />
+        <v-col cols="12" sm="12" md="3">
+          <v-text-field
+            class="v-btn--block something"
+            v-model="search"
+            outlined
+            hide-details
+            dense
+            placeholder="검색"
+            autocomplete="off"
+          >
+            <v-icon slot="append" color="black"> mdi-magnify </v-icon>
+          </v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="auto">
+          <v-btn
+            link
+            :to="{ name: 'CategoryWrite' }"
+            class="v-btn--block"
+            color="primary"
+          >
+            <h5>등록하기</h5>
+          </v-btn>
+        </v-col>
+        <v-col cols="12" sm="6" md="auto">
+          <v-btn class="v-btn--block" color="error">
+            <h5>삭제하기</h5>
+          </v-btn>
+        </v-col>
+      </v-row>
       <!--      <v-list-item v-for="(category, index) in categories" :key="index">-->
       <!--        {{ category.name }}-->
       <!--      </v-list-item>-->
 
-      <v-data-table
-        show-select
-        :page="page"
-        :pageCount="numberOfElements"
-        :headers="headers"
-        :items="categories"
-        :options.sync="options"
-        :server-items-length="totalElements"
-        :loading="loading"
-        loading-text="로딩 중..."
-        :no-data-text="noDataText"
-        class="elevation-1"
-      >
-        <!-- https://luerangler-dev.tistory.com/34 참고-->
-        <template v-slot:item.admin="{ item }">
-          {{ item.admin || '작성자 없음' }}
-        </template>
+      <v-row>
+        <v-col>
+          <v-data-table
+            :calculate-widths="true"
+            show-select
+            :page="page"
+            :pageCount="numberOfElements"
+            :headers="headers"
+            :items="categories"
+            :options.sync="options"
+            :server-items-length="totalElements"
+            :loading="loading"
+            loading-text="로딩 중..."
+            :no-data-text="noDataText"
+            hide-default-footer
+            :search="search"
+            :header-props="headerProp"
+            class="elevation-1"
+          >
+            <!-- https://luerangler-dev.tistory.com/34 참고-->
+            <template v-slot:item.admin="{ item }">
+              {{ item.admin || '작성자 없음' }}
+            </template>
 
-        <template v-slot:item.visible="{ item }">
-          {{ item.visible | visibleFilter }}
-        </template>
+            <template v-slot:item.visible="{ item }">
+              {{ item.visible | visibleFilter }}
+            </template>
 
-        <template v-slot:item.createdAt="{ item }">
-          {{ item.createdAt | yyyymmdd }}
-        </template>
+            <template v-slot:item.createdAt="{ item }">
+              {{ item.createdAt | yyyymmdd }}
+            </template>
 
-        <template v-slot:item.updatedAt="{ item }">
-          {{ item.updatedAt | yyyymmdd }}
-        </template>
-      </v-data-table>
+            <template v-slot:item.updatedAt="{ item }">
+              {{ item.updatedAt | yyyymmdd }}
+            </template>
+          </v-data-table>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <v-pagination
+            total-visible="11"
+            v-model="page"
+            :length="totalPage"
+          ></v-pagination>
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>
 
 <script>
-import categoriesApi from '@/api/categories'
+import categoriesApi from '@/api/admin/categories'
 
 export default {
   name: 'CategoryListPage',
   data() {
     return {
       noDataText: '데이터가 없습니다',
+      search: '',
       page: 1,
+      totalPage: 10,
       totalElements: 0,
       numberOfElements: 0,
       categories: [],
@@ -62,6 +114,9 @@ export default {
         { text: '생성일', value: 'createdAt' },
         { text: '수정일', value: 'updatedAt' },
       ],
+      headerProp: {
+        sortByText: '정렬기준',
+      },
     }
   },
   // 이것은 사용자가 현재 페이지를 변경할 때 새 데이터 세트를 채웁니다.
@@ -90,6 +145,7 @@ export default {
          * @property { Array<Object> } content
          * @property { number } totalElements
          * @property { number } numberOfElements
+         * @property { number } totalPages
          */
         /** @type Categories */
         .then(({ data }) => {
@@ -99,6 +155,7 @@ export default {
           this.categories = this.itemSlicing(data.content)
           this.totalElements = data.totalElements
           this.numberOfElements = data.numberOfElements
+          this.totalPage = data.totalPages
         })
         .catch(error => {
           this.errorPrint(error)
