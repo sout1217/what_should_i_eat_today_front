@@ -15,8 +15,11 @@
             dense
             placeholder="검색"
             autocomplete="off"
+            @keydown.enter="readDataFromAPI"
           >
-            <v-icon slot="append" color="black"> mdi-magnify </v-icon>
+            <v-icon @click="readDataFromAPI" slot="append" color="black">
+              mdi-magnify
+            </v-icon>
           </v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="auto">
@@ -30,18 +33,15 @@
           </v-btn>
         </v-col>
         <v-col cols="12" sm="6" md="auto">
-          <v-btn class="v-btn--block" color="error">
+          <v-btn @click="deleteCategories" class="v-btn--block" color="error">
             <h5>삭제하기</h5>
           </v-btn>
         </v-col>
       </v-row>
-      <!--      <v-list-item v-for="(category, index) in categories" :key="index">-->
-      <!--        {{ category.name }}-->
-      <!--      </v-list-item>-->
-
       <v-row>
         <v-col>
           <v-data-table
+            v-model="selected"
             :calculate-widths="true"
             show-select
             :page="page"
@@ -60,12 +60,28 @@
           >
             <!-- https://luerangler-dev.tistory.com/34 참고-->
             <template v-slot:item.admin="{ item }">
-              {{ item.admin || '작성자 없음' }}
+              {{ item.admin.email || '작성자 없음' }}
             </template>
 
-            <template v-slot:item.visible="{ item }">
-              {{ item.visible | visibleFilter }}
+            <!-- 시작 -->
+            <template v-slot:item.visible="props">
+              <v-edit-dialog
+                :return-value.sync="props.item.visible"
+                @save="save(props.item)"
+                @cancel="cancel(props.item)"
+                @open="open(props.item)"
+                @close="close(props.item)"
+                large
+                save-text="저장"
+                cancel-text="취소"
+              >
+                {{ props.item.visible | visibleFilter }}
+                <template v-slot:input>
+                  <v-switch hide-details v-model="props.item.visible" />
+                </template>
+              </v-edit-dialog>
             </template>
+            <!-- 종료 -->
 
             <template v-slot:item.createdAt="{ item }">
               {{ item.createdAt | yyyymmdd }}
@@ -98,6 +114,7 @@ export default {
   data() {
     return {
       noDataText: '데이터가 없습니다',
+      selected: [],
       search: '',
       page: 1,
       totalPage: 10,
@@ -130,8 +147,11 @@ export default {
   },
   methods: {
     /** 카테고리 조회 */
-    //Reading data from API method.
     async readDataFromAPI() {
+      // 이전에 선택한 카테고리들을 초기화하기 위함
+      // 1. 카테고리 선택 후 다음 페이지 또는 이전 페이지로 이동했을 때
+      // 2. 카테고리를 삭제후 다시 재삭제 할 때
+      this.selected = []
       this.loading = true
 
       // page, size
@@ -139,7 +159,7 @@ export default {
       let pageNumber = page - 1
 
       categoriesApi
-        .getCategories(pageNumber, itemsPerPage)
+        .getCategories(pageNumber, itemsPerPage, this.search)
         /**
          * @typedef Categories
          * @property { Array<Object> } content
@@ -152,7 +172,7 @@ export default {
           console.log(data)
           this.loading = false
 
-          this.categories = this.itemSlicing(data.content)
+          this.categories = this.itemSort(data.content)
           this.totalElements = data.totalElements
           this.numberOfElements = data.numberOfElements
           this.totalPage = data.totalPages
@@ -163,7 +183,7 @@ export default {
     },
 
     /** 카테고리들 정렬 */
-    itemSlicing(content) {
+    itemSort(content) {
       const { sortBy, sortDesc } = this.options
 
       let items = content
@@ -191,6 +211,44 @@ export default {
     errorPrint(error) {
       this.loading = false
       this.noDataText = error.message
+    },
+
+    /** 카테고리 삭제하기 */
+    deleteCategories() {
+      const categoryIds = this.selected.map(category => category.id)
+      console.log('categoryIds -> ', categoryIds)
+
+      categoriesApi
+        .deleteAllById(categoryIds)
+        .then(() => {
+          this.readDataFromAPI()
+          this.$toastSuccess(`총 ${categoryIds.length}건 삭제되었습니다`)
+        })
+        .catch(error => {
+          this.$toastError(error)
+        })
+    },
+    save(item) {
+      console.log('save', item.visible)
+      const { id, visible } = item
+
+      categoriesApi
+        .updateVisibleOfCategory({ id, visible })
+        .then(() => {
+          this.$toastSuccess('수정되었습니다')
+        })
+        .catch(error => {
+          this.$toastError(error)
+        })
+    },
+    cancel(item) {
+      console.log('cancel', item.visible)
+    },
+    open(item) {
+      console.log('open', item.visible)
+    },
+    close(item) {
+      console.log('close', item.visible)
     },
   },
 }
