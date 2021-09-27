@@ -43,25 +43,12 @@
               hide-default-footer
               :single-select="true"
             >
-              <!--키 값을 명시해 주어야 만, select 시 1개만 정상 select 됩니다. -->
-              <template v-slot:items="props">
-                <td>{{ props.item.name }}</td>
-                <td class="text-xs-right">{{ props.item.calories }}</td>
-                <td class="text-xs-right">{{ props.item.fat }}</td>
-                <td class="text-xs-right">{{ props.item.carbs }}</td>
-                <td class="text-xs-right">{{ props.item.protein }}</td>
-                <td class="justify-center layout px-0">
-                  <v-icon small class="mr-2" @click="editItem(props.item)">
-                    edit
-                  </v-icon>
-                  <v-icon small @click="deleteItem(props.item)">
-                    delete
-                  </v-icon>
-                </td>
+              <template v-slot:item.title="{ item }">
+                <span @click="showModal(item.id)">{{ item.title }}</span>
               </template>
-              <!--<template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
-          </template>-->
+              <template v-slot:item.status="{ item }">
+                <span v-html="item.status">{{ item.status }}</span>
+              </template>
             </v-data-table>
           </v-col>
           <v-col cols="12">
@@ -70,11 +57,43 @@
         </v-row>
       </v-container>
     </div>
+
+    <!-- 모달 -->
+    <template>
+      <div class="text-center">
+        <v-dialog v-model="dialog" width="500">
+          <v-card>
+            <v-card-title class="text-h5 grey lighten-2">
+              Privacy Policy
+            </v-card-title>
+
+            <v-card-text>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+              sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" text @click="dialog = false">
+                I accept
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
-import { getReports } from '@/api/admin/report'
+import { getReports, getReport } from '@/api/admin/report'
 
 export default {
   name: 'Report',
@@ -88,7 +107,7 @@ export default {
         text: '신고자',
         align: 'left',
         sortable: false,
-        value: 'id',
+        value: 'email',
       },
       { text: '제목', value: 'title' },
       { text: '내용', value: 'content' },
@@ -96,20 +115,21 @@ export default {
       { text: '처리상태', value: 'status' },
     ],
     data: [],
+    selectedReport: {},
     condition: {
       title: '',
       reportStatus: '',
     },
     editedIndex: -1,
     editedItem: {
-      id: '',
+      email: '',
       title: '',
       content: '',
       type: '',
       status: '',
     },
     defaultItem: {
-      id: '',
+      email: '',
       title: '',
       content: '',
       type: '',
@@ -138,6 +158,9 @@ export default {
   // },
 
   methods: {
+    getColor() {
+      return 'red'
+    },
     searchWithSelect(approved) {
       this.condition.reportStatus = approved
       this.search()
@@ -153,6 +176,13 @@ export default {
       this.page = 1
       this.getReportList()
     },
+    showModal(id) {
+      const result = getReport(id)
+      result.then(value => {
+        console.log(value.data)
+      })
+      this.dialog = true
+    },
     singleSelect(event) {
       console.log(event)
     },
@@ -163,11 +193,15 @@ export default {
       }
       for (let d of gotData) {
         this.data.push({
-          id: d.member.email,
+          id: d.id,
+          email: d.member.email,
           title: d.title,
           content: d.content,
           type: { PROFILE: '프로필', REVIEW: '리뷰', POST: '포스트' }[d.type],
-          status: { NOT_APPROVED: '미승인', APPROVED: '승인' }[d.status],
+          status: {
+            NOT_APPROVED: '<span class="secondary-wine-2">미승인</span>',
+            APPROVED: '<span class="brand-primary-blue">승인</span>',
+          }[d.status],
         })
       }
     },

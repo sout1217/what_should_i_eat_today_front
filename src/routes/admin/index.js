@@ -64,5 +64,17 @@ export const AdminLayout = {
         auth: true,
       },
     },
+    {
+      path: 'test',
+      name: 'test',
+      component: () => import('@/views/admin//page/test'),
+      meta: {
+        icon: 'mdi-view-dashboard',
+        title: '테스트',
+        fullPath: '/admin/test',
+        visible: true,
+        auth: true,
+      },
+    },
   ],
 }
