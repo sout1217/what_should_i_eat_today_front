@@ -50,6 +50,19 @@ export const AdminLayout = {
             auth: true,
           },
         },
+        {
+          path: ':id',
+          name: 'CategoryDetails',
+          component: () =>
+            import('@/views/admin/page/category/CategoryDetailsPage'),
+          meta: {
+            icon: 'mdi-square-edit-outline',
+            title: '상세보기',
+            fullPath: '/admin/category',
+            visible: false,
+            auth: true,
+          },
+        },
       ],
     },
     {

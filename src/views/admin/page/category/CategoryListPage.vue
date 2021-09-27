@@ -58,6 +58,15 @@
             :header-props="headerProp"
             class="elevation-1"
           >
+            <template v-slot:item.name="{ item }">
+              <div
+                class="fill-height d-flex align-center"
+                @click="toCategoryDetailsPage"
+              >
+                {{ item.name }}
+              </div>
+            </template>
+
             <!-- https://luerangler-dev.tistory.com/34 참고-->
             <template v-slot:item.admin="{ item }">
               {{ item.admin.email || '작성자 없음' }}
@@ -249,6 +258,13 @@ export default {
     },
     close(item) {
       console.log('close', item.visible)
+    },
+    test() {
+      alert('test')
+    },
+    toCategoryDetailsPage({ id }) {
+      console.log(id)
+      this.$router.push({ name: 'CategoryDetails', params: { id } })
     },
   },
 }
