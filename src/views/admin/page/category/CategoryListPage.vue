@@ -57,14 +57,12 @@
             :search="search"
             :header-props="headerProp"
             class="elevation-1"
+            dense
           >
             <template v-slot:item.name="{ item }">
-              <div
-                class="fill-height d-flex align-center"
-                @click="toCategoryDetailsPage"
-              >
+              <v-btn text color="primary" @click="toCategoryDetailsPage(item)">
                 {{ item.name }}
-              </div>
+              </v-btn>
             </template>
 
             <!-- https://luerangler-dev.tistory.com/34 참고-->
@@ -224,6 +222,9 @@ export default {
 
     /** 카테고리 삭제하기 */
     deleteCategories() {
+      if (this.selected.length < 1)
+        return this.$toastWarning('1건 이상 선택해주세요')
+
       const categoryIds = this.selected.map(category => category.id)
       console.log('categoryIds -> ', categoryIds)
 
