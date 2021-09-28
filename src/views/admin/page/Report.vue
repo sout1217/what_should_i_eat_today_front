@@ -41,10 +41,13 @@
               class="elevation-1"
               item-key="name"
               hide-default-footer
+              dense
               :single-select="true"
             >
               <template v-slot:item.title="{ item }">
-                <span @click="showModal(item.id)">{{ item.title }}</span>
+                <span class="p-focus" @click="showModal(item.id)">{{
+                  item.title
+                }}</span>
               </template>
               <template v-slot:item.status="{ item }">
                 <span v-html="item.status">{{ item.status }}</span>
@@ -63,28 +66,73 @@
       <div class="text-center">
         <v-dialog v-model="dialog" width="500">
           <v-card>
-            <v-card-title class="text-h5 grey lighten-2">
-              Privacy Policy
-            </v-card-title>
+            <v-card-title class="text-h5 lighten-2"> 사용자 신고 </v-card-title>
 
-            <v-card-text>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="dialog = false">
-                I accept
-              </v-btn>
-            </v-card-actions>
+            <v-container class="d-flex justify-center">
+              <v-row>
+                <v-col cols="6" align-self="center">
+                  <h2>신고 유형</h2>
+                  <v-text-field outlined dense hide-details></v-text-field>
+                </v-col>
+                <v-col cols="6" align-self="center">
+                  <h2>신고 유형</h2>
+                  <v-text-field outlined dense hide-details></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-container class="d-flex justify-center">
+              <v-row>
+                <v-col cols="12" align-self="center">
+                  <h2>질문 제목</h2>
+                  <v-text-field outlined dense hide-details></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-container class="d-flex justify-center">
+              <v-row>
+                <v-col cols="12" align-self="center">
+                  <h2>질문 내용</h2>
+                  <v-text-field outlined dense hide-details></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-container class="d-flex justify-center">
+              <v-row>
+                <v-col cols="12" align-self="center">
+                  <h2>게시글</h2>
+                  <v-textarea outlined dense hide-details></v-textarea>
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-container>
+              <v-row>
+                <v-col cols="12" align-self="center">
+                  <h2>처리 상태</h2>
+                  <v-radio-group v-model="form.status" row>
+                    <v-radio
+                      v-for="n in statusRadio"
+                      :key="n"
+                      :label="`${n}`"
+                      :value="n"
+                    ></v-radio>
+                  </v-radio-group>
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-container>
+              <v-row align="center" justify="space-around">
+                <v-col cols="12">
+                  <v-btn elevation="2" depressed color="primary">확인</v-btn>
+                  <v-btn
+                    elevation="2"
+                    depressed
+                    color="error"
+                    @click="dialog = false"
+                    >취소</v-btn
+                  >
+                </v-col>
+              </v-row>
+            </v-container>
           </v-card>
         </v-dialog>
       </div>
@@ -102,6 +150,7 @@ export default {
     size: 10,
     length: 10,
     dialog: false,
+    statusRadio: ['처리', '미처리'],
     headers: [
       {
         text: '신고자',
@@ -126,6 +175,9 @@ export default {
       title: '',
       content: '',
       type: '',
+      status: '',
+    },
+    form: {
       status: '',
     },
     defaultItem: {
@@ -253,5 +305,9 @@ export default {
 <style scoped>
 .admin-content {
   width: 930px;
+}
+
+.p-focus {
+  cursor: pointer;
 }
 </style>
