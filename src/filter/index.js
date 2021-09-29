@@ -10,6 +10,7 @@ const yyyymmddFormmater = DateTimeFormatter.ofPattern('yyyy.MM.dd')
 
 Vue.filter('visibleFilter', visibleFilter) /** 노출여부 필터 */
 Vue.filter('yyyymmdd', yyyymmdd) /** yyyy.mm.dd 필터 */
+Vue.filter('join', join) /** yyyy.mm.dd 필터 */
 
 /**
  * @description 노출여부
@@ -30,4 +31,13 @@ function yyyymmdd(arr) {
   const t = LocalTime.of(...sliceTime)
 
   return LocalDateTime.of(d, t).format(yyyymmddFormmater)
+}
+
+/**
+ * @description 배열 합치기
+ * @param { string[] } arr
+ * @param { string } delimiter
+ * */
+function join(arr, delimiter = ', ') {
+  return arr.join(delimiter)
 }

@@ -40,7 +40,7 @@
             <template v-for="(children, i) in route.children">
               <v-list-item
                 link
-                :to="children.meta.fullPath"
+                :to="`${children.meta.fullPath}`"
                 exact
                 active-class="error white--text"
                 :key="i"
@@ -94,7 +94,14 @@ export default {
     return {
       drawer: true,
       mini: true,
-      items: AdminLayout.children.filter(route => route.meta.visible),
+      items: AdminLayout.children
+        .filter(route => route.meta.visible)
+        .map(route => ({
+          ...route,
+          children: route.children?.filter(
+            childrenRoute => childrenRoute.meta.visible,
+          ),
+        })),
     }
   },
   mounted() {

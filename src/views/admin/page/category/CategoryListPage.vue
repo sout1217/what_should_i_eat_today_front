@@ -267,6 +267,19 @@ export default {
       console.log(id)
       this.$router.push({ name: 'CategoryDetails', params: { id } })
     },
+    changeUrl() {
+      // this.$router.push({ path: '', query: { page: this.page } })
+      // 실패작
+      // history.pushState(null, null, `?page=${this.page}`)
+      // this.$route.query.page = this.page
+      // 실패작
+      // console.log('history->', window.history)
+      // console.log('page -> ', this.page)
+      // const state = { page: this.page }
+      // const title = ''
+      // history.pushState(state, title)
+      // this.$route.query.page = this.page
+    },
   },
 }
 </script>

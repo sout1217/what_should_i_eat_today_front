@@ -72,9 +72,13 @@
                 </validation-provider>
               </div>
 
-              <v-row justify="space-between" align="center" no-gutters>
+              <v-row align="center" no-gutters style="gap: 0 8px" class="">
                 <label class="t1">음식 리스트</label>
+                <v-spacer />
+                <v-btn small class="success"> 카테고리 음식 추가하기 </v-btn>
+                <v-btn small :class="editClass"> 수정 </v-btn>
                 <v-btn small class="error"> 삭제 </v-btn>
+                <v-btn small class="secondary lighten-2"> 취소 </v-btn>
               </v-row>
 
               <v-row>
@@ -89,6 +93,10 @@
                     hide-default-footer
                     :items="table.foods"
                   >
+                    <!-- todo : 2021.09.29 코드 개선 필요 -->
+                    <template v-slot:item.foodTags="{ item }">
+                      {{ item.foodTags.map(tag => tag.name) | join }}
+                    </template>
                   </v-data-table>
                 </v-col>
               </v-row>
@@ -117,6 +125,8 @@ export default {
   name: 'CategoryDetailsPage',
   data() {
     return {
+      apiLoaded: false,
+      isUpdated: false,
       formData: {
         name: '',
         description: '',
@@ -137,6 +147,18 @@ export default {
       },
     }
   },
+  watch: {
+    formData: {
+      deep: true, // 자식 속성까지 watch 로 감시 - 객체의 중첩된 변경 감지
+      immediate: true, // 현재 값으로 즉시 핸들러 트리거
+      handler: function (newVal, oldVal) {
+        if (this.apiLoaded) {
+          console.log(newVal, oldVal)
+          this.isUpdated = true
+        }
+      },
+    },
+  },
   methods: {
     readDataFromAPI() {
       categoriesApi
@@ -147,12 +169,15 @@ export default {
           this.formData.name = name
           this.formData.description = description
 
+          setTimeout(() => {
+            this.apiLoaded = true
+          }, 0)
+
           return foodApi.getFoodsByCategory(0, 3, this.categoryId)
         })
         .then(({ data }) => {
           console.log('foods -> ', data)
           const { content: foods } = data
-
           this.table.foods = foods
         })
         .catch(error => this.$toastError(error))
@@ -167,6 +192,12 @@ export default {
   computed: {
     categoryId() {
       return this.$route.params.id
+    },
+    editClass() {
+      return {
+        primary: true,
+        'lighten-3': !this.isUpdated,
+      }
     },
   },
   mounted() {
