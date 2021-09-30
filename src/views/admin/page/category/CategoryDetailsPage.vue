@@ -118,9 +118,6 @@
 </template>
 
 <script>
-import categoriesApi from '@/api/admin/categories'
-import foodApi from '@/api/admin/foods'
-
 export default {
   name: 'CategoryDetailsPage',
   data() {
@@ -160,28 +157,12 @@ export default {
     },
   },
   methods: {
+    /** 현재 페이지 데이터 가져오기 */
     readDataFromAPI() {
-      categoriesApi
-        .getCategory(this.categoryId)
-        .then(({ data }) => {
-          console.log('category -> ', data)
-          const { name, description } = data
-          this.formData.name = name
-          this.formData.description = description
-
-          setTimeout(() => {
-            this.apiLoaded = true
-          }, 0)
-
-          return foodApi.getFoodsByCategory(0, 3, this.categoryId)
-        })
-        .then(({ data }) => {
-          console.log('foods -> ', data)
-          const { content: foods } = data
-          this.table.foods = foods
-        })
-        .catch(error => this.$toastError(error))
+      /** 카테고리 데이터 가져오기 */
+      /** 카테고리에 해당하는 음식 가져오기 */
     },
+    /** 현재 카테고리에 관련된 음식 더 가져오기 */
     moreFoods() {
       console.log('more food')
       console.log(this.table.page)

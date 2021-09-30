@@ -7,12 +7,12 @@ function create(payload) {
   console.log('payload -> ', payload)
   return axios.post('/v1/categories', payload)
 }
-/** 카테고리 조회하기 one */
-function getCategory(categoryId) {
+/** 카테고리 단 건 조회히가 */
+function findByCategory(categoryId) {
   return axios.get(`/v1/categories/${categoryId}`)
 }
 
-/** 카테고리 리스트 조회하기 (페이지) */
+/** 카테고리 리스트 조회하기 */
 function getCategories(page = 1, size = 10, title = '') {
   return axios.get('/v1/categories', {
     params: {
@@ -45,7 +45,7 @@ function isMaxPage(size) {
 
 export default {
   create,
-  getCategory,
+  findByCategory,
   getCategories,
   deleteAllById,
   updateVisibleOfCategory,
