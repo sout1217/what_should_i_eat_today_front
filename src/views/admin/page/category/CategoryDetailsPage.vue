@@ -10,7 +10,7 @@
       <v-row>
         <v-col>
           <validation-observer ref="observer">
-            <v-form @submit.prevent="submit">
+            <v-form>
               <div class="mb-3">
                 <label class="t1">카테고리명</label>
                 <validation-provider
@@ -20,6 +20,7 @@
                 >
                   <v-text-field
                     dense
+                    disabled
                     :error-messages="errors"
                     v-model="formData.name"
                     outlined
@@ -76,7 +77,9 @@
                 <label class="t1">음식 리스트</label>
                 <v-spacer />
                 <v-btn small class="success"> 카테고리 음식 추가하기 </v-btn>
-                <v-btn small :class="editClass"> 수정 </v-btn>
+                <v-btn small class="primary" @click="updateCategory">
+                  수정
+                </v-btn>
                 <v-btn small class="error"> 삭제 </v-btn>
                 <v-btn small class="secondary lighten-2"> 취소 </v-btn>
               </v-row>
@@ -91,6 +94,7 @@
                     :pageCount="table.numberOfElements"
                     :headers="table.headers"
                     hide-default-footer
+                    :options="table.options"
                     :items="table.foods"
                   >
                     <!-- todo : 2021.09.29 코드 개선 필요 -->
@@ -122,8 +126,6 @@ export default {
   name: 'CategoryDetailsPage',
   data() {
     return {
-      apiLoaded: false,
-      isUpdated: false,
       formData: {
         name: '',
         description: '',
@@ -134,6 +136,7 @@ export default {
         foods: /** id, name, country, foodCategories, foodTags */ [],
         page: 10,
         numberOfElements: 10,
+        options: {},
         headers: [
           { text: '번호', value: 'id' },
           { text: '음식명', value: 'name' },
@@ -144,41 +147,76 @@ export default {
       },
     }
   },
-  watch: {
-    formData: {
-      deep: true, // 자식 속성까지 watch 로 감시 - 객체의 중첩된 변경 감지
-      immediate: true, // 현재 값으로 즉시 핸들러 트리거
-      handler: function (newVal, oldVal) {
-        if (this.apiLoaded) {
-          console.log(newVal, oldVal)
-          this.isUpdated = true
-        }
-      },
-    },
-  },
   methods: {
     /** 현재 페이지 데이터 가져오기 */
     readDataFromAPI() {
-      /** 카테고리 데이터 가져오기 */
-      /** 카테고리에 해당하는 음식 가져오기 */
+      const { id: categoryId } = this.$route.params
+
+      this.$store
+        .dispatch('FIND_CATEGORIES_BY_ID', categoryId)
+        .then(category => {
+          this.formData = { ...category }
+        })
+        .catch(error => {
+          this.$toastError(error)
+        })
+
+      this.$store
+        .dispatch('FIND_FOODS_BY_CATEGORY_ID', { categoryId, page: 0, size: 3 })
+        .then(foodsPage => {
+          console.log('fp->', foodsPage)
+          const { content: foods, number: page } = foodsPage
+
+          this.updateFoodsTable(foods, page)
+        })
+        .catch(error => this.$toastError(error))
     },
     /** 현재 카테고리에 관련된 음식 더 가져오기 */
     moreFoods() {
-      console.log('more food')
-      console.log(this.table.page)
-      console.log(this.table.numberOfElements)
-      // categoriesApi.getCategories()
+      const { id: categoryId } = this.$route.params
+
+      const increasedPage = this.table.options.page + 1
+
+      this.$store
+        .dispatch('FIND_FOODS_BY_CATEGORY_ID', {
+          categoryId,
+          page: increasedPage,
+          size: 3,
+        })
+        .then(foodsPage => {
+          const { content: foods, number: page } = foodsPage
+
+          if (foods.length < 1)
+            return this.$toastWarning('더 이상 음식이 존재하지 않습니다')
+
+          this.updateFoodsTable(foods, page)
+        })
+        .catch(error => this.$toastError(error))
     },
-  },
-  computed: {
-    categoryId() {
-      return this.$route.params.id
+
+    /** 음식 테이블 변경하기 */
+    updateFoodsTable(foods, page) {
+      this.table.foods.push(...foods)
+      this.table.options.page = page
     },
-    editClass() {
-      return {
-        primary: true,
-        'lighten-3': !this.isUpdated,
-      }
+    /** 카테고리 수정하기 */
+    updateCategory() {
+      const { id: categoryId } = this.$route.params
+
+      this.$refs.observer
+        .validate()
+        .then(() => {
+          return this.$store.dispatch('UPDATE_CATEGORY', {
+            categoryId,
+            ...this.formData,
+          })
+        })
+        .then(() => {
+          this.$toastSuccess('수정되었습니다')
+        })
+        .catch(error => {
+          this.$toastError(error)
+        })
     },
   },
   mounted() {

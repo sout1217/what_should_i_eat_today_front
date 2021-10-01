@@ -1,5 +1,5 @@
 <template>
-  <v-row class="fill-height px-lg-16" align="center">
+  <v-row class="fill-height" align="center">
     <v-col cols="12">
       <v-row align="center" class="mb-4">
         <v-col cols="12" sm="auto" md="auto">
@@ -264,7 +264,6 @@ export default {
       alert('test')
     },
     toCategoryDetailsPage({ id }) {
-      console.log(id)
       this.$router.push({ name: 'CategoryDetails', params: { id } })
     },
     changeUrl() {

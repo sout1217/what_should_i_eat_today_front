@@ -3,7 +3,9 @@
   <!--    <router-view />-->
   <!--  </v-row>-->
   <v-container id="category" class="fill-height" fluid>
-    <router-view />
+    <v-card flat class="transparent mx-auto" max-width="1440" width="100%">
+      <router-view />
+    </v-card>
   </v-container>
 </template>
 

@@ -8,7 +8,7 @@ const axios = getInstanceWithAuth()
  * @param { number } size
  * @param { number } categoryId
  * */
-function getFoodsByCategory(page = 0, size = 10, categoryId) {
+function findAllByCategoryId(categoryId, page = 0, size = 10) {
   return axios.get(`/v1/foods/categories/${categoryId}`, {
     params: {
       page,
@@ -24,5 +24,5 @@ function isMaxPage(size) {
 }
 
 export default {
-  getFoodsByCategory,
+  findAllByCategoryId,
 }

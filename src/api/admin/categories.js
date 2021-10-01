@@ -8,7 +8,7 @@ function create(payload) {
   return axios.post('/v1/categories', payload)
 }
 /** 카테고리 단 건 조회히가 */
-function findByCategory(categoryId) {
+function findById(categoryId) {
   return axios.get(`/v1/categories/${categoryId}`)
 }
 
@@ -32,6 +32,11 @@ function deleteAllById(categoryIds) {
   })
 }
 
+/** 카테고리 수정하기 */
+function updateCategory(categoryId, data) {
+  return axios.put(`/v1/categories/${categoryId}`, data)
+}
+
 /** 카테고리 노출여부 수정 */
 function updateVisibleOfCategory(category) {
   return axios.put('/v1/categories/visible', category)
@@ -45,8 +50,9 @@ function isMaxPage(size) {
 
 export default {
   create,
-  findByCategory,
+  findById,
   getCategories,
   deleteAllById,
   updateVisibleOfCategory,
+  updateCategory,
 }
