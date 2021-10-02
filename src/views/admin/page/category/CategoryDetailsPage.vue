@@ -76,12 +76,49 @@
               <v-row align="center" no-gutters style="gap: 0 8px" class="">
                 <label class="t1">음식 리스트</label>
                 <v-spacer />
-                <v-btn small class="success"> 카테고리 음식 추가하기 </v-btn>
+                <v-dialog v-model="dialog" max-width="880">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn v-on="on" v-bind="attrs" small class="success">
+                      카테고리 음식 추가하기
+                    </v-btn>
+                  </template>
+
+                  <v-card class="pa-16">
+                    <v-card-title class="text-h5 lighten-2">
+                      카드 타이틀 맥스
+                    </v-card-title>
+
+                    <v-card-text>
+                      <v-row>
+                        <v-col>
+                          <v-select outlined dense :items="[1, 2, 3, 4, 5]">
+                          </v-select>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="primary" text @click="dialog = false">
+                        동의
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
                 <v-btn small class="primary" @click="updateCategory">
-                  수정
+                  카테고리 수정
                 </v-btn>
                 <v-btn small class="error"> 삭제 </v-btn>
-                <v-btn small class="secondary lighten-2"> 취소 </v-btn>
+
+                <v-btn
+                  small
+                  class="secondary lighten-2"
+                  @click="$router.back()"
+                >
+                  취소
+                </v-btn>
               </v-row>
 
               <v-row>
@@ -126,6 +163,9 @@ export default {
   name: 'CategoryDetailsPage',
   data() {
     return {
+      modal: {
+        dialog: false,
+      },
       formData: {
         name: '',
         description: '',
