@@ -2,6 +2,25 @@ import { getInstanceWithAuth } from '@/api'
 
 const axios = getInstanceWithAuth()
 
+function findAll(page = 0, size = 10) {
+  return axios.get('/v1/foods', {
+    params: {
+      page,
+      size: isMaxPage(size),
+    },
+  })
+}
+
+/** Admin 태그와 국가가 있는 음식 가져오기 */
+function findAllWithTagsAndCountry(page = 0, size = 10) {
+  return axios.get('/v1/foods/tags-country', {
+    params: {
+      page,
+      size: isMaxPage(size),
+    },
+  })
+}
+
 /**
  * 카테고리에 해당하는 음식 조회하기 (페이지)
  * @param { number } page
@@ -24,5 +43,7 @@ function isMaxPage(size) {
 }
 
 export default {
+  findAll,
   findAllByCategoryId,
+  findAllWithTagsAndCountry,
 }

@@ -76,37 +76,14 @@
               <v-row align="center" no-gutters style="gap: 0 8px" class="">
                 <label class="t1">음식 리스트</label>
                 <v-spacer />
-                <v-dialog v-model="dialog" max-width="880">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn v-on="on" v-bind="attrs" small class="success">
-                      카테고리 음식 추가하기
-                    </v-btn>
-                  </template>
-
-                  <v-card class="pa-16">
-                    <v-card-title class="text-h5 lighten-2">
-                      카드 타이틀 맥스
-                    </v-card-title>
-
-                    <v-card-text>
-                      <v-row>
-                        <v-col>
-                          <v-select outlined dense :items="[1, 2, 3, 4, 5]">
-                          </v-select>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" text @click="dialog = false">
-                        동의
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
+                <v-btn @click="modal.dialog = true" small class="success">
+                  카테고리에 음식 추가하기
+                </v-btn>
+                <FoodAddModal
+                  :category-id="$route.params.id"
+                  :dialog="modal.dialog"
+                  @closeModal="closeModal"
+                />
                 <v-btn small class="primary" @click="updateCategory">
                   카테고리 수정
                 </v-btn>
@@ -159,8 +136,10 @@
 </template>
 
 <script>
+import FoodAddModal from '@/views/admin/modal/AddFoodModal'
 export default {
   name: 'CategoryDetailsPage',
+  components: { FoodAddModal },
   data() {
     return {
       modal: {
@@ -193,7 +172,7 @@ export default {
       const { id: categoryId } = this.$route.params
 
       this.$store
-        .dispatch('FIND_CATEGORIES_BY_ID', categoryId)
+        .dispatch('GET_CATEGORIES_BY_ID', categoryId)
         .then(category => {
           this.formData = { ...category }
         })
@@ -202,7 +181,7 @@ export default {
         })
 
       this.$store
-        .dispatch('FIND_FOODS_BY_CATEGORY_ID', { categoryId, page: 0, size: 3 })
+        .dispatch('GET_FOODS_BY_CATEGORY_ID', { categoryId, page: 0, size: 3 })
         .then(foodsPage => {
           console.log('fp->', foodsPage)
           const { content: foods, number: page } = foodsPage
@@ -218,7 +197,7 @@ export default {
       const increasedPage = this.table.options.page + 1
 
       this.$store
-        .dispatch('FIND_FOODS_BY_CATEGORY_ID', {
+        .dispatch('GET_FOODS_BY_CATEGORY_ID', {
           categoryId,
           page: increasedPage,
           size: 3,
@@ -257,6 +236,10 @@ export default {
         .catch(error => {
           this.$toastError(error)
         })
+    },
+    /** 카테고리에 음식 추가 모달 닫기  */
+    closeModal() {
+      this.modal.dialog = false
     },
   },
   mounted() {

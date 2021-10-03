@@ -3,7 +3,7 @@ import foodApi from '@/api/admin/foods'
 
 const actions = {
   /** Admin 카테고리 가져오기*/
-  async FIND_CATEGORIES_BY_ID({ commit }, categoryId) {
+  async GET_CATEGORIES_BY_ID({ commit }, categoryId) {
     console.log(commit)
     const { data: category } = await categoriesApi.findById(categoryId)
     // commit('updateCategory', category)
@@ -18,13 +18,23 @@ const actions = {
   },
 
   /** Admin 카테고리에 해당하는 음식 가져오기 */
-  async FIND_FOODS_BY_CATEGORY_ID(
+  async GET_FOODS_BY_CATEGORY_ID(
     { commit },
     { categoryId, page = 0, size = 10 },
   ) {
     console.log(commit)
     const { data: foodsPage } = await foodApi.findAllByCategoryId(
       categoryId,
+      page,
+      size,
+    )
+    return foodsPage
+  },
+
+  /** Admin 태그와 국가가 있는 음식 가져오기 */
+  async GET_FOODS_WITH_TAGS_AND_COUNTRY({ commit }, { page = 0, size = 10 }) {
+    console.log(commit)
+    const { data: foodsPage } = await foodApi.findAllWithTagsAndCountry(
       page,
       size,
     )

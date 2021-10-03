@@ -8,7 +8,7 @@
         <v-spacer />
         <v-col cols="12" sm="12" md="3">
           <v-text-field
-            class="v-btn--block something"
+            class="v-btn--block"
             v-model="search"
             outlined
             hide-details
