@@ -72,11 +72,23 @@
               <v-row>
                 <v-col cols="6" align-self="center">
                   <h2>신고 유형</h2>
-                  <v-text-field outlined dense hide-details></v-text-field>
+                  <v-text-field
+                    outlined
+                    dense
+                    hide-details
+                    disabled
+                    v-model="form.type"
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="6" align-self="center">
-                  <h2>신고 유형</h2>
-                  <v-text-field outlined dense hide-details></v-text-field>
+                  <h2>신고자</h2>
+                  <v-text-field
+                    outlined
+                    dense
+                    hide-details
+                    disabled
+                    v-model="form.email"
+                  ></v-text-field>
                 </v-col>
               </v-row>
             </v-container>
@@ -84,7 +96,13 @@
               <v-row>
                 <v-col cols="12" align-self="center">
                   <h2>질문 제목</h2>
-                  <v-text-field outlined dense hide-details></v-text-field>
+                  <v-text-field
+                    outlined
+                    dense
+                    hide-details
+                    disabled
+                    v-model="form.title"
+                  ></v-text-field>
                 </v-col>
               </v-row>
             </v-container>
@@ -92,7 +110,13 @@
               <v-row>
                 <v-col cols="12" align-self="center">
                   <h2>질문 내용</h2>
-                  <v-text-field outlined dense hide-details></v-text-field>
+                  <v-text-field
+                    outlined
+                    dense
+                    hide-details
+                    disabled
+                    v-model="form.content"
+                  ></v-text-field>
                 </v-col>
               </v-row>
             </v-container>
@@ -100,7 +124,13 @@
               <v-row>
                 <v-col cols="12" align-self="center">
                   <h2>게시글</h2>
-                  <v-textarea outlined dense hide-details></v-textarea>
+                  <v-textarea
+                    outlined
+                    dense
+                    hide-details
+                    disabled
+                    v-model="form.specify"
+                  ></v-textarea>
                 </v-col>
               </v-row>
             </v-container>
@@ -111,9 +141,9 @@
                   <v-radio-group v-model="form.status" row>
                     <v-radio
                       v-for="n in statusRadio"
-                      :key="n"
-                      :label="`${n}`"
-                      :value="n"
+                      :key="n.value"
+                      :label="`${n.text}`"
+                      :value="n.value"
                     ></v-radio>
                   </v-radio-group>
                 </v-col>
@@ -122,7 +152,13 @@
             <v-container>
               <v-row align="center" justify="space-around">
                 <v-col cols="12">
-                  <v-btn elevation="2" depressed color="primary">확인</v-btn>
+                  <v-btn
+                    elevation="2"
+                    depressed
+                    color="primary"
+                    @click="updateReport()"
+                    >확인</v-btn
+                  >
                   <v-btn
                     elevation="2"
                     depressed
@@ -141,7 +177,7 @@
 </template>
 
 <script>
-import { getReports, getReport } from '@/api/admin/report'
+import { getReports, getReport, updateReportStatus } from '@/api/admin/report'
 
 export default {
   name: 'Report',
@@ -150,7 +186,16 @@ export default {
     size: 10,
     length: 10,
     dialog: false,
-    statusRadio: ['처리', '미처리'],
+    statusRadio: [
+      {
+        text: '승인',
+        value: 'APPROVED',
+      },
+      {
+        text: '미승인',
+        value: 'NOT_APPROVED',
+      },
+    ],
     headers: [
       {
         text: '신고자',
@@ -178,6 +223,12 @@ export default {
       status: '',
     },
     form: {
+      reportId: '',
+      type: '',
+      email: '',
+      title: '',
+      content: '',
+      specify: '',
       status: '',
     },
     defaultItem: {
@@ -231,9 +282,24 @@ export default {
     showModal(id) {
       const result = getReport(id)
       result.then(value => {
-        console.log(value.data)
+        let result = value.data
+        this.form.id = result.id
+        this.form.type = result.type
+        this.form.title = result.title
+        this.form.email = result.member.email
+        this.form.content = result.content
+        this.form.status = result.status
       })
       this.dialog = true
+    },
+    updateReport() {
+      try {
+        console.log(this.form.status)
+        const result = updateReportStatus(this.form.id, this.form.status)
+        console.log(result)
+      } catch (e) {
+        console.log(e)
+      }
     },
     singleSelect(event) {
       console.log(event)

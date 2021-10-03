@@ -20,4 +20,10 @@ function getReport(id) {
   return instance.get(`v1/reports/${id}`)
 }
 
-export { getReports, getReport }
+function updateReportStatus(id, status) {
+  return instance.put(`v1/reports/${id}`, {
+    status: status,
+  })
+}
+
+export { getReports, getReport, updateReportStatus }
