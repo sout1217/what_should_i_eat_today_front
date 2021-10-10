@@ -130,6 +130,36 @@
                 </v-col>
               </v-row>
             </v-container>
+            <!-- 리폿의 종류에 따라 다르게 보여줌 -->
+            <v-container>
+              <v-row>
+                <v-col cols="12" align-self="center">
+                  <v-card elevation="2" v-if="form.type == 'POST'">
+                    이메일 : {{ form.specify.post.email }} <br />
+                    닉네임 : {{ form.specify.post.nickName }} <br />
+                    이름 : {{ form.specify.post.name }} <br />
+                    제목 : {{ form.specify.post.title }} <br />
+                    내용 : {{ form.specify.post.content }}
+                  </v-card>
+                  <v-card elevation="2" v-if="form.type == 'REVIEW'">
+                    이메일 : {{ form.specify.review.email }} <br />
+                    닉네임 : {{ form.specify.review.nickName }} <br />
+                    이름 : {{ form.specify.review.name }} <br />
+                    내용 : {{ form.specify.review.content }}
+                  </v-card>
+                  <v-card elevation="2" v-if="form.type == 'PROFILE'">
+                    이메일 : {{ form.specify.profile.email }} <br />
+                    닉네임 : {{ form.specify.profile.nickName }} <br />
+                    이름 : {{ form.specify.profile.name }} <br />
+                    프로필 이미지 :
+                    <img
+                      :src="form.specify.profile.profileImg"
+                      alt="이미지를 불러올 수 없습니다"
+                    />
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
             <v-container>
               <v-row>
                 <v-col cols="12" align-self="center">
@@ -300,6 +330,7 @@ export default {
     },
     showModal(id) {
       const result = getReport(id)
+      console.log(result)
       result.then(value => {
         let result = value.data
         this.form.id = result.id
@@ -309,36 +340,36 @@ export default {
         this.form.content = result.content
         this.form.status = result.status
 
+        console.log(result.type)
+
+        let closer = this.form
         if (result.type == 'PROFILE') {
           const requestMember = getMember(result.reportedMember.id)
           requestMember.then(p => {
-            console.log(p)
-            this.specify.profile.email = p.data.email
-            this.specify.profile.name = p.data.name
-            this.specify.profile.nickName = p.data.nickName
-            this.specify.profile.profileImg = p.data.profileImg
+            closer.specify.profile.email = p.data.email
+            closer.specify.profile.name = p.data.name
+            closer.specify.profile.nickName = p.data.nickName
+            closer.specify.profile.profileImg = p.data.profileImg
           })
         } else if (result.type == 'REVIEW') {
           const requestReview = getReview(result.review.id)
           requestReview.then(r => {
             let review = r.data
-            console.log(review)
-            this.specify.review.email = review.member.email
-            this.specify.review.name = review.member.name
-            this.specify.review.nickName = review.member.nickName
-            this.specify.review.content = review.content
+            closer.specify.review.email = review.member.email
+            closer.specify.review.name = review.member.name
+            closer.specify.review.nickName = review.member.nickName
+            closer.specify.review.content = review.content
           })
         } else if (result.type == 'POST') {
           let requestPost = getPost(result.post.id)
 
           requestPost.then(p => {
-            console.log(p)
             let post = p.data
-            this.specify.post.email = post.member.email
-            this.specify.post.name = post.member.name
-            this.specify.post.nickName = post.member.nickName
-            this.specify.post.content = post.content
-            this.specify.post.title = post.title
+            closer.specify.post.email = post.member.email
+            closer.specify.post.name = post.member.name
+            closer.specify.post.nickName = post.member.nickName
+            closer.specify.post.content = post.content
+            closer.specify.post.title = post.title
           })
         }
       })
@@ -346,7 +377,7 @@ export default {
     },
     updateReport() {
       try {
-        console.log(this.form.status)
+        // console.log(this.form.status)
         const result = updateReportStatus(this.form.id, this.form.status)
         result.then(d => {
           if (d.status.toString().startsWith('2')) {
@@ -359,10 +390,12 @@ export default {
           }
         })
         // $toastSuccess
-        console.log(result)
+        // console.log(result)
       } catch (e) {
         console.log(e)
       }
+      // modal close
+      this.dialog = false
     },
     singleSelect(event) {
       console.log(event)
