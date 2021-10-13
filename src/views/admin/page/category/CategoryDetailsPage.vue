@@ -110,6 +110,7 @@
                     hide-default-footer
                     :options="table.options"
                     :items="table.foods"
+                    :items-per-page="-1"
                   >
                     <!-- todo : 2021.09.29 코드 개선 필요 -->
                     <template v-slot:item.foodTags="{ item }">
