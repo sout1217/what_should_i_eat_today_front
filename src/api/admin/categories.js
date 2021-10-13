@@ -42,6 +42,16 @@ function updateVisibleOfCategory(category) {
   return axios.put('/v1/categories/visible', category)
 }
 
+/** 카테고리 음식 매핑 수정 */
+function updateFoodCategoryMapping(categoryId, param) {
+  console.log('p->', param)
+  return axios.put(
+    `/v1/categories/foodCategory-mapping/${categoryId}`,
+    {},
+    { params: param },
+  )
+}
+
 /** size 가 -1 인 경우 max page 로 설정하여 요청한다 */
 function isMaxPage(size) {
   const PER_PAGE_MAX = 2000
@@ -55,4 +65,5 @@ export default {
   deleteAllById,
   updateVisibleOfCategory,
   updateCategory,
+  updateFoodCategoryMapping,
 }

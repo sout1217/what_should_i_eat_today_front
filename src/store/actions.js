@@ -1,5 +1,7 @@
 import categoriesApi from '@/api/admin/categories'
 import foodApi from '@/api/admin/foods'
+import countriesApi from '@/api/admin/countries'
+import tagsApi from '@/api/admin/tags'
 
 const actions = {
   /** Admin 카테고리 가져오기*/
@@ -32,13 +34,39 @@ const actions = {
   },
 
   /** Admin 태그와 국가가 있는 음식 가져오기 */
-  async GET_FOODS_WITH_TAGS_AND_COUNTRY({ commit }, { page = 0, size = 10 }) {
+  async GET_FOODS_WITH_TAGS_AND_COUNTRY(
+    { commit },
+    { formData, page = 0, size = 10 },
+  ) {
     console.log(commit)
     const { data: foodsPage } = await foodApi.findAllWithTagsAndCountry(
+      formData,
       page,
       size,
     )
     return foodsPage
+  },
+
+  /** Admin 국가 리스트 가져오기 */
+  async GET_COUNTRY() {
+    const { data: countries } = await countriesApi.getCountries()
+    return countries
+  },
+
+  /** Admin 태그 리스트 가져오기 */
+  async GET_TAGS() {
+    const { data: tags } = await tagsApi.getTags()
+    return tags
+  },
+
+  /** Admin FoodCategory 매핑 업데이트 */
+  async UPDATE_FOOD_CATEGORY_MAPPING({ commit }, { categoryId, ...param }) {
+    console.log(commit)
+    console.log(param)
+
+    await categoriesApi.updateFoodCategoryMapping(categoryId, param)
+
+    // todo : 2021.10.12 백엔드 로직 만들기
   },
 }
 

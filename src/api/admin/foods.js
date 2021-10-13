@@ -12,9 +12,10 @@ function findAll(page = 0, size = 10) {
 }
 
 /** Admin 태그와 국가가 있는 음식 가져오기 */
-function findAllWithTagsAndCountry(page = 0, size = 10) {
+function findAllWithTagsAndCountry(formData, page = 0, size = 10) {
   return axios.get('/v1/foods/tags-country', {
     params: {
+      ...formData,
       page,
       size: isMaxPage(size),
     },

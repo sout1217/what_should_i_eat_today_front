@@ -79,7 +79,7 @@
                 <v-btn @click="modal.dialog = true" small class="success">
                   카테고리에 음식 추가하기
                 </v-btn>
-                <FoodAddModal
+                <AddFoodModal
                   :category-id="$route.params.id"
                   :dialog="modal.dialog"
                   @closeModal="closeModal"
@@ -136,10 +136,10 @@
 </template>
 
 <script>
-import FoodAddModal from '@/views/admin/modal/AddFoodModal'
+import AddFoodModal from '@/views/admin/modal/AddFoodModal'
 export default {
   name: 'CategoryDetailsPage',
-  components: { FoodAddModal },
+  components: { AddFoodModal },
   data() {
     return {
       modal: {
