@@ -68,11 +68,23 @@ export const AdminLayout = {
     {
       path: 'report',
       name: 'Report',
-      component: () => import('@/views/admin/page/Report'),
+      component: () => import('@/views/admin/page/report/Report'),
       meta: {
         icon: 'mdi-view-dashboard',
         title: '신고관리',
         fullPath: '/admin/report',
+        visible: true,
+        auth: true,
+      },
+    },
+    {
+      path: 'qna',
+      name: 'Qna',
+      component: () => import('@/views/admin/page/qna/Qna'),
+      meta: {
+        icon: 'mdi-view-dashboard',
+        title: 'Qna 관리',
+        fullPath: '/admin/qna',
         visible: true,
         auth: true,
       },
