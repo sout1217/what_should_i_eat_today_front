@@ -1,7 +1,14 @@
 <template>
-  <v-slide-group v-model="model" center-active show-arrows small>
+  <v-slide-group center-active show-arrows small>
     <template v-for="(card, index) in cards">
-      <card-item :card="card" :key="`card-list-${index}`" />
+      <card-item
+        :card="card"
+        :key="`card-list-${index}`"
+        :id="card.id"
+        @first="first"
+        @second="second"
+        @third="third"
+      />
     </template>
   </v-slide-group>
 </template>
@@ -13,7 +20,17 @@ export default {
   components: { CardItem },
   props: {
     cards: { type: Array },
-    model: { type: Number, default: 0 },
+  },
+  methods: {
+    first(param) {
+      this.$emit('first', param)
+    },
+    second(param) {
+      this.$emit('second', param)
+    },
+    third(param) {
+      this.$emit('third', param)
+    },
   },
 }
 </script>

@@ -1,8 +1,9 @@
 <template>
-  <v-slide-item v-slot="{ active, toggle }">
+  <v-slide-item v-slot="{ active, toggle }" style="width: 500px">
     <v-card class="ma-4" max-width="250" @click="toggle">
       <v-img
         :src="card.src"
+        :alt="card.alt"
         class="white--text align-end"
         gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
         height="150px"
@@ -12,23 +13,20 @@
 
       <v-card-actions>
         <v-card-text class="food-card-text">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias culpa
-          cupiditate delectus deleniti eos eum excepturi expedita itaque
-          molestias, mollitia nihil nobis placeat quas quidem reprehenderit.
-          Reprehenderit tenetur vel voluptatum.
+          {{ card.content }}
         </v-card-text>
 
         <v-spacer></v-spacer>
 
-        <v-btn small icon>
+        <v-btn small icon @click="$emit('first', id)">
           <v-icon small>mdi-heart</v-icon>
         </v-btn>
 
-        <v-btn small icon>
+        <v-btn small icon @click="$emit('second', id)">
           <v-icon small>mdi-bookmark</v-icon>
         </v-btn>
 
-        <v-btn small icon>
+        <v-btn small icon @click="$emit('third', id)">
           <v-icon small>mdi-share-variant</v-icon>
         </v-btn>
       </v-card-actions>
@@ -43,6 +41,9 @@ export default {
       type: Object,
     },
     toggle: { type: Function },
+    id: {
+      type: Number,
+    },
   },
 }
 </script>
