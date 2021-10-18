@@ -18,15 +18,15 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn small icon @click="$emit('first', id)">
+        <v-btn small icon @click="$emit('first', card)">
           <v-icon small>mdi-heart</v-icon>
         </v-btn>
 
-        <v-btn small icon @click="$emit('second', id)">
+        <v-btn small icon @click="$emit('second', card)">
           <v-icon small>mdi-bookmark</v-icon>
         </v-btn>
 
-        <v-btn small icon @click="$emit('third', id)">
+        <v-btn small icon @click="$emit('third', card)">
           <v-icon small>mdi-share-variant</v-icon>
         </v-btn>
       </v-card-actions>

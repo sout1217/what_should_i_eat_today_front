@@ -16,16 +16,22 @@
       </div>
       <div>
         <CardListGroup
-          :cards="postLikedByMe.posts"
+          :cards="postFavoriteByMe.posts"
           groupName="찜한 글"
           :model="4"
+          @first="doLike"
+          @second="doFavorite"
+          @third="doDelete"
         />
       </div>
       <div>
         <CardListGroup
-          :cards="postFavoriteByMe.posts"
+          :cards="postLikedByMe.posts"
           groupName="좋아요를 누른 글"
           :model="4"
+          @first="doLike"
+          @second="doFavorite"
+          @third="doDelete"
         />
       </div>
     </div>
@@ -35,6 +41,13 @@
 <script>
 import Profile from '@/views/components/common/profile/Profile'
 import CardListGroup from '@/views/components/common/card/CardListGroup'
+import {
+  likePost,
+  cancelLikd,
+  favoritePost,
+  unfavoritePost,
+  deletePost,
+} from '@/api/admin/post'
 import {
   getPostLikedByMe,
   getPostFavoriteByMe,
@@ -66,21 +79,40 @@ export default {
     }
   },
   methods: {
-    doLike(key) {
-      if (key.liked) {
-        console.log('좋아요 취소하기')
+    doLike(card) {
+      if (card.like) {
+        cancelLikd(card.id).then(({ status }) => {
+          if (status == 200) {
+            location.reload()
+          }
+        })
+      } else {
+        likePost(card.id).then(({ status }) => {
+          if (status == 200) {
+            location.reload()
+          }
+        })
       }
-      console.log('like')
     },
-    doFavorite(key) {
-      if (key.favorited) {
-        console.log('즐겨찾기 취소')
+    doFavorite(card) {
+      if (card.favorite) {
+        unfavoritePost(card.id).then(({ status }) => {
+          if (status == 200) {
+            location.reload()
+          }
+        })
+      } else {
+        favoritePost(card.id).then(({ status }) => {
+          if (status == 200) {
+            location.reload()
+          }
+        })
       }
-      console.log('favorite')
     },
-    doDelete(key) {
-      console.log(key)
-      console.log('삭제')
+    doDelete(card) {
+      deletePost(card.id).then(() => {
+        location.reload()
+      })
     },
   },
   mounted() {
@@ -94,6 +126,8 @@ export default {
           content: d.content,
           src: d.imagePath,
           alt: d.imageName,
+          like: d.isLikedByMe,
+          favorite: d.isFavoriteByMe,
         })
       }
     })
@@ -106,6 +140,8 @@ export default {
           content: d.content,
           src: d.imagePath,
           alt: d.imageName,
+          like: d.isLikedByMe,
+          favorite: d.isFavoriteByMe,
         })
       }
     })
@@ -118,6 +154,8 @@ export default {
           content: d.content,
           src: d.imagePath,
           alt: d.imageName,
+          like: d.isLikedByMe,
+          favorite: d.isFavoriteByMe,
         })
       }
     })
