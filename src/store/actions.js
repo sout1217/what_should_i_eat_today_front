@@ -2,8 +2,15 @@ import categoriesApi from '@/api/admin/categories'
 import foodApi from '@/api/admin/foods'
 import countriesApi from '@/api/admin/countries'
 import tagsApi from '@/api/admin/tags'
+import meApi from '@/api/member/me'
 
 const actions = {
+  /** 내 정보 조회 */
+  async GET_ME({ commit }) {
+    const { data: member } = await meApi.getMe()
+    console.log('호출 완료')
+    commit('updateMe', member)
+  },
   /** Admin 카테고리 가져오기*/
   async GET_CATEGORIES_BY_ID({ commit }, categoryId) {
     console.log(commit)

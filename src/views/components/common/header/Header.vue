@@ -11,23 +11,74 @@
     </div>
 
     <div class="right">
-      <div class="nav-item">
-        <LoginPopover />
-      </div>
+      <template v-if="token">
+        <div class="no-select">
+          {{ isLogin.name }}
+        </div>
+        <v-menu max-width="140" rounded offset-y>
+          <template v-slot:activator="{ on }">
+            <v-btn icon v-on="on">
+              <v-avatar size="36">
+                <v-img :src="isLogin.profileImg"></v-img>
+              </v-avatar>
+            </v-btn>
+          </template>
+          <v-list dark class="bg-black-opacity text-center">
+            <v-list-item
+              v-for="(item, index) in popoverItems"
+              :key="index"
+              link
+            >
+              <v-list-item-title>
+                <span class="b3"> {{ item.name }}</span>
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </template>
+      <template v-else>
+        <div class="nav-item">
+          <LoginPopover />
+        </div>
+      </template>
     </div>
   </header>
 </template>
 
 <script>
 import LoginPopover from '@/views/components/LoginPopover'
+
 export default {
   name: 'Header',
   components: { LoginPopover },
+  data() {
+    return {
+      popoverItems: [
+        { name: '글 작성' },
+        { name: '마이페이지' },
+        { name: '소식 모아보기' },
+        { name: '설정' },
+        { name: '로그아웃' },
+      ],
+    }
+  },
+  mounted() {
+    this.$store.dispatch('GET_ME')
+  },
+  computed: {
+    token() {
+      return this.$store.state.token
+    },
+    isLogin() {
+      return this.$store.getters.getMe
+    },
+  },
 }
 </script>
 
 <style scoped lang="scss">
 @import 'src/css/index';
+
 .header {
   //background-color: $brand-primary-black;
   color: $grayscale-black-6;
@@ -47,13 +98,16 @@ export default {
     .logo {
       overflow: hidden;
       border-radius: 50px;
+
       img {
         width: 48px;
       }
     }
   }
+
   .right {
     display: flex;
+    align-items: center;
     gap: 0 16px;
   }
 
@@ -69,8 +123,10 @@ export default {
       margin-top: 5px;
       transition: 200ms;
     }
+
     &:hover {
       color: $grayscale-black-6;
+
       &::after {
         width: 100%;
       }
@@ -79,6 +135,10 @@ export default {
 
   .router-link-active {
     cursor: pointer;
+  }
+
+  .no-select {
+    user-select: none;
   }
 }
 </style>

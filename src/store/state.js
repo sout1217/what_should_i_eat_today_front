@@ -1,4 +1,6 @@
 const state = {
+  me: {},
+  token: localStorage.getItem('wteToken') || '',
   admin: {
     categories: [],
     foods: [],
