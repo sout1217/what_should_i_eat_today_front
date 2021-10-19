@@ -11,7 +11,7 @@
           :model="4"
           @first="doLike"
           @second="doFavorite"
-          @third="doDelete"
+          @third="checkDelete"
         />
       </div>
       <div>
@@ -21,7 +21,7 @@
           :model="4"
           @first="doLike"
           @second="doFavorite"
-          @third="doDelete"
+          @third="checkDelete"
         />
       </div>
       <div>
@@ -31,7 +31,14 @@
           :model="4"
           @first="doLike"
           @second="doFavorite"
-          @third="doDelete"
+          @third="checkDelete"
+        />
+        <Alert
+          :dialog="deleteDialog.dialog"
+          :ok-action="doDeleteAtDialog"
+          :close-action="closeDialog"
+          :cancel-action="closeDialog"
+          :message="deleteDialog.message"
         />
       </div>
     </div>
@@ -53,11 +60,14 @@ import {
   getPostFavoriteByMe,
   getMyPost,
 } from '@/api/member/post'
+import Alert from '@/views/components/common/alert/Alert'
+
 export default {
   name: 'mypage',
   components: {
     Profile,
     CardListGroup,
+    Alert,
   },
   data() {
     return {
@@ -76,6 +86,11 @@ export default {
         size: 10,
         posts: [],
       },
+      deleteDialog: {
+        dialog: false,
+        card: {},
+        message: '정말로 삭제하시겠습니까?',
+      },
     }
   },
   methods: {
@@ -83,13 +98,17 @@ export default {
       if (card.like) {
         cancelLikd(card.id).then(({ status }) => {
           if (status == 200) {
-            location.reload()
+            card.like = false
+            this.postLikedByMe.posts = []
+            this.loadLikePost()
           }
         })
       } else {
         likePost(card.id).then(({ status }) => {
           if (status == 200) {
-            location.reload()
+            card.like = true
+            this.postLikedByMe.posts = []
+            this.loadLikePost()
           }
         })
       }
@@ -98,67 +117,101 @@ export default {
       if (card.favorite) {
         unfavoritePost(card.id).then(({ status }) => {
           if (status == 200) {
-            location.reload()
+            card.favorite = false
+            this.postFavoriteByMe.posts = []
+            this.loadFavoritePost()
           }
         })
       } else {
         favoritePost(card.id).then(({ status }) => {
           if (status == 200) {
-            location.reload()
+            card.favorite = true
+            this.postFavoriteByMe.posts = []
+            this.loadFavoritePost()
           }
         })
       }
     },
-    doDelete(card) {
-      deletePost(card.id).then(() => {
-        location.reload()
+    checkDelete(card) {
+      this.deleteDialog.dialog = true
+      this.deleteDialog.card = card
+    },
+    doDeleteAtDialog() {
+      if (this.$isNotEmpty(this.deleteDialog.card)) {
+        deletePost(this.deleteDialog.card.id).then(() => {
+          this.myPost.posts = []
+          this.loadMyPost()
+          this.closeDialog()
+        })
+      }
+    },
+    loadMyPost() {
+      let myPost = getMyPost()
+      myPost.then(({ data: { content } }) => {
+        for (let d of content) {
+          this.myPost.posts.push({
+            id: d.id,
+            title: d.title,
+            content: d.content,
+            src: d.imagePath,
+            alt: d.imageName,
+            like: d.isLikedByMe,
+            favorite: d.isFavoriteByMe,
+            deleteAction: true,
+            likeAction: true,
+            favoriteAction: true,
+          })
+        }
       })
+    },
+    loadLikePost() {
+      let postLikedByMe = getPostLikedByMe()
+      postLikedByMe.then(({ data: { content } }) => {
+        // this.postLikedByMe.posts = []
+        for (let d of content) {
+          this.postLikedByMe.posts.push({
+            id: d.id,
+            title: d.title,
+            content: d.content,
+            src: d.imagePath,
+            alt: d.imageName,
+            like: d.isLikedByMe,
+            favorite: d.isFavoriteByMe,
+            deleteAction: false,
+            likeAction: true,
+            favoriteAction: true,
+          })
+        }
+      })
+    },
+    loadFavoritePost() {
+      let postFavoriteByMe = getPostFavoriteByMe()
+      postFavoriteByMe.then(({ data: { content } }) => {
+        for (let d of content) {
+          this.postFavoriteByMe.posts.push({
+            id: d.id,
+            title: d.title,
+            content: d.content,
+            src: d.imagePath,
+            alt: d.imageName,
+            like: d.isLikedByMe,
+            favorite: d.isFavoriteByMe,
+            deleteAction: false,
+            likeAction: true,
+            favoriteAction: true,
+          })
+        }
+      })
+    },
+
+    closeDialog() {
+      this.deleteDialog.dialog = false
     },
   },
   mounted() {
-    let postLikedByMe = getPostLikedByMe()
-    postLikedByMe.then(({ data: { content } }) => {
-      // this.postLikedByMe.posts = []
-      for (let d of content) {
-        this.postLikedByMe.posts.push({
-          id: d.id,
-          title: d.title,
-          content: d.content,
-          src: d.imagePath,
-          alt: d.imageName,
-          like: d.isLikedByMe,
-          favorite: d.isFavoriteByMe,
-        })
-      }
-    })
-    let postFavoriteByMe = getPostFavoriteByMe()
-    postFavoriteByMe.then(({ data: { content } }) => {
-      for (let d of content) {
-        this.postFavoriteByMe.posts.push({
-          id: d.id,
-          title: d.title,
-          content: d.content,
-          src: d.imagePath,
-          alt: d.imageName,
-          like: d.isLikedByMe,
-          favorite: d.isFavoriteByMe,
-        })
-      }
-    })
-    let myPost = getMyPost()
-    myPost.then(({ data: { content } }) => {
-      for (let d of content) {
-        this.myPost.posts.push({
-          id: d.id,
-          title: d.title,
-          content: d.content,
-          src: d.imagePath,
-          alt: d.imageName,
-          like: d.isLikedByMe,
-          favorite: d.isFavoriteByMe,
-        })
-      }
-    })
+    this.loadMyPost()
+    this.loadFavoritePost()
+    this.loadLikePost()
   },
 }
 </script>
