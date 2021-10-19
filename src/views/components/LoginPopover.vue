@@ -5,11 +5,10 @@
       :close-on-content-click="false"
       :nudge-width="200"
       transition="scroll-y-reverse-transition"
+      nudge-top="-25"
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn color="indigo" dark v-bind="attrs" v-on="on">
-          메뉴 팝오버
-        </v-btn>
+        <div class="nav-item" v-on="on" v-bind="attrs">로그인</div>
       </template>
 
       <v-card>

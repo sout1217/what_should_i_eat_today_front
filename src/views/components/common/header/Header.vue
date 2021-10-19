@@ -11,15 +11,18 @@
     </div>
 
     <div class="right">
-      <router-link tag="div" to="/" class="nav-item">로그인</router-link>
-      <router-link tag="div" to="/" class="nav-item">회원가입</router-link>
+      <div class="nav-item">
+        <LoginPopover />
+      </div>
     </div>
   </header>
 </template>
 
 <script>
+import LoginPopover from '@/views/components/LoginPopover'
 export default {
   name: 'Header',
+  components: { LoginPopover },
 }
 </script>
 
