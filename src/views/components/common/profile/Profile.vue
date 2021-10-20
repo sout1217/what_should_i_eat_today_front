@@ -19,7 +19,7 @@
               normal
               color="darken-2"
               class="brand-primary-blue h3"
-              @click="editProfile"
+              @click="profileAction"
             >
               mdi-account-edit
             </v-icon>
@@ -27,24 +27,24 @@
         </v-card-title>
 
         <v-card-actions class="black--text pa-0 flex-column">
-          <v-btn color="lighten-2" text small @click="myPost">
+          <v-btn color="lighten-2" text small @click="topAction">
             <v-card-text calss="b3 black--text">
-              작성한 게시글 수 : 10개
+              {{ top }}
             </v-card-text>
           </v-btn>
         </v-card-actions>
         <v-card-actions class="black--text pa-0 flex-column">
-          <v-btn color="lighten-2" text small @click="myFavorite">
+          <v-btn color="lighten-2" text small @click="middleAction">
             <v-card-text calss="b3 black--text">
-              내가 찜한 게시글 : 10개
+              {{ middle }}
             </v-card-text>
           </v-btn>
         </v-card-actions>
 
         <v-card-actions class="black--text pa-0 flex-column">
-          <v-btn color="lighten-2" text small @click="like">
+          <v-btn color="lighten-2" text small @click="bottomAction">
             <v-card-text calss="b3 black--text">
-              좋아요 한 글 : 10개
+              {{ bottom }}
             </v-card-text>
           </v-btn>
         </v-card-actions>
@@ -101,15 +101,21 @@ export default {
     editProfile() {
       console.log('profile')
     },
-    myPost() {
-      console.log('post')
+  },
+  props: {
+    top: {
+      type: String,
     },
-    like() {
-      console.log('like')
+    middle: {
+      type: String,
     },
-    myFavorite() {
-      console.log('favorite')
+    bottom: {
+      type: String,
     },
+    topAction: { type: Function, default: function () {} },
+    middleAction: { type: Function, default: function () {} },
+    bottomAction: { type: Function, default: function () {} },
+    profileAction: { type: Function, default: function () {} },
   },
 }
 </script>

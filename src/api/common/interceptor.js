@@ -9,7 +9,7 @@ export function setInterceptors(instance) {
       // config.headers['Authorization'] = `bearer ${store.state.token}`
       config.headers[
         'Authorization'
-      ] = `Bearer ${process.env.VUE_APP_TEMP_ADMIN_TOKEN}`
+      ] = `Bearer ${process.env.VUE_APP_TEMP_USER_TOKEN}`
       return config
     },
     function (error) {
