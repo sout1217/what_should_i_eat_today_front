@@ -1,7 +1,15 @@
 <template>
   <div class="">
     <div class="mb-4 mt-4">
-      <Profile></Profile>
+      <Profile
+        :top="profile.myPostStatus"
+        :middle="profile.favoriteStatus"
+        :bottom="profile.likeStatus"
+        :top-action="undefined"
+        :middle-action="undefined"
+        :bottom-action="undefined"
+        :profile-action="undefined"
+      ></Profile>
     </div>
     <div class="mt-4">
       <div>
@@ -48,17 +56,19 @@
 <script>
 import Profile from '@/views/components/common/profile/Profile'
 import CardListGroup from '@/views/components/common/card/CardListGroup'
+
 import {
+  getPostLikedByMe,
+  getPostFavoriteByMe,
+  getMyPost,
   likePost,
   cancelLikd,
   favoritePost,
   unfavoritePost,
   deletePost,
-} from '@/api/admin/post'
-import {
-  getPostLikedByMe,
-  getPostFavoriteByMe,
-  getMyPost,
+  countMyPost,
+  countLikePost,
+  countFavoritePost,
 } from '@/api/member/post'
 import Alert from '@/views/components/common/alert/Alert'
 
@@ -91,6 +101,11 @@ export default {
         card: {},
         message: '정말로 삭제하시겠습니까?',
       },
+      profile: {
+        myPostStatus: '작성한 게시글 수 : 10개',
+        likeStatus: '좋아요 한 글 : 10개',
+        favoriteStatus: '내가 찜한 게시글 : 10개',
+      },
     }
   },
   methods: {
@@ -101,6 +116,7 @@ export default {
             card.like = false
             this.postLikedByMe.posts = []
             this.loadLikePost()
+            this.makeOtherLike(card.id, false)
           }
         })
       } else {
@@ -109,6 +125,7 @@ export default {
             card.like = true
             this.postLikedByMe.posts = []
             this.loadLikePost()
+            this.makeOtherLike(card.id, true)
           }
         })
       }
@@ -118,6 +135,7 @@ export default {
         unfavoritePost(card.id).then(({ status }) => {
           if (status == 200) {
             card.favorite = false
+            this.makeOtherFavorite(card.id, false)
             this.postFavoriteByMe.posts = []
             this.loadFavoritePost()
           }
@@ -126,6 +144,7 @@ export default {
         favoritePost(card.id).then(({ status }) => {
           if (status == 200) {
             card.favorite = true
+            this.makeOtherFavorite(card.id, true)
             this.postFavoriteByMe.posts = []
             this.loadFavoritePost()
           }
@@ -144,6 +163,7 @@ export default {
           this.closeDialog()
         })
       }
+      location.reload()
     },
     loadMyPost() {
       let myPost = getMyPost()
@@ -207,11 +227,57 @@ export default {
     closeDialog() {
       this.deleteDialog.dialog = false
     },
+
+    makeOtherLike(id, flag) {
+      this.postFavoriteByMe.posts.forEach(c => {
+        if (c.id == id) {
+          c.like = flag
+        }
+      })
+      this.postLikedByMe.posts.forEach(c => {
+        if (c.id == id) {
+          c.like = flag
+        }
+      })
+      this.myPost.posts.forEach(c => {
+        if (c.id == id) {
+          c.like = flag
+        }
+      })
+    },
+
+    makeOtherFavorite(id, flag) {
+      this.postFavoriteByMe.posts.forEach(c => {
+        if (c.id == id) {
+          c.favorite = flag
+        }
+      })
+      this.postLikedByMe.posts.forEach(c => {
+        if (c.id == id) {
+          c.favorite = flag
+        }
+      })
+      this.myPost.posts.forEach(c => {
+        if (c.id == id) {
+          c.favorite = flag
+        }
+      })
+    },
   },
   mounted() {
     this.loadMyPost()
     this.loadFavoritePost()
     this.loadLikePost()
+
+    countMyPost().then(({ data }) => {
+      this.profile.myPostStatus = `작성한 게시글 수 : ${data}개`
+    })
+    countLikePost().then(({ data }) => {
+      this.profile.likeStatus = `좋아요 한 글 : ${data}개`
+    })
+    countFavoritePost().then(({ data }) => {
+      this.profile.favoriteStatus = `내가 찜한 게시글 : ${data}개`
+    })
   },
 }
 </script>

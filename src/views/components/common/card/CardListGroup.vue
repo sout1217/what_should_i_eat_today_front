@@ -1,6 +1,7 @@
 <template>
   <v-sheet class="mx-auto transparent">
-    <div class="h3 px-16">{{ groupName }}</div>
+    <div class="h3 px-16" v-if="cards.length > 0">{{ groupName }}</div>
+    <div class="h3 px-16" v-else>{{ groupName }}이 없습니다.</div>
     <card-list
       :cards="cards"
       :model="model"

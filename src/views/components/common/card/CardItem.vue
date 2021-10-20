@@ -19,7 +19,8 @@
         <v-spacer></v-spacer>
 
         <v-btn small icon @click="$emit('first', card)" v-if="card.likeAction">
-          <v-icon small>mdi-heart</v-icon>
+          <v-icon small v-if="card.like">mdi-heart</v-icon>
+          <v-icon small v-if="!card.like">mdi-heart-outline</v-icon>
         </v-btn>
 
         <v-btn
@@ -28,7 +29,8 @@
           @click="$emit('second', card)"
           v-if="card.favoriteAction"
         >
-          <v-icon small>mdi-bookmark</v-icon>
+          <v-icon small v-if="card.favorite">mdi-bookmark</v-icon>
+          <v-icon small v-if="!card.favorite">mdi-bookmark-outline</v-icon>
         </v-btn>
 
         <v-btn
