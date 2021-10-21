@@ -30,15 +30,64 @@ import HorizontalScroll from 'horizontal-scroll/src'
 export default {
   name: 'HomePage',
   async mounted() {
-    const blocks = document.getElementsByClassName('block')
-    const container = document.getElementsByClassName('image-container')
+    this.scrollInit()
 
-    new HorizontalScroll({
-      blocks: blocks,
-      container: container,
-      isAnimated: true,
-      springEffect: 1.8,
-    })
+    this.wheelEvent()
+  },
+
+  data() {
+    return {
+      hs: null,
+      isCalling: false,
+    }
+  },
+  methods: {
+    /** 메인 스크롤 세팅 */
+    scrollInit() {
+      const blocks = document.getElementsByClassName('block')
+      const container = document.getElementsByClassName('image-container')
+
+      this.hs = new HorizontalScroll({
+        blocks: blocks,
+        container: container,
+        isAnimated: true,
+        springEffect: 1.8,
+      })
+    },
+    wheelEvent() {
+      const hsElem = document.querySelector('.horizontal-scroll')
+      const addPosition = 100
+
+      window.addEventListener('wheel', () => {
+        const currentPosition = Math.abs(
+          hsElem.style.transform.substring(
+            hsElem.style.transform.indexOf('(') + 1,
+            hsElem.style.transform.indexOf('p'),
+          ),
+        )
+        const eventActionScrollPosition =
+          this.hs.vars.oldScrollValue / 2 + addPosition
+
+        if (!this.isCalling && eventActionScrollPosition < currentPosition) {
+          this.isCalling = true
+          this.$store
+            .dispatch('GET_RANDOM_POSTS')
+            .then(data => {
+              console.log(data)
+              this.isCalling = false
+
+              /** 만약 마지막이 였다면 더 이상 조회하지 않는다 this.calling = True */
+            })
+            .catch(error => {
+              this.$toastError(error)
+              /** 오류나면 더 이상안가져오게 끔 한다 */
+            })
+        }
+
+        console.log('현재 포지션', currentPosition)
+        console.log('api 호출 포지션', eventActionScrollPosition)
+      })
+    },
   },
 }
 </script>

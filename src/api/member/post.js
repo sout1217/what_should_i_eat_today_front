@@ -14,4 +14,14 @@ function getMyPost() {
   return instance.get('v1/posts/my')
 }
 
-export { getPostLikedByMe, getPostFavoriteByMe, getMyPost }
+/** 랜덤 post 가져오기 */
+function getRandomPosts() {
+  return instance.get('v1/posts/random')
+}
+
+export default {
+  getPostLikedByMe,
+  getPostFavoriteByMe,
+  getMyPost,
+  getRandomPosts,
+}

@@ -1,6 +1,6 @@
 const state = {
   me: {},
-  token: localStorage.getItem('wteToken') || '',
+  token: sessionStorage.getItem('wteToken') || '',
   admin: {
     categories: [],
     foods: [],

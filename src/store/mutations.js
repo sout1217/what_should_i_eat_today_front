@@ -14,8 +14,13 @@ const mutations = {
 
   /** 토큰 업데이트 */
   updateToken(state, token) {
-    localStorage.setItem('wteToken', token)
+    sessionStorage.setItem('wteToken', token)
     state.token = token
+  },
+
+  deleteToken(state) {
+    sessionStorage.removeItem('wteToken')
+    state.token = ''
   },
 }
 export default mutations

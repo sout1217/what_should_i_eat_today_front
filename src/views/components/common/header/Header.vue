@@ -62,8 +62,13 @@ export default {
       ],
     }
   },
-  mounted() {
-    this.$store.dispatch('GET_ME')
+  async mounted() {
+    try {
+      await this.$store.dispatch('GET_ME')
+    } catch (error) {
+      this.$store.commit('deleteToken')
+      this.$toastError('인증 실패')
+    }
   },
   computed: {
     token() {

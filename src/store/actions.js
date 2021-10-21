@@ -3,6 +3,7 @@ import foodApi from '@/api/admin/foods'
 import countriesApi from '@/api/admin/countries'
 import tagsApi from '@/api/admin/tags'
 import meApi from '@/api/member/me'
+import postApi from '@/api/member/post'
 
 const actions = {
   /** 내 정보 조회 */
@@ -11,6 +12,14 @@ const actions = {
     console.log('호출 완료')
     commit('updateMe', member)
   },
+
+  /** 랜덤 음식들 가져오기  */
+  async GET_RANDOM_POSTS({ commit }) {
+    console.log(commit)
+    const { data } = await postApi.getRandomPosts()
+    return data
+  },
+
   /** Admin 카테고리 가져오기*/
   async GET_CATEGORIES_BY_ID({ commit }, categoryId) {
     console.log(commit)
