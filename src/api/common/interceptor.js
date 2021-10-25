@@ -6,9 +6,6 @@ export function setInterceptors(instance) {
     function (config) {
       // Do something before request is sent
       // console.log(config);
-
-      config.headers['Authorization'] = `Bearer ${store.state.token}`
-
       // 개발용 token
       /** 2021.10.19 - sns 로그인 토큰을 이용하기 위해 기존 env 에서 작업하던 토큰을 주석처리 하였음 */
       // config.headers[

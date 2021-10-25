@@ -1,7 +1,15 @@
 <template>
   <div class="">
     <div class="mb-4 mt-4">
-      <Profile></Profile>
+      <Profile
+        :top="profile.myPostStatus"
+        :middle="profile.favoriteStatus"
+        :bottom="profile.likeStatus"
+        :top-action="undefined"
+        :middle-action="undefined"
+        :bottom-action="undefined"
+        :profile-action="undefined"
+      ></Profile>
     </div>
     <div class="mt-4">
       <div>
@@ -11,21 +19,34 @@
           :model="4"
           @first="doLike"
           @second="doFavorite"
-          @third="doDelete"
-        />
-      </div>
-      <div>
-        <CardListGroup
-          :cards="postLikedByMe.posts"
-          groupName="찜한 글"
-          :model="4"
+          @third="checkDelete"
         />
       </div>
       <div>
         <CardListGroup
           :cards="postFavoriteByMe.posts"
+          groupName="찜한 글"
+          :model="4"
+          @first="doLike"
+          @second="doFavorite"
+          @third="checkDelete"
+        />
+      </div>
+      <div>
+        <CardListGroup
+          :cards="postLikedByMe.posts"
           groupName="좋아요를 누른 글"
           :model="4"
+          @first="doLike"
+          @second="doFavorite"
+          @third="checkDelete"
+        />
+        <Alert
+          :dialog="deleteDialog.dialog"
+          :ok-action="doDeleteAtDialog"
+          :close-action="closeDialog"
+          :cancel-action="closeDialog"
+          :message="deleteDialog.message"
         />
       </div>
     </div>
@@ -35,16 +56,28 @@
 <script>
 import Profile from '@/views/components/common/profile/Profile'
 import CardListGroup from '@/views/components/common/card/CardListGroup'
+
 import {
   getPostLikedByMe,
   getPostFavoriteByMe,
   getMyPost,
+  likePost,
+  cancelLikd,
+  favoritePost,
+  unfavoritePost,
+  deletePost,
+  countMyPost,
+  countLikePost,
+  countFavoritePost,
 } from '@/api/member/post'
+import Alert from '@/views/components/common/alert/Alert'
+
 export default {
   name: 'mypage',
   components: {
     Profile,
     CardListGroup,
+    Alert,
   },
   data() {
     return {
@@ -63,64 +96,199 @@ export default {
         size: 10,
         posts: [],
       },
+      deleteDialog: {
+        dialog: false,
+        card: {},
+        message: '정말로 삭제하시겠습니까?',
+      },
+      profile: {
+        myPostStatus: '작성한 게시글 수 : 10개',
+        likeStatus: '좋아요 한 글 : 10개',
+        favoriteStatus: '내가 찜한 게시글 : 10개',
+      },
     }
   },
   methods: {
-    doLike(key) {
-      if (key.liked) {
-        console.log('좋아요 취소하기')
+    async doLike(card) {
+      if (card.like) {
+        await cancelLikd(card.id).then(({ status }) => {
+          if (status == 200) {
+            card.like = false
+            this.postLikedByMe.posts = []
+            this.loadLikePost()
+            this.makeOtherLike(card.id, false)
+          }
+        })
+      } else {
+        await likePost(card.id).then(({ status }) => {
+          if (status == 200) {
+            card.like = true
+            this.postLikedByMe.posts = []
+            this.loadLikePost()
+            this.makeOtherLike(card.id, true)
+          }
+        })
       }
-      console.log('like')
+      await this.statusLikePost()
     },
-    doFavorite(key) {
-      if (key.favorited) {
-        console.log('즐겨찾기 취소')
+    async doFavorite(card) {
+      if (card.favorite) {
+        await unfavoritePost(card.id).then(({ status }) => {
+          if (status == 200) {
+            card.favorite = false
+            this.makeOtherFavorite(card.id, false)
+            this.postFavoriteByMe.posts = []
+            this.loadFavoritePost()
+          }
+        })
+      } else {
+        await favoritePost(card.id).then(({ status }) => {
+          if (status == 200) {
+            card.favorite = true
+            this.makeOtherFavorite(card.id, true)
+            this.postFavoriteByMe.posts = []
+            this.loadFavoritePost()
+          }
+        })
       }
-      console.log('favorite')
+      await this.statusFavoritePost()
     },
-    doDelete(key) {
-      console.log(key)
-      console.log('삭제')
+    checkDelete(card) {
+      this.deleteDialog.dialog = true
+      this.deleteDialog.card = card
+    },
+    doDeleteAtDialog() {
+      if (this.$isNotEmpty(this.deleteDialog.card)) {
+        deletePost(this.deleteDialog.card.id).then(() => {
+          this.myPost.posts = []
+          this.loadMyPost()
+          this.closeDialog()
+        })
+      }
+      location.reload()
+    },
+    loadMyPost() {
+      let myPost = getMyPost()
+      myPost.then(({ data: { content } }) => {
+        for (let d of content) {
+          this.myPost.posts.push({
+            id: d.id,
+            title: d.title,
+            content: d.content,
+            src: d.imagePath,
+            alt: d.imageName,
+            like: d.isLikedByMe,
+            favorite: d.isFavoriteByMe,
+            deleteAction: true,
+            likeAction: true,
+            favoriteAction: true,
+          })
+        }
+      })
+    },
+    loadLikePost() {
+      let postLikedByMe = getPostLikedByMe()
+      postLikedByMe.then(({ data: { content } }) => {
+        // this.postLikedByMe.posts = []
+        for (let d of content) {
+          this.postLikedByMe.posts.push({
+            id: d.id,
+            title: d.title,
+            content: d.content,
+            src: d.imagePath,
+            alt: d.imageName,
+            like: d.isLikedByMe,
+            favorite: d.isFavoriteByMe,
+            deleteAction: false,
+            likeAction: true,
+            favoriteAction: true,
+          })
+        }
+      })
+    },
+    loadFavoritePost() {
+      let postFavoriteByMe = getPostFavoriteByMe()
+      postFavoriteByMe.then(({ data: { content } }) => {
+        for (let d of content) {
+          this.postFavoriteByMe.posts.push({
+            id: d.id,
+            title: d.title,
+            content: d.content,
+            src: d.imagePath,
+            alt: d.imageName,
+            like: d.isLikedByMe,
+            favorite: d.isFavoriteByMe,
+            deleteAction: false,
+            likeAction: true,
+            favoriteAction: true,
+          })
+        }
+      })
+    },
+
+    closeDialog() {
+      this.deleteDialog.dialog = false
+    },
+
+    makeOtherLike(id, flag) {
+      this.postFavoriteByMe.posts.forEach(c => {
+        if (c.id == id) {
+          c.like = flag
+        }
+      })
+      this.postLikedByMe.posts.forEach(c => {
+        if (c.id == id) {
+          c.like = flag
+        }
+      })
+      this.myPost.posts.forEach(c => {
+        if (c.id == id) {
+          c.like = flag
+        }
+      })
+    },
+
+    makeOtherFavorite(id, flag) {
+      this.postFavoriteByMe.posts.forEach(c => {
+        if (c.id == id) {
+          c.favorite = flag
+        }
+      })
+      this.postLikedByMe.posts.forEach(c => {
+        if (c.id == id) {
+          c.favorite = flag
+        }
+      })
+      this.myPost.posts.forEach(c => {
+        if (c.id == id) {
+          c.favorite = flag
+        }
+      })
+    },
+
+    statusMyPost() {
+      countMyPost().then(({ data }) => {
+        this.profile.myPostStatus = `작성한 게시글 수 : ${data}개`
+      })
+    },
+    statusLikePost() {
+      countLikePost().then(({ data }) => {
+        this.profile.likeStatus = `좋아요 한 글 : ${data}개`
+      })
+    },
+    statusFavoritePost() {
+      countFavoritePost().then(({ data }) => {
+        this.profile.favoriteStatus = `내가 찜한 게시글 : ${data}개`
+      })
     },
   },
   mounted() {
-    let postLikedByMe = getPostLikedByMe()
-    postLikedByMe.then(({ data: { content } }) => {
-      // this.postLikedByMe.posts = []
-      for (let d of content) {
-        this.postLikedByMe.posts.push({
-          id: d.id,
-          title: d.title,
-          content: d.content,
-          src: d.imagePath,
-          alt: d.imageName,
-        })
-      }
-    })
-    let postFavoriteByMe = getPostFavoriteByMe()
-    postFavoriteByMe.then(({ data: { content } }) => {
-      for (let d of content) {
-        this.postFavoriteByMe.posts.push({
-          id: d.id,
-          title: d.title,
-          content: d.content,
-          src: d.imagePath,
-          alt: d.imageName,
-        })
-      }
-    })
-    let myPost = getMyPost()
-    myPost.then(({ data: { content } }) => {
-      for (let d of content) {
-        this.myPost.posts.push({
-          id: d.id,
-          title: d.title,
-          content: d.content,
-          src: d.imagePath,
-          alt: d.imageName,
-        })
-      }
-    })
+    this.loadMyPost()
+    this.loadFavoritePost()
+    this.loadLikePost()
+    this.statusMyPost()
+    this.statusLikePost()
+    this.statusFavoritePost()
   },
 }
 </script>

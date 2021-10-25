@@ -1,11 +1,5 @@
 <template>
   <v-dialog v-model="dialog" max-width="450" dark style="border-radius: 20px">
-    <template v-slot:activator="{ on, attrs }">
-      <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
-        Click Me
-      </v-btn>
-    </template>
-
     <v-card>
       <v-card-text class="font-weight-medium pt-8">
         <span class="t1">{{ message }}</span>
@@ -13,16 +7,13 @@
 
       <v-card-actions class="px-6 pb-6">
         <v-spacer></v-spacer>
-        <v-btn
-          class="system-error grayscale-white--text"
-          @click="dialog = false"
-        >
+        <v-btn class="system-error grayscale-white--text" @click="okAction">
           <span class="t2">{{ ok }}</span>
         </v-btn>
         <v-btn
           v-if="no"
           class="system-success grayscale-white--text"
-          @click="dialog = false"
+          @click="cancelAction"
         >
           <span class="t2">{{ no }}</span>
         </v-btn>
@@ -35,14 +26,31 @@
 export default {
   name: 'Alert',
   data() {
-    return {
-      dialog: false,
-    }
+    return {}
   },
   props: {
     message: { type: String, default: '메시지' },
     ok: { type: String, default: '확인' },
     no: { type: String, default: '' },
+    dialog: { type: Boolean, default: false },
+    okAction: {
+      type: Function,
+      default: function () {
+        this.$emit('ok')
+      },
+    },
+    cancelAction: {
+      type: Function,
+      default: function () {
+        this.$emit('cancel')
+      },
+    },
+    closeAction: {
+      type: Function,
+      default: function () {
+        this.$emit('close')
+      },
+    },
   },
 }
 </script>

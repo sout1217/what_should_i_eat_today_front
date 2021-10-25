@@ -18,15 +18,27 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn small icon @click="$emit('first', id)">
-          <v-icon small>mdi-heart</v-icon>
+        <v-btn small icon @click="$emit('first', card)" v-if="card.likeAction">
+          <v-icon small v-if="card.like">mdi-heart</v-icon>
+          <v-icon small v-if="!card.like">mdi-heart-outline</v-icon>
         </v-btn>
 
-        <v-btn small icon @click="$emit('second', id)">
-          <v-icon small>mdi-bookmark</v-icon>
+        <v-btn
+          small
+          icon
+          @click="$emit('second', card)"
+          v-if="card.favoriteAction"
+        >
+          <v-icon small v-if="card.favorite">mdi-bookmark</v-icon>
+          <v-icon small v-if="!card.favorite">mdi-bookmark-outline</v-icon>
         </v-btn>
 
-        <v-btn small icon @click="$emit('third', id)">
+        <v-btn
+          small
+          icon
+          @click="$emit('third', card)"
+          v-if="card.deleteAction"
+        >
           <v-icon small>mdi-share-variant</v-icon>
         </v-btn>
       </v-card-actions>

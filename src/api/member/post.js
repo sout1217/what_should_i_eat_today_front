@@ -20,9 +20,49 @@ function getRandomPosts() {
   return instance.get('v1/posts/random')
 }
 
-export default {
+function deletePost(id) {
+  return instance.delete(`v1/posts/${id}`)
+}
+
+function likePost(id) {
+  return instance.post(`v1/posts/${id}/like`)
+}
+
+function cancelLikd(id) {
+  return instance.delete(`v1/posts/${id}/like`)
+}
+
+function favoritePost(id) {
+  return instance.post(`v1/posts/${id}/favorite`)
+}
+
+function unfavoritePost(id) {
+  return instance.delete(`v1/posts/${id}/favorite`)
+}
+
+function countMyPost() {
+  return instance.get(`v1/posts/my/count`)
+}
+
+function countLikePost() {
+  return instance.get(`v1/posts/liked/count`)
+}
+
+function countFavoritePost() {
+  return instance.get(`v1/posts/favorite/count`)
+}
+
+export {
   getPostLikedByMe,
   getPostFavoriteByMe,
-  getMyPost,
   getRandomPosts,
+  getMyPost,
+  deletePost,
+  likePost,
+  cancelLikd,
+  favoritePost,
+  unfavoritePost,
+  countMyPost,
+  countLikePost,
+  countFavoritePost,
 }
