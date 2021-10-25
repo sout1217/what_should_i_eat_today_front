@@ -5,27 +5,26 @@
       :close-on-content-click="false"
       :nudge-width="200"
       transition="scroll-y-reverse-transition"
+      nudge-top="-25"
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn color="indigo" dark v-bind="attrs" v-on="on">
-          메뉴 팝오버
-        </v-btn>
+        <div class="nav-item" v-on="on" v-bind="attrs">로그인</div>
       </template>
 
       <v-card>
         <v-list>
           <v-list-item class="mb-2">
-            <v-btn block color="amber" large>
+            <v-btn block color="amber" @click="kakaoLogin" large>
               <span class="b1 grayscale-white">카카오 로그인</span>
             </v-btn>
           </v-list-item>
           <v-list-item class="mb-2">
-            <v-btn block color="gray" large>
+            <v-btn block color="gray" @click="googleLogin" large>
               <span class="b1">구글 로그인</span>
             </v-btn>
           </v-list-item>
           <v-list-item>
-            <v-btn block color="green lighten-1" large>
+            <v-btn block color="green lighten-1" @click="naverLogin" large>
               <span class="b1 grayscale-white"> 네이버 로그인 </span>
             </v-btn>
           </v-list-item>
@@ -45,6 +44,20 @@ export default {
       message: false,
       hints: true,
     }
+  },
+  methods: {
+    kakaoLogin() {
+      location.href =
+        'http://localhost:8081/oauth2/authorize/kakao?redirect_uri=http://localhost:3000/oauth2/redirect'
+    },
+    googleLogin() {
+      location.href =
+        'http://localhost:8081/oauth2/authorize/google?redirect_uri=http://localhost:3000/oauth2/redirect'
+    },
+    naverLogin() {
+      location.href =
+        'http://localhost:8081/oauth2/authorize/naver?redirect_uri=http://localhost:3000/oauth2/redirect'
+    },
   },
 }
 </script>

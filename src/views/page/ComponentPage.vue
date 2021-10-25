@@ -31,6 +31,8 @@
     <naver-icon fill="mediumseagreen" />
     <google-icon />
     <kakao-icon fill="orange" width="100" height="100" />
+
+    <Alert ok="로그인" />
   </div>
 </template>
 
@@ -46,6 +48,7 @@ import Popover from '@/views/components/common/popover/Popover'
 import NaverIcon from '@/views/components/common/share/NaverIcon'
 import GoogleIcon from '@/views/components/common/share/GoogleIcon'
 import KakaoIcon from '@/views/components/common/share/KakaoIcon'
+import Alert from '@/views/components/common/alert/Alert'
 
 export default {
   name: 'ComponentPage',
@@ -111,6 +114,7 @@ export default {
     }
   },
   components: {
+    Alert,
     Popover,
     KakaoIcon,
     GoogleIcon,

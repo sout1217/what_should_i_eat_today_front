@@ -16,3 +16,9 @@ export default {
   components: { Header },
 }
 </script>
+
+<style lang="scss">
+#app {
+  background-color: var(--v-background-base);
+}
+</style>
