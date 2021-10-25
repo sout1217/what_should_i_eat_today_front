@@ -109,9 +109,9 @@ export default {
     }
   },
   methods: {
-    doLike(card) {
+    async doLike(card) {
       if (card.like) {
-        cancelLikd(card.id).then(({ status }) => {
+        await cancelLikd(card.id).then(({ status }) => {
           if (status == 200) {
             card.like = false
             this.postLikedByMe.posts = []
@@ -120,7 +120,7 @@ export default {
           }
         })
       } else {
-        likePost(card.id).then(({ status }) => {
+        await likePost(card.id).then(({ status }) => {
           if (status == 200) {
             card.like = true
             this.postLikedByMe.posts = []
@@ -129,10 +129,11 @@ export default {
           }
         })
       }
+      await this.statusLikePost()
     },
-    doFavorite(card) {
+    async doFavorite(card) {
       if (card.favorite) {
-        unfavoritePost(card.id).then(({ status }) => {
+        await unfavoritePost(card.id).then(({ status }) => {
           if (status == 200) {
             card.favorite = false
             this.makeOtherFavorite(card.id, false)
@@ -141,7 +142,7 @@ export default {
           }
         })
       } else {
-        favoritePost(card.id).then(({ status }) => {
+        await favoritePost(card.id).then(({ status }) => {
           if (status == 200) {
             card.favorite = true
             this.makeOtherFavorite(card.id, true)
@@ -150,6 +151,7 @@ export default {
           }
         })
       }
+      await this.statusFavoritePost()
     },
     checkDelete(card) {
       this.deleteDialog.dialog = true
@@ -263,21 +265,30 @@ export default {
         }
       })
     },
+
+    statusMyPost() {
+      countMyPost().then(({ data }) => {
+        this.profile.myPostStatus = `작성한 게시글 수 : ${data}개`
+      })
+    },
+    statusLikePost() {
+      countLikePost().then(({ data }) => {
+        this.profile.likeStatus = `좋아요 한 글 : ${data}개`
+      })
+    },
+    statusFavoritePost() {
+      countFavoritePost().then(({ data }) => {
+        this.profile.favoriteStatus = `내가 찜한 게시글 : ${data}개`
+      })
+    },
   },
   mounted() {
     this.loadMyPost()
     this.loadFavoritePost()
     this.loadLikePost()
-
-    countMyPost().then(({ data }) => {
-      this.profile.myPostStatus = `작성한 게시글 수 : ${data}개`
-    })
-    countLikePost().then(({ data }) => {
-      this.profile.likeStatus = `좋아요 한 글 : ${data}개`
-    })
-    countFavoritePost().then(({ data }) => {
-      this.profile.favoriteStatus = `내가 찜한 게시글 : ${data}개`
-    })
+    this.statusMyPost()
+    this.statusLikePost()
+    this.statusFavoritePost()
   },
 }
 </script>
