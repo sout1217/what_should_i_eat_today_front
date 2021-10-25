@@ -1,6 +1,6 @@
 <template>
-  <v-slide-item v-slot="{ active, toggle }" style="width: 500px">
-    <v-card class="ma-4" max-width="250" @click="toggle">
+  <v-slide-item style="width: 500px">
+    <v-card class="ma-4" max-width="250" @click="$emit('onclick', card)">
       <v-img
         :src="card.src"
         :alt="card.alt"
@@ -39,7 +39,7 @@
           @click="$emit('third', card)"
           v-if="card.deleteAction"
         >
-          <v-icon small>mdi-share-variant</v-icon>
+          <v-icon small>mdi-delete</v-icon>
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -52,7 +52,6 @@ export default {
     card: {
       type: Object,
     },
-    toggle: { type: Function },
     id: {
       type: Number,
     },

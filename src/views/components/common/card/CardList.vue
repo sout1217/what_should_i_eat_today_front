@@ -8,6 +8,7 @@
         @first="first"
         @second="second"
         @third="third"
+        @onclick="click"
       />
     </template>
   </v-slide-group>
@@ -20,6 +21,7 @@ export default {
   components: { CardItem },
   props: {
     cards: { type: Array },
+    eclick: { type: Function, default: function () {} },
   },
   methods: {
     first(param) {
@@ -30,6 +32,9 @@ export default {
     },
     third(param) {
       this.$emit('third', param)
+    },
+    click(param) {
+      this.$emit('onclick', param)
     },
   },
 }
