@@ -67,7 +67,7 @@ export default {
       await this.$store.dispatch('GET_ME')
     } catch (error) {
       this.$store.commit('deleteToken')
-      this.$toastError('인증 실패')
+      // this.$toastError('인증 실패')
     }
   },
   computed: {

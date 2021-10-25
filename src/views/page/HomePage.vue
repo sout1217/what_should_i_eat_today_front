@@ -5,21 +5,13 @@
   >
     <div class="center-wrap">
       <div class="image-container">
-        <div class="block block-1">
-          <a href="#">
-            <img :src="require('@/assets/main.png')" alt="" />
-          </a>
-        </div>
-        <div class="block block-2">
-          <a href="#">
-            <img :src="require('@/assets/main-2.png')" alt="" />
-          </a>
-        </div>
-        <div class="block block-3">
-          <a href="#">
-            <img :src="require('@/assets/main-3.png')" alt="" />
-          </a>
-        </div>
+        <template v-for="(post, index) in posts">
+          <div class="block" :key="index">
+            <a href="#">
+              <img :src="post.imagePath" :alt="post.title" />
+            </a>
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -30,17 +22,25 @@ import HorizontalScroll from 'horizontal-scroll/src'
 export default {
   name: 'HomePage',
   async mounted() {
-    this.scrollInit()
+    const posts = await this.$store.dispatch('GET_RANDOM_POSTS')
+    this.posts = [].concat(posts)
 
-    this.wheelEvent()
+    /** 화면이 다 그려진 후 스크롤 이벤트 실행 */
+    this.$nextTick(() => {
+      this.scrollInit()
+      this.wheelEvent()
+    })
   },
 
   data() {
     return {
       hs: null,
       isCalling: false,
+      addScrollRight: 0,
+      posts: [],
     }
   },
+  created() {},
   methods: {
     /** 메인 스크롤 세팅 */
     scrollInit() {
@@ -53,28 +53,66 @@ export default {
         isAnimated: true,
         springEffect: 1.8,
       })
+
+      this.addScrollRight = this.hs.vars.scrollRight
     },
+    /** 마우스 휠 이벤트 */
     wheelEvent() {
       const hsElem = document.querySelector('.horizontal-scroll')
-      const addPosition = 100
+      const subPosition = 300
 
-      window.addEventListener('wheel', () => {
+      window.addEventListener('wheel', event => {
         const currentPosition = Math.abs(
           hsElem.style.transform.substring(
             hsElem.style.transform.indexOf('(') + 1,
             hsElem.style.transform.indexOf('p'),
           ),
         )
-        const eventActionScrollPosition =
-          this.hs.vars.oldScrollValue / 2 + addPosition
 
-        if (!this.isCalling && eventActionScrollPosition < currentPosition) {
+        const isWheelDown = 0 < event.deltaY
+
+        // const eventActionScrollPosition = this.hs.vars.oldScrollValue / 2 + 100
+        const eventActionScrollPosition = this.hs.vars.scrollRight - subPosition
+
+        if (
+          !this.isCalling &&
+          eventActionScrollPosition < currentPosition &&
+          isWheelDown
+        ) {
           this.isCalling = true
           this.$store
             .dispatch('GET_RANDOM_POSTS')
+            /** @typedef post
+             *  @property {boolean} archived
+             *  @property {string} title
+             *  @property {string} content
+             *  @property {Object} food
+             *  @property {string} imageName
+             *  @property {string} imagePath
+             *  @property {string} isFavoriteByMe
+             *  @property {number} isLikedByMe
+             *  @property {Object} member
+             * */
             .then(data => {
-              console.log(data)
+              console.log('d---------->', data)
               this.isCalling = false
+              // this.posts.push(...data)
+
+              const hsElem = document.querySelector('.horizontal-scroll')
+
+              let html = ''
+
+              data.forEach(post => {
+                html += `<div class="block" style="display: inline-block;" >`
+                html += `  <a href="#">`
+                html += `    <img src="${post.imagePath}" alt="${post.title}" />`
+                html += `  </a>`
+                html += `</div>`
+              })
+
+              hsElem.insertAdjacentHTML('beforeend', html)
+
+              this.hs.vars.scrollRight += this.addScrollRight
 
               /** 만약 마지막이 였다면 더 이상 조회하지 않는다 this.calling = True */
             })
@@ -83,7 +121,6 @@ export default {
               /** 오류나면 더 이상안가져오게 끔 한다 */
             })
         }
-
         console.log('현재 포지션', currentPosition)
         console.log('api 호출 포지션', eventActionScrollPosition)
       })
@@ -135,20 +172,12 @@ export default {
   transition: transform, filter;
   transition-duration: 0.8s;
   filter: brightness(0.4);
+  background-color: #d1d1d1;
 }
 
 .block img:hover {
   border-radius: 8px;
-  transform: scale(1.2);
+  transform: scale(1.1);
   filter: brightness(100%);
-}
-
-//.block-1,
-//.block-2,
-//.block-3,
-.block-4,
-.block-5 {
-  background: url(http://placehold.it/692x443) no-repeat;
-  background-size: 100% 100%;
 }
 </style>

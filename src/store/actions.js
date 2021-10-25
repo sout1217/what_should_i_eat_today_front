@@ -9,7 +9,6 @@ const actions = {
   /** 내 정보 조회 */
   async GET_ME({ commit }) {
     const { data: member } = await meApi.getMe()
-    console.log('호출 완료')
     commit('updateMe', member)
   },
 

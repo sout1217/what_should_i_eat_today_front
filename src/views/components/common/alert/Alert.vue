@@ -20,6 +20,7 @@
           <span class="t2">{{ ok }}</span>
         </v-btn>
         <v-btn
+          v-if="no"
           class="system-success grayscale-white--text"
           @click="dialog = false"
         >
@@ -41,7 +42,7 @@ export default {
   props: {
     message: { type: String, default: '메시지' },
     ok: { type: String, default: '확인' },
-    no: { type: String, default: '취소' },
+    no: { type: String, default: '' },
   },
 }
 </script>
