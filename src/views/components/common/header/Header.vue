@@ -25,6 +25,8 @@
           </template>
           <v-list dark class="bg-black-opacity text-center">
             <v-list-item
+              :to="item.href"
+              exact
               v-for="(item, index) in popoverItems"
               :key="index"
               link
@@ -54,11 +56,11 @@ export default {
   data() {
     return {
       popoverItems: [
-        { name: '글 작성' },
-        { name: '마이페이지' },
-        { name: '소식 모아보기' },
-        { name: '설정' },
-        { name: '로그아웃' },
+        { name: '글 작성', href: '#' },
+        { name: '마이페이지', href: '/mypage' },
+        { name: '소식 모아보기', href: '#' },
+        { name: '설정', href: '#' },
+        { name: '로그아웃', href: '#' },
       ],
     }
   },

@@ -56,20 +56,7 @@
 <script>
 import Profile from '@/views/components/common/profile/Profile'
 import CardListGroup from '@/views/components/common/card/CardListGroup'
-
-import {
-  getPostLikedByMe,
-  getPostFavoriteByMe,
-  getMyPost,
-  likePost,
-  cancelLikd,
-  favoritePost,
-  unfavoritePost,
-  deletePost,
-  countMyPost,
-  countLikePost,
-  countFavoritePost,
-} from '@/api/member/post'
+import postApi from '@/api/member/post'
 import Alert from '@/views/components/common/alert/Alert'
 
 export default {
@@ -111,7 +98,7 @@ export default {
   methods: {
     async doLike(card) {
       if (card.like) {
-        await cancelLikd(card.id).then(({ status }) => {
+        await postApi.cancelLiked(card.id).then(({ status }) => {
           if (status == 200) {
             card.like = false
             this.postLikedByMe.posts = []
@@ -120,7 +107,7 @@ export default {
           }
         })
       } else {
-        await likePost(card.id).then(({ status }) => {
+        await postApi.likePost(card.id).then(({ status }) => {
           if (status == 200) {
             card.like = true
             this.postLikedByMe.posts = []
@@ -133,7 +120,7 @@ export default {
     },
     async doFavorite(card) {
       if (card.favorite) {
-        await unfavoritePost(card.id).then(({ status }) => {
+        await postApi.unfavoritePost(card.id).then(({ status }) => {
           if (status == 200) {
             card.favorite = false
             this.makeOtherFavorite(card.id, false)
@@ -142,7 +129,7 @@ export default {
           }
         })
       } else {
-        await favoritePost(card.id).then(({ status }) => {
+        await postApi.favoritePost(card.id).then(({ status }) => {
           if (status == 200) {
             card.favorite = true
             this.makeOtherFavorite(card.id, true)
@@ -159,7 +146,7 @@ export default {
     },
     doDeleteAtDialog() {
       if (this.$isNotEmpty(this.deleteDialog.card)) {
-        deletePost(this.deleteDialog.card.id).then(() => {
+        postApi.deletePost(this.deleteDialog.card.id).then(() => {
           this.myPost.posts = []
           this.loadMyPost()
           this.closeDialog()
@@ -168,7 +155,7 @@ export default {
       location.reload()
     },
     loadMyPost() {
-      let myPost = getMyPost()
+      let myPost = postApi.getMyPost()
       myPost.then(({ data: { content } }) => {
         for (let d of content) {
           this.myPost.posts.push({
@@ -187,7 +174,7 @@ export default {
       })
     },
     loadLikePost() {
-      let postLikedByMe = getPostLikedByMe()
+      let postLikedByMe = postApi.getPostLikedByMe()
       postLikedByMe.then(({ data: { content } }) => {
         // this.postLikedByMe.posts = []
         for (let d of content) {
@@ -207,7 +194,7 @@ export default {
       })
     },
     loadFavoritePost() {
-      let postFavoriteByMe = getPostFavoriteByMe()
+      let postFavoriteByMe = postApi.getPostFavoriteByMe()
       postFavoriteByMe.then(({ data: { content } }) => {
         for (let d of content) {
           this.postFavoriteByMe.posts.push({
@@ -267,17 +254,17 @@ export default {
     },
 
     statusMyPost() {
-      countMyPost().then(({ data }) => {
+      postApi.countMyPost().then(({ data }) => {
         this.profile.myPostStatus = `작성한 게시글 수 : ${data}개`
       })
     },
     statusLikePost() {
-      countLikePost().then(({ data }) => {
+      postApi.countLikePost().then(({ data }) => {
         this.profile.likeStatus = `좋아요 한 글 : ${data}개`
       })
     },
     statusFavoritePost() {
-      countFavoritePost().then(({ data }) => {
+      postApi.countFavoritePost().then(({ data }) => {
         this.profile.favoriteStatus = `내가 찜한 게시글 : ${data}개`
       })
     },
