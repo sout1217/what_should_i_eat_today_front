@@ -8,6 +8,7 @@
       @first="first"
       @second="second"
       @third="third"
+      @onclick="click"
     />
   </v-sheet>
 </template>
@@ -39,6 +40,9 @@ export default {
     },
     third(param) {
       this.$emit('third', param)
+    },
+    click(param) {
+      this.$emit('onclick', param)
     },
   },
 }
