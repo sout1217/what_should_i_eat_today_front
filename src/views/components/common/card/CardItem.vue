@@ -1,15 +1,18 @@
 <template>
-  <v-slide-item v-slot="{ active, toggle }" style="width: 500px">
-    <v-card class="ma-4" max-width="250" @click="toggle">
-      <v-img
-        :src="card.src"
-        :alt="card.alt"
-        class="white--text align-end"
-        gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-        height="150px"
-      >
-        <v-card-title v-text="card.title"></v-card-title>
-      </v-img>
+  <v-slide-item style="width: 500px">
+    <v-card class="ma-4" max-width="250">
+      <router-link tag="div" to="#">
+        <v-img
+          v-ripple="{ class: 'secondary-orange-1' }"
+          :src="card.src"
+          :alt="card.alt"
+          class="white--text align-end pointer"
+          gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+          height="150px"
+        >
+          <v-card-title v-text="card.title"></v-card-title>
+        </v-img>
+      </router-link>
 
       <v-card-actions>
         <v-card-text class="food-card-text">
@@ -19,8 +22,12 @@
         <v-spacer></v-spacer>
 
         <v-btn small icon @click="$emit('first', card)" v-if="card.likeAction">
-          <v-icon small v-if="card.like">mdi-heart</v-icon>
-          <v-icon small v-if="!card.like">mdi-heart-outline</v-icon>
+          <v-icon :color="first.color" small v-if="card.like">
+            {{ first.fill }}
+          </v-icon>
+          <v-icon :color="first.color" small v-if="!card.like">
+            {{ first.outline }}
+          </v-icon>
         </v-btn>
 
         <v-btn
@@ -29,8 +36,12 @@
           @click="$emit('second', card)"
           v-if="card.favoriteAction"
         >
-          <v-icon small v-if="card.favorite">mdi-bookmark</v-icon>
-          <v-icon small v-if="!card.favorite">mdi-bookmark-outline</v-icon>
+          <v-icon :color="second.color" small v-if="card.favorite">
+            {{ second.fill }}
+          </v-icon>
+          <v-icon :color="second.color" small v-if="!card.favorite">
+            {{ second.outline }}
+          </v-icon>
         </v-btn>
 
         <v-btn
@@ -39,7 +50,7 @@
           @click="$emit('third', card)"
           v-if="card.deleteAction"
         >
-          <v-icon small>mdi-share-variant</v-icon>
+          <v-icon :color="third.color" small>{{ third.outline }}</v-icon>
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -55,6 +66,39 @@ export default {
     toggle: { type: Function },
     id: {
       type: Number,
+    },
+    first: {
+      type: Object,
+      require: false,
+      default: () => {
+        return {
+          fill: 'mdi-heart',
+          outline: 'mdi-heart-outline',
+          color: 'red lighten-1',
+        }
+      },
+    },
+    second: {
+      type: Object,
+      require: false,
+      default: () => {
+        return {
+          fill: 'mdi-bookmark',
+          outline: 'mdi-bookmark-outline',
+          color: 'orange lighten-2',
+        }
+      },
+    },
+    third: {
+      type: Object,
+      require: false,
+      default: () => {
+        return {
+          fill: 'mdi-delete',
+          outline: 'mdi-delete-outline',
+          color: 'grey',
+        }
+      },
     },
   },
 }

@@ -52,7 +52,7 @@ $system-success: #2284f5 !important;
   color: $secondary-blue-3
 }
 .secondary-heart {
-  color: $secondary-heart
+  color: $secondary-heart !important;
 }
 .secondary-wine-1 {
   color: $secondary-wine-1
@@ -322,6 +322,10 @@ body {
 }
 .shadow-5 {
   box-shadow: 0 24px 24px rgba(0, 0, 0, 0.25) !important;
+}
+
+.pointer {
+  cursor: pointer !important;
 }
 
 /* toast css ( md ↑) */

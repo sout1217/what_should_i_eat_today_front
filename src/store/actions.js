@@ -83,6 +83,12 @@ const actions = {
 
     // todo : 2021.10.12 백엔드 로직 만들기
   },
+
+  /** All 최근 올라온 음식 글 가져오기 */
+  async GET_RECENTLY_POSTS({ commit }) {
+    const { data } = await postApi.getRecentlyPosts()
+    console.log('d ->', data)
+  },
 }
 
 export default actions

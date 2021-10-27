@@ -34,17 +34,17 @@ function getRandomPosts() {
 
 /** 글 삭제하기 */
 function deletePost(id) {
-  return instance.delete(`v1/posts/${id}`)
+  return instanceWithAuth.delete(`v1/posts/${id}`)
 }
 
 /** 글 좋아요하기 */
 function likePost(id) {
-  return instance.post(`v1/posts/${id}/like`)
+  return instanceWithAuth.post(`v1/posts/${id}/like`)
 }
 
 /** 글 좋아요 취소하기 */
 function cancelLiked(id) {
-  return instance.delete(`v1/posts/${id}/like`)
+  return instanceWithAuth.delete(`v1/posts/${id}/like`)
 }
 
 /** 내가 작성한 글 수 */
@@ -62,6 +62,11 @@ function countFavoritePost() {
   return instance.get(`v1/posts/favorite/count`)
 }
 
+/** 최근에 올라온 글 가져오기 */
+function getRecentlyPosts() {
+  return instanceWithAuth.get('v1/posts/recently')
+}
+
 export default {
   getPostLikedByMe,
   getPostFavoriteByMe,
@@ -75,4 +80,5 @@ export default {
   countMyPost,
   countLikePost,
   countFavoritePost,
+  getRecentlyPosts,
 }

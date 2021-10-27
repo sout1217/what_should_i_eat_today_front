@@ -5,9 +5,12 @@
     <card-list
       :cards="cards"
       :model="model"
-      @first="first"
-      @second="second"
-      @third="third"
+      :first="first"
+      :second="second"
+      :third="third"
+      @first="firstAction"
+      @second="secondAction"
+      @third="thirdAction"
     />
   </v-sheet>
 </template>
@@ -29,15 +32,24 @@ export default {
       type: Number,
       default: 0,
     },
+    first: {
+      type: Object,
+    },
+    second: {
+      type: Object,
+    },
+    third: {
+      type: Object,
+    },
   },
   methods: {
-    first(param) {
+    firstAction(param) {
       this.$emit('first', param)
     },
-    second(param) {
+    secondAction(param) {
       this.$emit('second', param)
     },
-    third(param) {
+    thirdAction(param) {
       this.$emit('third', param)
     },
   },
