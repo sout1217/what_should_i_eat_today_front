@@ -8,9 +8,9 @@
         :first="first"
         :second="second"
         :third="third"
-        @first="firstAction"
-        @second="secondAction"
-        @third="thirdAction"
+        @firstAction="firstAction"
+        @secondAction="secondAction"
+        @thirdAction="thirdAction"
       />
     </template>
   </v-slide-group>
@@ -35,13 +35,13 @@ export default {
   },
   methods: {
     firstAction(param) {
-      this.$emit('first', param)
+      this.$emit('firstAction', param)
     },
     secondAction(param) {
-      this.$emit('second', param)
+      this.$emit('secondAction', param)
     },
     thirdAction(param) {
-      this.$emit('third', param)
+      this.$emit('thirdAction', param)
     },
   },
 }

@@ -2,20 +2,20 @@
   <v-container fluid>
     <v-row class="px-lg-16">
       <!-- left -->
-      <v-col cols="5" class="pr-6">
+      <v-col cols="12" md="5" class="pr-6">
         <v-card class="transparent" flat>
           <router-link to="#">
             <v-img
               class="rounded-xl"
               max-height="445"
               v-ripple="{ class: 'secondary-orange-1' }"
-              :lazy-src="require('@/assets/sundai.png')"
-              :src="require('@/assets/sundai.png')"
+              :src="post.imagePath"
+              :alt="post.imageName"
             />
           </router-link>
 
           <v-card-text class="b1 pt-2 pb-0 d-flex align-center">
-            <div class="flex-grow-1">순대국밥</div>
+            <div class="flex-grow-1"></div>
             <div>
               <v-btn icon>
                 <v-icon color="red lighten-1">mdi-heart</v-icon>
@@ -35,11 +35,11 @@
                 text-color="grayscale-black-6"
                 label
                 small
-                v-for="tag in ['든든한', '뜨근한', '건강식']"
-                :key="tag"
+                v-for="category in post.food.foodCategories"
+                :key="category.id"
               >
                 <span class="b2 font-weight-light">
-                  {{ tag }}
+                  {{ category.name }}
                 </span>
               </v-chip>
             </v-chip-group>
@@ -48,10 +48,15 @@
       </v-col>
 
       <!-- right -->
-      <v-col cols="7" class="pl-6 pt-5">
+      <v-col cols="12" md="7" class="pl-6 pt-5">
         <v-row align="baseline" class="mb-8" no-gutters>
-          <h1 class="mr-4">맛나고 맛좋은 맛있는 음식들</h1>
-          <h6 class="b3 grayscale-black-6 font-weight-light">2019.03.27</h6>
+          <h1 class="mr-4">{{ post.title }}</h1>
+          <h6
+            class="b3 grayscale-black-6 font-weight-light"
+            :title="post.createdAt | yyyymmdd"
+          >
+            {{ post.createdAt | untillNow }} 일 전
+          </h6>
           <v-spacer />
           <h6>
             <v-btn x-small plain link :ripple="false">
@@ -74,13 +79,24 @@
         <v-row no-gutters class="mb-8">
           <dl>
             <dt class="mb-4">작성자</dt>
-            <dd class="pl-8">든든한 배달음식</dd>
+            <dd class="pl-8 d-flex align-center">
+              <v-img
+                v-ripple
+                dark
+                :src="post.member.profileImg"
+                max-width="36"
+                class="pointer rounded-circle mr-2"
+              />
+              {{ post.member.name }}
+            </dd>
           </dl>
         </v-row>
         <v-row no-gutters class="mb-8">
           <dl>
             <dt class="mb-4">태그</dt>
-            <dd class="pl-8">든든한 배달음식</dd>
+            <dd class="pl-8">
+              {{ post.food.foodTags.map(f => f.name) | join }}
+            </dd>
           </dl>
         </v-row>
         <v-row no-gutters>
@@ -100,29 +116,29 @@
       <v-col>
         <CardListGroup
           :cards="recommendedPosts.posts"
-          groupName="추천 글"
+          groupName="현재 음식의 최근 올라온 글"
           :model="4"
           :frist="recommendedPosts.first"
           :second="recommendedPosts.second"
           :third="recommendedPosts.third"
-          @first="doLike"
-          @second="doRating"
-          @third="doFavorite"
+          @firstAction="doLike"
+          @secondAction="doRating"
+          @thirdAction="doFavorite"
         />
       </v-col>
     </v-row>
     <v-row>
       <v-col>
         <CardListGroup
-          :cards="recommendedPosts.posts"
+          :cards="recentlyPosts.posts"
           groupName="최근 올라온 글"
           :model="4"
-          :frist="recommendedPosts.first"
-          :second="recommendedPosts.second"
-          :third="recommendedPosts.third"
-          @first="doLike"
-          @second="doRating"
-          @third="doFavorite"
+          :frist="recentlyPosts.first"
+          :second="recentlyPosts.second"
+          :third="recentlyPosts.third"
+          @firstAction="doLike"
+          @secondAction="doRating"
+          @thirdAction="doFavorite"
         />
       </v-col>
     </v-row>
@@ -131,11 +147,29 @@
 
 <script>
 import CardListGroup from '@/views/components/common/card/CardListGroup'
+import postApi from '@/api/member/post'
+
 export default {
   name: 'PostDetailPage',
   components: { CardListGroup },
   data() {
     return {
+      post: {
+        archive: false,
+        content: '',
+        createdAt: [0, 1, 1, 0, 0, 0, 0],
+        food: {
+          foodTags: [],
+        },
+        id: 0,
+        imageName: '',
+        imagePath: '',
+        isFavoriteByMe: false,
+        isLikedByMe: false,
+        likes: null,
+        member: {},
+        title: '',
+      },
       recommendedPosts: {
         first: {
           fill: 'mdi-heart',
@@ -154,66 +188,131 @@ export default {
         },
         page: 1,
         size: 10,
-        posts: [
-          {
-            id: 1,
-            src: '/img/sundai.2bac2e05.png',
-            alt: 'alt',
-            title: 'title',
-            content:
-              'contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent',
-            like: true,
-            favorite: true,
-            deleteAction: true,
-            likeAction: true,
-            favoriteAction: true,
-          },
-          {
-            id: 2,
-            src: '/img/sundai.2bac2e05.png',
-            alt: 'alt',
-            title: 'title',
-            content: 'content',
-            like: false,
-            favorite: false,
-            deleteAction: true,
-            likeAction: true,
-            favoriteAction: true,
-          },
-          {
-            id: 3,
-            src: '/img/sundai.2bac2e05.png',
-            alt: 'alt',
-            title: 'title',
-            content: 'content',
-            like: false,
-            favorite: false,
-            deleteAction: true,
-            likeAction: true,
-            favoriteAction: true,
-          },
-        ],
+        posts: [],
       },
       recentlyPosts: {
         posts: [],
+        first: {
+          fill: 'mdi-heart',
+          outline: 'mdi-heart-outline',
+          color: 'red',
+        },
+        second: {
+          fill: 'mdi-star',
+          outline: 'mdi-star-outline',
+          color: 'orange lighten-2',
+        },
+        third: {
+          fill: 'mdi-thresh',
+          outline: 'mdi-plus',
+          color: 'grey',
+        },
+      },
+      recentPostsOfCurrentFood: {
+        posts: [],
+        first: {
+          fill: 'mdi-heart',
+          outline: 'mdi-heart-outline',
+          color: 'red',
+        },
+        second: {
+          fill: 'mdi-star',
+          outline: 'mdi-star-outline',
+          color: 'orange lighten-2',
+        },
+        third: {
+          fill: 'mdi-thresh',
+          outline: 'mdi-plus',
+          color: 'grey',
+        },
       },
     }
   },
   methods: {
-    /** 최근 게시물 불러오기 */
-    loadRecentlyPosts() {
+    /** postId에 해당하는 Post 불러오기 */
+    loadPost() {
       this.$store
-        .dispatch('GET_RECENTLY_POSTS')
-        .then(data => {
-          console.log(data)
+        .dispatch('GET_POST', this.$route.params.postId)
+        .then(post => {
+          this.post = post
+          console.log(post)
+
+          this.loadRecentPostsOfCurrentFood(post.food.id)
         })
         .catch(error => this.$toastError(error))
     },
-    doLike() {},
+    /** 최근 Post 불러오기 */
+    loadRecentlyPosts() {
+      this.$store
+        .dispatch('GET_RECENTLY_POSTS')
+        .then(postsPage => {
+          const { content: posts } = postsPage
+          // console.log(posts)
+
+          const newPosts = posts.map(post => ({
+            ...post,
+            src: post.imagePath,
+            alt: post.imageName,
+            likeAction: true,
+            favoriteAction: true,
+            deleteAction: true,
+          }))
+
+          // this.recentlyPosts.posts.push(...newPosts)
+          this.recentlyPosts.posts = [].concat(newPosts)
+        })
+        .catch(error => this.$toastError(error))
+    },
+    /** 최근 Post 불러오기 (음식아이디 필요) */
+    loadRecentPostsOfCurrentFood(foodId) {
+      console.log(foodId)
+      this.$store
+        .dispatch('GET_RECENTLY_POSTS', foodId)
+        .then(postsPage => {
+          const { content: posts } = postsPage
+          // console.log(posts)
+
+          const newPosts = posts.map(post => ({
+            ...post,
+            src: post.imagePath,
+            alt: post.imageName,
+            likeAction: true,
+            favoriteAction: true,
+            deleteAction: true,
+          }))
+
+          // this.recentlyPosts.posts.push(...newPosts)
+          this.recentlyPosts.posts = [].concat(newPosts)
+        })
+        .catch(error => this.$toastError(error))
+    },
+    async doLike(card) {
+      console.log(this.$store.state.me)
+
+      if (card.like) {
+        await postApi.cancelLiked(card.id).then(({ status }) => {
+          if (status == 200) {
+            card.like = false
+            this.loadLikePost()
+            this.makeOtherLike(card.id, false)
+          }
+        })
+      } else {
+        await postApi.likePost(card.id).then(({ status }) => {
+          if (status == 200) {
+            card.like = true
+            this.loadLikePost()
+            this.makeOtherLike(card.id, true)
+          }
+        })
+      }
+      await this.statusLikePost()
+    },
     doRating() {},
     doFavorite() {},
   },
   mounted() {
+    this.loadPost()
     this.loadRecentlyPosts()
   },
 }

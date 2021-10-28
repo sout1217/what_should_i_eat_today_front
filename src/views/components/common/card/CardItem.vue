@@ -1,6 +1,6 @@
 <template>
   <v-slide-item style="width: 500px">
-    <v-card class="ma-4" max-width="250">
+    <v-card class="ma-4 rounded-t-lg overflow-hidden" max-width="250">
       <router-link tag="div" to="#">
         <v-img
           v-ripple="{ class: 'secondary-orange-1' }"
@@ -9,6 +9,7 @@
           class="white--text align-end pointer"
           gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
           height="150px"
+          style="background-color: #d1d1d1"
         >
           <v-card-title v-text="card.title"></v-card-title>
         </v-img>
@@ -21,7 +22,12 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn small icon @click="$emit('first', card)" v-if="card.likeAction">
+        <v-btn
+          small
+          icon
+          @click="$emit('firstAction', card)"
+          v-if="card.likeAction"
+        >
           <v-icon :color="first.color" small v-if="card.like">
             {{ first.fill }}
           </v-icon>
@@ -33,7 +39,7 @@
         <v-btn
           small
           icon
-          @click="$emit('second', card)"
+          @click="$emit('secondAction', card)"
           v-if="card.favoriteAction"
         >
           <v-icon :color="second.color" small v-if="card.favorite">
@@ -47,7 +53,7 @@
         <v-btn
           small
           icon
-          @click="$emit('third', card)"
+          @click="$emit('thirdAction', card)"
           v-if="card.deleteAction"
         >
           <v-icon :color="third.color" small>{{ third.outline }}</v-icon>

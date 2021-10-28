@@ -67,6 +67,11 @@ function getRecentlyPosts() {
   return instanceWithAuth.get('v1/posts/recently')
 }
 
+/** Post 1개 가져오기 */
+function getPost(postId) {
+  return instance.get(`v1/posts/${postId}`)
+}
+
 export default {
   getPostLikedByMe,
   getPostFavoriteByMe,
@@ -81,4 +86,5 @@ export default {
   countLikePost,
   countFavoritePost,
   getRecentlyPosts,
+  getPost,
 }

@@ -86,8 +86,16 @@ const actions = {
 
   /** All 최근 올라온 음식 글 가져오기 */
   async GET_RECENTLY_POSTS({ commit }) {
-    const { data } = await postApi.getRecentlyPosts()
-    console.log('d ->', data)
+    console.log(commit)
+    const { data: postsPage } = await postApi.getRecentlyPosts()
+    return postsPage
+  },
+
+  /** POST 1개 가져오기 */
+  async GET_POST({ commit }, postId) {
+    console.log(commit)
+    const { data: post } = await postApi.getPost(postId)
+    return post
   },
 }
 

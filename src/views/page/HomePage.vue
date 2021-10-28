@@ -7,7 +7,7 @@
       <div class="image-container">
         <template v-for="(post, index) in posts">
           <div class="block" :key="index">
-            <a href="/post-detail">
+            <a :href="`/posts/${post.id}`">
               <img :src="post.imagePath" :alt="post.title" />
             </a>
           </div>
@@ -104,7 +104,7 @@ export default {
 
               data.forEach(post => {
                 html += `<div class="block" style="display: inline-block;" >`
-                html += `  <a href="/post-detail">`
+                html += `  <a href="/posts/${post.id}">`
                 html += `    <img src="${post.imagePath}" alt="${post.title}" />`
                 html += `  </a>`
                 html += `</div>`
