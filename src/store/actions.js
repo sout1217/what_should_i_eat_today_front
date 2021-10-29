@@ -97,6 +97,13 @@ const actions = {
     const { data: post } = await postApi.getPost(postId)
     return post
   },
+
+  /** 현재 음식에 대한 최근 POST 가져오기 */
+  async GET_RECENT_POSTS_OF_CURRENT_FOOD({ commit }, foodId) {
+    console.log(commit)
+    const { data: post } = await postApi.getRecentPostsOfCurrentFood(foodId)
+    return post
+  },
 }
 
 export default actions

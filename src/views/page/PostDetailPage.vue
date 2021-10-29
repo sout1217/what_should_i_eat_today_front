@@ -1,30 +1,42 @@
 <template>
   <v-container fluid>
-    <v-row class="px-lg-16">
+    <v-row class="px-lg-16 mb-5 mb-md-0">
       <!-- left -->
       <v-col cols="12" md="5" class="pr-6">
         <v-card class="transparent" flat>
           <router-link to="#">
             <v-img
+              id="current-post-img"
               class="rounded-xl"
-              max-height="445"
               v-ripple="{ class: 'secondary-orange-1' }"
               :src="post.imagePath"
               :alt="post.imageName"
+              :aspect-ratio="16 / 11"
             />
           </router-link>
 
           <v-card-text class="b1 pt-2 pb-0 d-flex align-center">
-            <div class="flex-grow-1"></div>
+            <div class="flex-grow-1">
+              {{ post.food.name }}
+            </div>
             <div>
-              <v-btn icon>
-                <v-icon color="red lighten-1">mdi-heart</v-icon>
+              <v-btn @click="doLike(post)" icon>
+                <v-icon v-if="post.first" color="red lighten-1">
+                  mdi-heart
+                </v-icon>
+                <v-icon v-else color="red lighten-1">mdi-heart-outline</v-icon>
               </v-btn>
-              <v-btn icon>
-                <v-icon color="orange lighten-2">mdi-star</v-icon>
+              <v-btn @click="doRating(post)" icon>
+                <v-icon v-if="post.second" color="orange lighten-2">
+                  mdi-star
+                </v-icon>
+                <v-icon v-else color="orange lighten-2"
+                  >mdi-star-outline</v-icon
+                >
               </v-btn>
-              <v-btn icon>
-                <v-icon color="grey">mdi-plus</v-icon>
+              <v-btn @click="doFavorite(post)" icon>
+                <v-icon v-if="post.third" color="grey"> mdi-minus </v-icon>
+                <v-icon v-else color="grey">mdi-plus</v-icon>
               </v-btn>
             </div>
           </v-card-text>
@@ -52,7 +64,7 @@
         <v-row align="baseline" class="mb-8" no-gutters>
           <h1 class="mr-4">{{ post.title }}</h1>
           <h6
-            class="b3 grayscale-black-6 font-weight-light"
+            class="b3 grayscale-black-5 font-weight-light"
             :title="post.createdAt | yyyymmdd"
           >
             {{ post.createdAt | untillNow }} 일 전
@@ -79,7 +91,7 @@
         <v-row no-gutters class="mb-8">
           <dl>
             <dt class="mb-4">작성자</dt>
-            <dd class="pl-8 d-flex align-center">
+            <dd class="pl-8 d-flex align-center grayscale-black-5">
               <v-img
                 v-ripple
                 dark
@@ -94,19 +106,25 @@
         <v-row no-gutters class="mb-8">
           <dl>
             <dt class="mb-4">태그</dt>
-            <dd class="pl-8">
+            <dd class="pl-8 grayscale-black-5">
               {{ post.food.foodTags.map(f => f.name) | join }}
             </dd>
           </dl>
         </v-row>
         <v-row no-gutters>
-          <dl>
-            <dt class="mb-4">오늘의 문구</dt>
-            <dd class="pl-8">
-              Habitasse nibh sed pulvinar facilisis tempus. Bibendum tempus
-              integer ut varius et a hendrerit. Vehicula est elit pellentesque
-            </dd>
-          </dl>
+          <v-col class="col-12">
+            <dl>
+              <dt class="mb-4">오늘의 문구</dt>
+              <dd class="pl-8 d-flex justify-space-between grayscale-black-5">
+                <div class="pr-10 text-justify">
+                  {{ post.content }}
+                </div>
+                <div>
+                  <ShareGroup />
+                </div>
+              </dd>
+            </dl>
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
@@ -115,12 +133,12 @@
     <v-row>
       <v-col>
         <CardListGroup
-          :cards="recommendedPosts.posts"
+          :cards="recentPostsOfCurrentFood.posts"
           groupName="현재 음식의 최근 올라온 글"
           :model="4"
-          :frist="recommendedPosts.first"
-          :second="recommendedPosts.second"
-          :third="recommendedPosts.third"
+          :frist="recentPostsOfCurrentFood.first"
+          :second="recentPostsOfCurrentFood.second"
+          :third="recentPostsOfCurrentFood.third"
           @firstAction="doLike"
           @secondAction="doRating"
           @thirdAction="doFavorite"
@@ -140,6 +158,13 @@
           @secondAction="doRating"
           @thirdAction="doFavorite"
         />
+        <Alert
+          :dialog="infoDialog.dialog"
+          :message="infoDialog.message"
+          :ok-action="closeDialog"
+          :close-action="closeDialog"
+          @close="closeDialog"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -147,15 +172,16 @@
 
 <script>
 import CardListGroup from '@/views/components/common/card/CardListGroup'
+import Alert from '@/views/components/common/alert/Alert'
 import postApi from '@/api/member/post'
+import ShareGroup from '@/views/components/common/share/ShareList'
 
 export default {
   name: 'PostDetailPage',
-  components: { CardListGroup },
+  components: { ShareGroup, Alert, CardListGroup },
   data() {
     return {
       post: {
-        archive: false,
         content: '',
         createdAt: [0, 1, 1, 0, 0, 0, 0],
         food: {
@@ -166,7 +192,6 @@ export default {
         imagePath: '',
         isFavoriteByMe: false,
         isLikedByMe: false,
-        likes: null,
         member: {},
         title: '',
       },
@@ -182,7 +207,7 @@ export default {
           color: 'orange lighten-2',
         },
         third: {
-          fill: 'mdi-thresh',
+          fill: 'mdi-minus',
           outline: 'mdi-plus',
           color: 'grey',
         },
@@ -203,7 +228,7 @@ export default {
           color: 'orange lighten-2',
         },
         third: {
-          fill: 'mdi-thresh',
+          fill: 'mdi-minus',
           outline: 'mdi-plus',
           color: 'grey',
         },
@@ -221,10 +246,15 @@ export default {
           color: 'orange lighten-2',
         },
         third: {
-          fill: 'mdi-thresh',
+          fill: 'mdi-minus',
           outline: 'mdi-plus',
           color: 'grey',
         },
+      },
+      infoDialog: {
+        dialog: false,
+        card: {},
+        message: '로그인 후 이용가능한 서비스입니다.',
       },
     }
   },
@@ -234,8 +264,14 @@ export default {
       this.$store
         .dispatch('GET_POST', this.$route.params.postId)
         .then(post => {
-          this.post = post
-          console.log(post)
+          const newPost = {
+            ...post,
+            first: post.isLikedByMe,
+            second: false,
+            third: post.isFavoriteByMe,
+          }
+          console.log('newPost -> ', newPost)
+          this.post = newPost
 
           this.loadRecentPostsOfCurrentFood(post.food.id)
         })
@@ -247,10 +283,13 @@ export default {
         .dispatch('GET_RECENTLY_POSTS')
         .then(postsPage => {
           const { content: posts } = postsPage
-          // console.log(posts)
+          console.log('post', posts)
 
           const newPosts = posts.map(post => ({
             ...post,
+            first: post.isLikedByMe,
+            second: false,
+            third: post.isFavoriteByMe,
             src: post.imagePath,
             alt: post.imageName,
             likeAction: true,
@@ -267,13 +306,16 @@ export default {
     loadRecentPostsOfCurrentFood(foodId) {
       console.log(foodId)
       this.$store
-        .dispatch('GET_RECENTLY_POSTS', foodId)
+        .dispatch('GET_RECENT_POSTS_OF_CURRENT_FOOD', foodId)
         .then(postsPage => {
           const { content: posts } = postsPage
           // console.log(posts)
 
           const newPosts = posts.map(post => ({
             ...post,
+            first: post.isLikedByMe,
+            second: false,
+            third: post.isFavoriteByMe,
             src: post.imagePath,
             alt: post.imageName,
             likeAction: true,
@@ -282,40 +324,68 @@ export default {
           }))
 
           // this.recentlyPosts.posts.push(...newPosts)
-          this.recentlyPosts.posts = [].concat(newPosts)
+          this.recentPostsOfCurrentFood.posts = [].concat(newPosts)
         })
         .catch(error => this.$toastError(error))
     },
     async doLike(card) {
-      console.log(this.$store.state.me)
+      const { token } = this.$store.state
 
-      if (card.like) {
-        await postApi.cancelLiked(card.id).then(({ status }) => {
-          if (status == 200) {
-            card.like = false
-            this.loadLikePost()
-            this.makeOtherLike(card.id, false)
-          }
-        })
-      } else {
-        await postApi.likePost(card.id).then(({ status }) => {
-          if (status == 200) {
-            card.like = true
-            this.loadLikePost()
-            this.makeOtherLike(card.id, true)
-          }
-        })
+      if (!token) {
+        return (this.infoDialog.dialog = true)
       }
-      await this.statusLikePost()
+
+      try {
+        if (card.first) await postApi.cancelLiked(card.id)
+        else await postApi.likePost(card.id)
+        this.init()
+      } catch (error) {
+        this.$toastError(error)
+      }
     },
     doRating() {},
-    doFavorite() {},
+    async doFavorite(card) {
+      const { token } = this.$store.state
+
+      if (!token) {
+        return (this.infoDialog.dialog = true)
+      }
+      try {
+        if (card.third) await postApi.unfavoritePost(card.id)
+        else await postApi.favoritePost(card.id)
+
+        this.init()
+      } catch (error) {
+        this.$toastError(error)
+      }
+    },
+    closeDialog() {
+      this.infoDialog.dialog = false
+    },
+    init() {
+      this.loadPost()
+      this.loadRecentlyPosts()
+    },
   },
   mounted() {
-    this.loadPost()
-    this.loadRecentlyPosts()
+    this.init()
+  },
+  watch: {
+    '$route.params.postId': function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      this.init()
+    },
   },
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+#current-post-img {
+  background-color: #d1d1d1;
+}
+
+@media screen and (max-width: 954px) {
+  #current-post-img {
+  }
+}
+</style>

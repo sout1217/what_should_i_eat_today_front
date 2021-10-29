@@ -14,12 +14,12 @@ function getPostFavoriteByMe() {
 
 /** 글 즐겨찾기 하기 */
 function favoritePost(id) {
-  return instance.post(`v1/posts/${id}/favorite`)
+  return instanceWithAuth.post(`v1/posts/${id}/favorite`)
 }
 
 /** 글 즐겨찾기 삭제하기 */
 function unfavoritePost(id) {
-  return instance.delete(`v1/posts/${id}/favorite`)
+  return instanceWithAuth.delete(`v1/posts/${id}/favorite`)
 }
 
 /** 내가 작성한 글 가져오기 */
@@ -49,17 +49,17 @@ function cancelLiked(id) {
 
 /** 내가 작성한 글 수 */
 function countMyPost() {
-  return instance.get(`v1/posts/my/count`)
+  return instanceWithAuth.get(`v1/posts/my/count`)
 }
 
 /** 내가 좋아요 한 글 수 */
 function countLikePost() {
-  return instance.get(`v1/posts/liked/count`)
+  return instanceWithAuth.get(`v1/posts/liked/count`)
 }
 
 /** 내가 즐겨찾기한 글 수 */
 function countFavoritePost() {
-  return instance.get(`v1/posts/favorite/count`)
+  return instanceWithAuth.get(`v1/posts/favorite/count`)
 }
 
 /** 최근에 올라온 글 가져오기 */
@@ -69,7 +69,12 @@ function getRecentlyPosts() {
 
 /** Post 1개 가져오기 */
 function getPost(postId) {
-  return instance.get(`v1/posts/${postId}`)
+  return instanceWithAuth.get(`v1/posts/${postId}`)
+}
+
+/** 현재 음식에 대한 최근 POST 가져오기 */
+function getRecentPostsOfCurrentFood(foodId) {
+  return instanceWithAuth.get(`v1/posts/foods/${foodId}`)
 }
 
 export default {
@@ -87,4 +92,5 @@ export default {
   countFavoritePost,
   getRecentlyPosts,
   getPost,
+  getRecentPostsOfCurrentFood,
 }

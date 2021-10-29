@@ -1,5 +1,11 @@
 <template>
-  <v-dialog v-model="dialog" max-width="450" dark style="border-radius: 20px">
+  <v-dialog
+    v-model="dialog"
+    max-width="450"
+    dark
+    style="border-radius: 20px"
+    @click:outside="closeDialog"
+  >
     <v-card>
       <v-card-text class="font-weight-medium pt-8">
         <span class="t1">{{ message }}</span>
@@ -50,6 +56,11 @@ export default {
       default: function () {
         this.$emit('close')
       },
+    },
+  },
+  methods: {
+    closeDialog() {
+      this.$emit('close ')
     },
   },
 }

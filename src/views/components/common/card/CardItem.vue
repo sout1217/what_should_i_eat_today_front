@@ -1,7 +1,7 @@
 <template>
   <v-slide-item style="width: 500px">
     <v-card class="ma-4 rounded-t-lg overflow-hidden" max-width="250">
-      <router-link tag="div" to="#">
+      <router-link tag="div" :to="`${card.id}`">
         <v-img
           v-ripple="{ class: 'secondary-orange-1' }"
           :src="card.src"
@@ -28,10 +28,10 @@
           @click="$emit('firstAction', card)"
           v-if="card.likeAction"
         >
-          <v-icon :color="first.color" small v-if="card.like">
+          <v-icon :color="first.color" small v-if="card.first">
             {{ first.fill }}
           </v-icon>
-          <v-icon :color="first.color" small v-if="!card.like">
+          <v-icon :color="first.color" small v-if="!card.first">
             {{ first.outline }}
           </v-icon>
         </v-btn>
@@ -42,10 +42,10 @@
           @click="$emit('secondAction', card)"
           v-if="card.favoriteAction"
         >
-          <v-icon :color="second.color" small v-if="card.favorite">
+          <v-icon :color="second.color" small v-if="card.second">
             {{ second.fill }}
           </v-icon>
-          <v-icon :color="second.color" small v-if="!card.favorite">
+          <v-icon :color="second.color" small v-if="!card.second">
             {{ second.outline }}
           </v-icon>
         </v-btn>
@@ -56,7 +56,12 @@
           @click="$emit('thirdAction', card)"
           v-if="card.deleteAction"
         >
-          <v-icon :color="third.color" small>{{ third.outline }}</v-icon>
+          <v-icon v-if="card.third" :color="third.color" small>
+            {{ third.fill }}
+          </v-icon>
+          <v-icon v-else :color="third.color" small>
+            {{ third.outline }}
+          </v-icon>
         </v-btn>
       </v-card-actions>
     </v-card>
