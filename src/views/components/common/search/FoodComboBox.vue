@@ -1,12 +1,15 @@
 <template>
+  <!-- https://codepen.io/HarryEL65/pen/GRRbLwQ 예제 참고해서 만들기 -->
   <v-combobox
     v-model="chips"
     :items="items"
     chips
     clearable
     multiple
+    :selection="option"
     @input.native="searchText = $event.target.value"
   >
+    <v-slot></v-slot>
     <template v-slot:selection="">
       <v-input v-model="searchText" />
     </template>
@@ -33,6 +36,11 @@ export default {
       chips: [],
       items: [],
       searchText: '',
+      option: {
+        select: function (value) {
+          console.log(value)
+        },
+      },
     }
   },
 
@@ -59,7 +67,7 @@ export default {
   watch: {
     searchText() {
       if (!this.searchText) return
-
+      console.log(this.searchText)
       this.loadFoods()
     },
   },
