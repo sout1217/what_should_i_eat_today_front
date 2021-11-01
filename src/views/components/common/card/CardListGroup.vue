@@ -2,6 +2,7 @@
   <v-sheet class="mx-auto transparent">
     <div class="h3 px-16" v-if="cards.length > 0">{{ groupName }}</div>
     <div class="h3 px-16" v-else>{{ groupName }}이 없습니다.</div>
+
     <card-list
       :cards="cards"
       :model="model"
@@ -11,6 +12,7 @@
       @firstAction="firstAction"
       @secondAction="secondAction"
       @thirdAction="thirdAction"
+      @next="next"
     />
   </v-sheet>
 </template>
@@ -51,6 +53,9 @@ export default {
     },
     thirdAction(param) {
       this.$emit('thirdAction', param)
+    },
+    next() {
+      this.$emit('next')
     },
   },
 }

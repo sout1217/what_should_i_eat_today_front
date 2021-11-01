@@ -65,7 +65,8 @@ export default {
       const hsElem = document.querySelector('.horizontal-scroll')
       const subPosition = 300
 
-      window.addEventListener('wheel', event => {
+      // window 전역 설정되어 오류 발생
+      hsElem.addEventListener('wheel', event => {
         const currentPosition = Math.abs(
           hsElem.style.transform.substring(
             hsElem.style.transform.indexOf('(') + 1,

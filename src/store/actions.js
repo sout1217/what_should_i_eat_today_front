@@ -85,9 +85,9 @@ const actions = {
   },
 
   /** All 최근 올라온 음식 글 가져오기 */
-  async GET_RECENTLY_POSTS({ commit }) {
+  async GET_RECENTLY_POSTS({ commit }, page) {
     console.log(commit)
-    const { data: postsPage } = await postApi.getRecentlyPosts()
+    const { data: postsPage } = await postApi.getRecentlyPosts(page)
     return postsPage
   },
 
@@ -99,9 +99,12 @@ const actions = {
   },
 
   /** 현재 음식에 대한 최근 POST 가져오기 */
-  async GET_RECENT_POSTS_OF_CURRENT_FOOD({ commit }, foodId) {
+  async GET_RECENT_POSTS_OF_CURRENT_FOOD({ commit }, { foodId, page }) {
     console.log(commit)
-    const { data: post } = await postApi.getRecentPostsOfCurrentFood(foodId)
+    const { data: post } = await postApi.getRecentPostsOfCurrentFood({
+      foodId,
+      page,
+    })
     return post
   },
 }

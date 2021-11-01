@@ -18,6 +18,7 @@ Vue.filter('visibleFilter', visibleFilter) /** 노출여부 필터 */
 Vue.filter('yyyymmdd', yyyymmdd) /** yyyy.mm.dd 필터 */
 Vue.filter('join', join) /** yyyy.mm.dd 필터 */
 Vue.filter('untillNow', untillNow) /** yyyy.mm.dd 필터 */
+Vue.filter('oneThousand', oneThousand) /** yyyy.mm.dd 필터 */
 
 /**
  * @description 노출여부
@@ -52,6 +53,19 @@ function untillNow(arr) {
   const t = LocalTime.of(...sliceTime)
 
   return LocalDateTime.now().until(LocalDateTime.of(d, t), ChronoUnit.DAYS)
+}
+
+/**
+ * @description number -> 1000 -> 1k, 1200 -> 1.2k
+ * @param { Array<number> } arr
+ * */
+function oneThousand(number) {
+  if (number < 1000) {
+    return number
+  }
+  const division = Math.floor(number / 100) / 10
+
+  return `${division}k`
 }
 
 /**

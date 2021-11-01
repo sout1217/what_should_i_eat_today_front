@@ -22,47 +22,79 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn
-          small
-          icon
-          @click="$emit('firstAction', card)"
-          v-if="card.likeAction"
-        >
-          <v-icon :color="first.color" small v-if="card.first">
-            {{ first.fill }}
-          </v-icon>
-          <v-icon :color="first.color" small v-if="!card.first">
-            {{ first.outline }}
-          </v-icon>
-        </v-btn>
+        <v-tooltip nudge-bottom="12" top color="bg-grayscale-black-1">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              small
+              icon
+              @click="$emit('firstAction', card)"
+              v-if="card.likeAction"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon :color="first.color" small v-if="card.first">
+                {{ first.fill }}
+              </v-icon>
+              <v-icon :color="first.outlineColor" small v-if="!card.first">
+                {{ first.outline }}
+              </v-icon>
+            </v-btn>
+          </template>
+          <div class="tooltip b3 d-flex flex-column align-center">
+            <div>{{ first.tooltip }}</div>
+            <div v-if="isNotEmpty(card.firstCount)">{{ card.firstCount }}</div>
+          </div>
+        </v-tooltip>
 
-        <v-btn
-          small
-          icon
-          @click="$emit('secondAction', card)"
-          v-if="card.favoriteAction"
-        >
-          <v-icon :color="second.color" small v-if="card.second">
-            {{ second.fill }}
-          </v-icon>
-          <v-icon :color="second.color" small v-if="!card.second">
-            {{ second.outline }}
-          </v-icon>
-        </v-btn>
+        <v-tooltip nudge-bottom="12" top color="bg-grayscale-black-1">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              small
+              icon
+              @click="$emit('secondAction', card)"
+              v-if="card.favoriteAction"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon :color="second.color" small v-if="card.second">
+                {{ second.fill }}
+              </v-icon>
+              <v-icon :color="second.outlineColor" small v-if="!card.second">
+                {{ second.outline }}
+              </v-icon>
+            </v-btn>
+          </template>
+          <div class="tooltip b3 d-flex flex-column align-center">
+            <div>{{ second.tooltip }}</div>
+            <div v-if="isNotEmpty(card.secondCount)">
+              {{ card.secondCount }}
+            </div>
+          </div>
+        </v-tooltip>
 
-        <v-btn
-          small
-          icon
-          @click="$emit('thirdAction', card)"
-          v-if="card.deleteAction"
-        >
-          <v-icon v-if="card.third" :color="third.color" small>
-            {{ third.fill }}
-          </v-icon>
-          <v-icon v-else :color="third.color" small>
-            {{ third.outline }}
-          </v-icon>
-        </v-btn>
+        <v-tooltip nudge-bottom="12" top color="bg-grayscale-black-1">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              small
+              icon
+              @click="$emit('thirdAction', card)"
+              v-if="card.deleteAction"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon v-if="card.third" :color="third.color" small>
+                {{ third.fill }}
+              </v-icon>
+              <v-icon v-else :color="third.outlineColor" small>
+                {{ third.outline }}
+              </v-icon>
+            </v-btn>
+          </template>
+          <div class="tooltip b3 d-flex flex-column align-center">
+            <div>{{ third.tooltip }}</div>
+            <div v-if="isNotEmpty(card.thirdCount)">{{ card.thirdCount }}</div>
+          </div>
+        </v-tooltip>
       </v-card-actions>
     </v-card>
   </v-slide-item>
@@ -86,6 +118,8 @@ export default {
           fill: 'mdi-heart',
           outline: 'mdi-heart-outline',
           color: 'red lighten-1',
+          outlineColor: 'red lighten-1',
+          tooltip: 'first tooltip',
         }
       },
     },
@@ -97,6 +131,8 @@ export default {
           fill: 'mdi-bookmark',
           outline: 'mdi-bookmark-outline',
           color: 'orange lighten-2',
+          outlineColor: 'orange lighten-2',
+          tooltip: 'second tooltip',
         }
       },
     },
@@ -108,8 +144,18 @@ export default {
           fill: 'mdi-delete',
           outline: 'mdi-delete-outline',
           color: 'grey',
+          outlineColor: 'grey',
+          tooltip: 'third tooltip',
         }
       },
+    },
+  },
+  methods: {
+    isNotEmpty(obj) {
+      if (obj !== undefined && obj !== null) {
+        return true
+      }
+      return false
     },
   },
 }

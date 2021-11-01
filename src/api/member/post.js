@@ -63,8 +63,8 @@ function countFavoritePost() {
 }
 
 /** 최근에 올라온 글 가져오기 */
-function getRecentlyPosts() {
-  return instanceWithAuth.get('v1/posts/recently')
+function getRecentlyPosts(page) {
+  return instanceWithAuth.get('v1/posts/recently', { params: { page } })
 }
 
 /** Post 1개 가져오기 */
@@ -73,8 +73,8 @@ function getPost(postId) {
 }
 
 /** 현재 음식에 대한 최근 POST 가져오기 */
-function getRecentPostsOfCurrentFood(foodId) {
-  return instanceWithAuth.get(`v1/posts/foods/${foodId}`)
+function getRecentPostsOfCurrentFood({ foodId, page }) {
+  return instanceWithAuth.get(`v1/posts/foods/${foodId}`, { params: { page } })
 }
 
 export default {
