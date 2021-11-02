@@ -1,11 +1,16 @@
 <template>
   <v-container fluid class="pb-0">
     <v-row class="px-lg-16 mb-5 mb-md-0">
-      <!-- left -->
+      <!-- left 00-->
       <v-col cols="12" md="5" class="pr-6">
         <v-card class="transparent" flat>
-          <v-dialog fullscreen v-model="imgDialog">
-            <template v-slot:activator="{ attrs, on }">
+          <v-dialog
+            id="test"
+            overlay-color="#000"
+            overlay-opacity="0.9"
+            v-model="imgDialog"
+          >
+            <template v-slot:activator="{ on, attrs }">
               <v-img
                 v-on="on"
                 v-bind="attrs"
@@ -17,19 +22,15 @@
                 :aspect-ratio="16 / 11"
               />
             </template>
-            <div
-              class="d-flex align-center justify-center fill-height"
+            <v-img
               @click="imgDialog = false"
-              style="background-color: rgba(0, 0, 0, 0.85)"
-            >
-              <v-img
-                contain
-                :aspect-ratio="16 / 7"
-                class="pointer"
-                :src="post.imagePath"
-                :alt="post.imageName"
-              />
-            </div>
+              width="90%"
+              height="80vh"
+              contain
+              class="mx-auto pointer elevation-0"
+              :src="post.imagePath"
+              :alt="post.imageName"
+            />
           </v-dialog>
           <v-card-text class="b1 pt-2 pb-0 d-flex align-center">
             <div class="flex-grow-1">
@@ -58,9 +59,9 @@
                     <v-icon v-if="post.second" color="orange lighten-2">
                       mdi-star
                     </v-icon>
-                    <v-icon v-else color="orange lighten-2"
-                      >mdi-star-outline</v-icon
-                    >
+                    <v-icon v-else color="orange lighten-2">
+                      mdi-star-outline
+                    </v-icon>
                   </v-btn>
                 </template>
                 <div class="tooltip b3 d-flex flex-column align-center">
@@ -119,7 +120,7 @@
             {{ post.createdAt | untillNow }} 일 전
           </h6>
           <v-spacer />
-          <h6>
+          <h6 v-if="!$store.state.me">
             <v-btn x-small plain link :ripple="false">
               <div
                 class="
@@ -133,6 +134,29 @@
               >
                 <v-icon small class="mr-1"> mdi-account-alert</v-icon>
                 신고하기
+              </div>
+            </v-btn>
+          </h6>
+          <h6 v-else>
+            <v-btn x-small plain link :ripple="false">
+              <div class="b3 primary--text font-weight-light d-flex center">
+                <v-icon small class="mr-1"> mdi-pencil</v-icon>
+                수정
+              </div>
+            </v-btn>
+            <v-btn x-small plain link :ripple="false">
+              <div
+                class="
+                  b3
+                  red--text
+                  text--lighten-1
+                  font-weight-light
+                  d-flex
+                  center
+                "
+              >
+                <v-icon small class="mr-1"> mdi-delete</v-icon>
+                삭제
               </div>
             </v-btn>
           </h6>
@@ -220,9 +244,18 @@
     </v-row>
 
     <!-- section 3 -->
-    <v-row>
-      <v-col cols="12" class="bg-grayscale-black-2 rounded-t-lg pa-6 pb-10">
-        <div class="d-flex" style="gap: 0 16px">
+    <v-row class="grayscale-black-5 font-weight-light">
+      <!-- count -->
+      <v-col cols="12" class="d-flex">
+        <div>댓글</div>
+        <div class="pl-2">0개</div>
+      </v-col>
+      <!-- input -->
+      <v-col
+        cols="12"
+        class="bg-secondary-black-2 rounded-t-lg pa-6 pt-10 pb-10"
+      >
+        <div class="d-flex mb-5" style="gap: 0 16px">
           <v-avatar size="40px">
             <v-img
               v-if="$store.state.me"
@@ -236,18 +269,248 @@
             <v-text-field
               class="b1 font-weight-light pt-0 mt-0"
               @input="editOpen"
+              v-model="reviewForm.edit.text"
               placeholder="입력하세요"
             />
             <v-expand-transition mode="enter-class">
               <v-card
-                v-show="reviewForm.edit"
-                height="100"
-                width="100"
-                class="mx-auto secondary"
+                v-show="reviewForm.edit.visible"
+                elevation="0"
+                color="transparent"
+                class="text-right"
               >
-                <v-btn color="priamary">수정</v-btn>
+                <v-btn class="mr-4" color="primary" @click="writeReviewForPost"
+                  >댓글</v-btn
+                >
+                <v-btn @click="editClose" color="error">취소</v-btn>
               </v-card>
             </v-expand-transition>
+          </div>
+        </div>
+        <!-- reviews -->
+        <div class="d-flex b2" style="gap: 8px 0">
+          <div class="d-flex" style="gap: 0 16px">
+            <v-avatar size="40px">
+              <v-img
+                v-if="$store.state.me"
+                :src="$store.state.me.profileImg"
+                :alt="post.imageName"
+              />
+              <v-img v-else :src="post.imagePath" :alt="post.imageName" />
+            </v-avatar>
+
+            <div class="d-flex flex-column" style="gap: 4px 0">
+              <div class="d-flex align-baseline" style="gap: 0 12px">
+                <div class="b1">{{ $store.state.me.name }}</div>
+                <div class="b3">47분 전 (수정됨)</div>
+              </div>
+              <div>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab
+                aspernatur autem culpa cupiditate, debitis delectus dignissimos
+                dolores excepturi incidunt ipsa magni molestias nobis nostrum
+                possimus provident quasi quidem, soluta sunt.
+              </div>
+              <div class="d-flex align-center pt-1">
+                <div class="d-flex align-center mr-2">
+                  <v-btn
+                    width="24"
+                    height="24"
+                    light
+                    class="bg-grayscale-black-3"
+                    icon
+                  >
+                    <v-icon class="secondary-black-2">
+                      mdi-hand-pointing-up
+                    </v-icon>
+                  </v-btn>
+                </div>
+                <div class="d-flex align-center mr-2">
+                  <v-btn
+                    width="24"
+                    height="24"
+                    light
+                    class="bg-grayscale-black-3"
+                    icon
+                  >
+                    <v-icon class="secondary-black-2">
+                      mdi-hand-pointing-down
+                    </v-icon>
+                  </v-btn>
+                </div>
+                <v-btn small plain class="px-1">답글</v-btn>
+                <v-btn small plain class="px-1">수정</v-btn>
+                <v-btn small plain class="px-1">삭제</v-btn>
+              </div>
+              <div class="d-flex flex-column" style="gap: 12px 0">
+                <!-- reply view -->
+                <div class="d-flex">
+                  <v-btn plain class="px-0 rounded-xl">
+                    <v-icon>mdi-menu-down</v-icon>
+                    <div class="b2">답글 4개 보기</div>
+                  </v-btn>
+                </div>
+                <!-- review > reviews 1 -->
+                <div class="d-flex b2" style="gap: 8px 0">
+                  <div class="d-flex" style="gap: 0 16px">
+                    <v-avatar size="32px">
+                      <v-img
+                        v-if="$store.state.me"
+                        :src="$store.state.me.profileImg"
+                        :alt="post.imageName"
+                      />
+                      <v-img
+                        v-else
+                        :src="require('@/assets/profile.png')"
+                        :alt="post.imageName"
+                      />
+                    </v-avatar>
+
+                    <div class="d-flex flex-column" style="gap: 4px 0">
+                      <div class="d-flex align-baseline" style="gap: 0 12px">
+                        <div class="b1">{{ $store.state.me.name }}</div>
+                        <div class="b3">47분 전 (수정됨)</div>
+                      </div>
+                      <div>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit. Ab aspernatur autem culpa cupiditate, debitis
+                        delectus dignissimos dolores excepturi incidunt ipsa
+                        magni molestias nobis nostrum possimus provident quasi
+                        quidem, soluta sunt.
+                      </div>
+                      <div class="d-flex align-center pt-2 pb-1">
+                        <div class="d-flex align-center mr-2">
+                          <v-btn
+                            width="24"
+                            height="24"
+                            light
+                            class="bg-grayscale-black-3"
+                            icon
+                          >
+                            <v-icon class="secondary-black-2">
+                              mdi-hand-pointing-up
+                            </v-icon>
+                          </v-btn>
+                        </div>
+                        <div class="d-flex align-center mr-2">
+                          <v-btn
+                            width="24"
+                            height="24"
+                            light
+                            class="bg-grayscale-black-3"
+                            icon
+                          >
+                            <v-icon class="secondary-black-2">
+                              mdi-hand-pointing-down
+                            </v-icon>
+                          </v-btn>
+                        </div>
+                        <v-btn small plain class="px-1">답글</v-btn>
+                        <v-btn small plain class="px-1">수정</v-btn>
+                        <v-btn small plain class="px-1">삭제</v-btn>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- review > reviews 2 -->
+                <div class="d-flex b2" style="gap: 8px 0">
+                  <div class="d-flex" style="gap: 0 16px">
+                    <v-avatar size="32px">
+                      <v-img
+                        v-if="$store.state.me"
+                        :src="$store.state.me.profileImg"
+                        :alt="post.imageName"
+                      />
+                      <v-img
+                        v-else
+                        :src="post.imagePath"
+                        :alt="post.imageName"
+                      />
+                    </v-avatar>
+
+                    <div class="d-flex flex-column" style="gap: 4px 0">
+                      <div class="d-flex align-baseline" style="gap: 0 12px">
+                        <div class="b1">{{ $store.state.me.name }}</div>
+                        <div class="b3">47분 전 (수정됨)</div>
+                      </div>
+                      <div>
+                        <!-- 답변 대상 -->
+                        <a href="#" class="text-decoration-none">
+                          @{{ $store.state.me.name }}
+                        </a>
+                      </div>
+                      <div>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit. Ab aspernatur autem culpa cupiditate, debitis
+                        delectus dignissimos dolores excepturi incidunt ipsa
+                        magni molestias nobis nostrum possimus provident quasi
+                        quidem, soluta sunt.
+                      </div>
+                      <div class="d-flex align-center pt-2 pb-1">
+                        <div class="d-flex align-center mr-2">
+                          <v-btn
+                            width="24"
+                            height="24"
+                            light
+                            class="bg-grayscale-black-3"
+                            icon
+                          >
+                            <v-icon class="secondary-black-2">
+                              mdi-hand-pointing-up
+                            </v-icon>
+                          </v-btn>
+                        </div>
+                        <div class="d-flex align-center mr-2">
+                          <v-btn
+                            width="24"
+                            height="24"
+                            light
+                            class="bg-grayscale-black-3"
+                            icon
+                          >
+                            <v-icon class="secondary-black-2">
+                              mdi-hand-pointing-down
+                            </v-icon>
+                          </v-btn>
+                        </div>
+                        <v-btn small plain class="px-1">답글</v-btn>
+                        <v-btn small plain class="px-1">수정</v-btn>
+                        <v-btn small plain class="px-1">삭제</v-btn>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- input -->
+                <div class="d-flex mb-5" style="gap: 0 16px">
+                  <v-avatar size="32px">
+                    <v-img
+                      v-if="$store.state.me"
+                      :src="$store.state.me.profileImg"
+                      :alt="post.imageName"
+                    />
+                    <v-img v-else :src="post.imagePath" :alt="post.imageName" />
+                  </v-avatar>
+
+                  <div style="width: 100%">
+                    <v-text-field
+                      class="b1 font-weight-light pt-0 mt-0"
+                      @input="replyEditOpen"
+                      placeholder="입력하세요"
+                    />
+                    <v-expand-transition mode="enter-class">
+                      <v-card
+                        v-show="reviewForm.replyEdit"
+                        elevation="0"
+                        color="transparent"
+                        class="text-right"
+                      >
+                        <v-btn class="mr-4" color="primary">댓글</v-btn>
+                        <v-btn color="error">취소</v-btn>
+                      </v-card>
+                    </v-expand-transition>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </v-col>
@@ -365,7 +628,14 @@ export default {
       },
       imgDialog: false,
       reviewForm: {
-        edit: false,
+        edit: {
+          visible: false,
+          text: '',
+        },
+        replyEdit: false,
+        data: {
+          reviewForPost: '',
+        },
       },
     }
   },
@@ -506,9 +776,33 @@ export default {
       this.loadPost()
       this.loadRecentlyPosts()
     },
-    editOpen(val) {
-      if (val) this.reviewForm.edit = true
-      else this.reviewForm.edit = false
+    editOpen() {
+      if (this.reviewForm.edit.text) this.reviewForm.edit.visible = true
+      else this.reviewForm.edit.visible = false
+    },
+    editClose() {
+      this.reviewForm.edit.visible = false
+      this.reviewForm.edit.text = ''
+    },
+    replyEditOpen(val) {
+      if (val) this.reviewForm.replyEdit = true
+      else this.reviewForm.replyEdit = false
+    },
+    /** 글에 대한 댓글 작성 */
+    writeReviewForPost() {
+      const data = {
+        postId: this.$route.params.postId,
+        content: this.reviewForm.edit.text,
+      }
+
+      this.$store
+        .dispatch('WRITE_REVIEW_FOR_POST', data)
+        .then(data => {
+          console.log('write response', data)
+          this.editClose()
+        })
+        // 리뷰작성이 안될 때 해당 필드에 error message 출력하기
+        .catch(error => this.$toastError(error))
     },
   },
   mounted() {

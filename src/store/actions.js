@@ -4,6 +4,7 @@ import countriesApi from '@/api/admin/countries'
 import tagsApi from '@/api/admin/tags'
 import meApi from '@/api/member/me'
 import postApi from '@/api/member/post'
+import reviewApi from '@/api/member/review'
 
 const actions = {
   /** 내 정보 조회 */
@@ -106,6 +107,13 @@ const actions = {
       page,
     })
     return post
+  },
+
+  /** 글에 대한 댓글 작성 */
+  async WRITE_REVIEW_FOR_POST({ commit }, { postId, content }) {
+    console.log(commit)
+    const { data: result } = await reviewApi.writeReviewForPost(postId, content)
+    return result
   },
 }
 
