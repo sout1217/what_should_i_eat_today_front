@@ -31,7 +31,7 @@
         <v-col cols="12" sm="1"><v-card-text>제목</v-card-text></v-col>
         <v-col cols="12" sm="6">
           <v-text-field
-            :rules="form.title"
+            v-model="form.title"
             placeholder="글 제목을 입력하세요"
           ></v-text-field>
         </v-col>
@@ -40,7 +40,7 @@
         <v-col cols="12" sm="1"><v-card-text>내용</v-card-text></v-col>
         <v-col cols="12" sm="6">
           <v-text-field
-            :rules="form.content"
+            v-model="form.content"
             placeholder="글 내용을 입력하세요"
           ></v-text-field>
         </v-col>
