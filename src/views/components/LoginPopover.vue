@@ -47,16 +47,13 @@ export default {
   },
   methods: {
     kakaoLogin() {
-      location.href =
-        'http://localhost:8081/oauth2/authorize/kakao?redirect_uri=http://localhost:3000/oauth2/redirect'
+      location.href = `${process.env.VUE_APP_AUTHORIZATION_URL}kakao?redirect_uri=${process.env.VUE_APP_REDIRECT_URL}`
     },
     googleLogin() {
-      location.href =
-        'http://localhost:8081/oauth2/authorize/google?redirect_uri=http://localhost:3000/oauth2/redirect'
+      location.href = `${process.env.VUE_APP_AUTHORIZATION_URL}google?redirect_uri=${process.env.VUE_APP_REDIRECT_URL}`
     },
     naverLogin() {
-      location.href =
-        'http://localhost:8081/oauth2/authorize/naver?redirect_uri=http://localhost:3000/oauth2/redirect'
+      location.href = `${process.env.VUE_APP_AUTHORIZATION_URL}naver?redirect_uri=${process.env.VUE_APP_REDIRECT_URL}`
     },
   },
 }
