@@ -37,6 +37,7 @@ export default {
     third: {
       type: Object,
     },
+    eclick: { type: Function, default: function () {} },
   },
   methods: {
     firstAction(param) {
@@ -50,6 +51,9 @@ export default {
     },
     next() {
       this.$emit('next')
+    },
+    click(param) {
+      this.$emit('onclick', param)
     },
   },
 }

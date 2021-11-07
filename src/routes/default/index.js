@@ -32,5 +32,10 @@ export const DefaultLayout = {
       name: 'PostDetailPage',
       component: () => import('@/views/page/PostDetailPage'),
     },
+    {
+      path: '/post/add',
+      name: 'PostAddPage',
+      component: () => import('@/views/page/PostAddPage'),
+    },
   ],
 }

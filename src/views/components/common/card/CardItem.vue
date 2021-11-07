@@ -106,7 +106,6 @@ export default {
     card: {
       type: Object,
     },
-    toggle: { type: Function },
     id: {
       type: Number,
     },

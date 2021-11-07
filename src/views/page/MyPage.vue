@@ -20,6 +20,7 @@
           @first="doLike"
           @second="doFavorite"
           @third="checkDelete"
+          @onclick="goToDetail"
         />
       </div>
       <div>
@@ -30,6 +31,7 @@
           @first="doLike"
           @second="doFavorite"
           @third="checkDelete"
+          @onclick="goToDetail"
         />
       </div>
       <div>
@@ -40,6 +42,7 @@
           @first="doLike"
           @second="doFavorite"
           @third="checkDelete"
+          @onclick="goToDetail"
         />
         <Alert
           :dialog="deleteDialog.dialog"
@@ -265,6 +268,14 @@ export default {
       postApi.countFavoritePost().then(({ data }) => {
         this.profile.favoriteStatus = `내가 찜한 게시글 : ${data}개`
       })
+    },
+
+    goToDetail(card) {
+      alert(
+        '상세 페이지가 만들어지는데로 상세페이지를 이식해주십쇼. card id = ' +
+          card.id,
+      )
+      console.log(card)
     },
   },
   mounted() {

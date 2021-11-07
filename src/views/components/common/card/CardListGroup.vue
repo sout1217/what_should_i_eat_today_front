@@ -58,6 +58,9 @@ export default {
     next() {
       this.$emit('next')
     },
+    click(param) {
+      this.$emit('onclick', param)
+    },
   },
 }
 </script>
