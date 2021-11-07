@@ -177,8 +177,7 @@ export default {
       })
     },
     loadLikePost() {
-      let postLikedByMe = postApi.getPostLikedByMe()
-      postLikedByMe.then(({ data: { content } }) => {
+      postApi.getPostLikedByMe().then(({ data: { content } }) => {
         // this.postLikedByMe.posts = []
         for (let d of content) {
           this.postLikedByMe.posts.push({
@@ -197,8 +196,7 @@ export default {
       })
     },
     loadFavoritePost() {
-      let postFavoriteByMe = postApi.getPostFavoriteByMe()
-      postFavoriteByMe.then(({ data: { content } }) => {
+      postApi.getPostFavoriteByMe().then(({ data: { content } }) => {
         for (let d of content) {
           this.postFavoriteByMe.posts.push({
             id: d.id,

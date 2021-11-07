@@ -1,5 +1,5 @@
 <template>
-  <div class="touch-area">
+  <div class="touch-area d-flex align-center">
     <svg
       :width="width"
       :height="height"

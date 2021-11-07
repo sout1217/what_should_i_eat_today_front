@@ -2,13 +2,18 @@
   <v-sheet class="mx-auto transparent">
     <div class="h3 px-16" v-if="cards.length > 0">{{ groupName }}</div>
     <div class="h3 px-16" v-else>{{ groupName }}이 없습니다.</div>
+
     <card-list
+      style="min-height: 228px"
       :cards="cards"
       :model="model"
-      @first="first"
-      @second="second"
-      @third="third"
-      @onclick="click"
+      :first="first"
+      :second="second"
+      :third="third"
+      @firstAction="firstAction"
+      @secondAction="secondAction"
+      @thirdAction="thirdAction"
+      @next="next"
     />
   </v-sheet>
 </template>
@@ -30,16 +35,28 @@ export default {
       type: Number,
       default: 0,
     },
+    first: {
+      type: Object,
+    },
+    second: {
+      type: Object,
+    },
+    third: {
+      type: Object,
+    },
   },
   methods: {
-    first(param) {
-      this.$emit('first', param)
+    firstAction(param) {
+      this.$emit('firstAction', param)
     },
-    second(param) {
-      this.$emit('second', param)
+    secondAction(param) {
+      this.$emit('secondAction', param)
     },
-    third(param) {
-      this.$emit('third', param)
+    thirdAction(param) {
+      this.$emit('thirdAction', param)
+    },
+    next() {
+      this.$emit('next')
     },
     click(param) {
       this.$emit('onclick', param)
