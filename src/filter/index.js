@@ -5,6 +5,34 @@
  * */
 
 import Vue from 'vue'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import updateLocale from 'dayjs/plugin/updateLocale'
+import CustomParseFormat from 'dayjs/plugin/customParseFormat'
+import 'dayjs/locale/ko'
+
+dayjs.locale('ko')
+dayjs.extend(relativeTime)
+dayjs.extend(updateLocale)
+dayjs.extend(CustomParseFormat)
+
+// dayjs.updateLocale('ko', {
+//   relativeTime: {
+//     future: 'in %s',
+//     past: '%d ago',
+//     s: 'a few seconds',
+//     m: 'a minute',
+//     mm: '%d minutes',
+//     h: 'an hour',
+//     hh: '%d hours',
+//     d: 'a day',
+//     dd: '%d days',
+//     M: 'a month',
+//     MM: '%d months',
+//     y: 'a year',
+//     yy: '%d years',
+//   },
+// })
 import {
   LocalDate,
   LocalTime,
@@ -12,13 +40,19 @@ import {
   DateTimeFormatter,
   ChronoUnit,
 } from 'js-joda'
+
 const yyyymmddFormmater = DateTimeFormatter.ofPattern('yyyy.MM.dd')
+const yyyymmddhhmmssFormmater = DateTimeFormatter.ofPattern(
+  'yyyy.MM.dd HH:mm:ss',
+)
 
 Vue.filter('visibleFilter', visibleFilter) /** 노출여부 필터 */
 Vue.filter('yyyymmdd', yyyymmdd) /** yyyy.mm.dd 필터 */
+Vue.filter('yyyymmddhhmmss', yyyymmddhhmmss) /** yyyy.mm.dd 필터 */
 Vue.filter('join', join) /** yyyy.mm.dd 필터 */
 Vue.filter('untillNow', untillNow) /** yyyy.mm.dd 필터 */
 Vue.filter('oneThousand', oneThousand) /** yyyy.mm.dd 필터 */
+Vue.filter('to', to)
 
 /**
  * @description 노출여부
@@ -39,6 +73,15 @@ function yyyymmdd(arr) {
   const t = LocalTime.of(...sliceTime)
 
   return LocalDateTime.of(d, t).format(yyyymmddFormmater)
+}
+
+function yyyymmddhhmmss(arr) {
+  const sliceDate = arr.slice(0, 3)
+  const sliceTime = arr.slice(3)
+  const d = LocalDate.of(...sliceDate)
+  const t = LocalTime.of(...sliceTime)
+
+  return LocalDateTime.of(d, t).format(yyyymmddhhmmssFormmater)
 }
 
 /**
@@ -75,4 +118,17 @@ function oneThousand(number) {
  * */
 function join(arr, delimiter = ', ') {
   return arr.join(delimiter)
+}
+
+function to(arr) {
+  return convert(arr).fromNow()
+}
+
+/**
+ * ★★★ format 형식 맞추기
+ * https://day.js.org/docs/en/parse/string-format
+ * */
+function convert(arr) {
+  if (!arr) return ''
+  return dayjs(arr.slice(0, 6).join('-'), 'YYYY-M-D-H-m-s', 'ko')
 }

@@ -4,6 +4,7 @@
     max-width="450"
     dark
     style="border-radius: 20px"
+    ref="alert"
     @click:outside="closeDialog"
   >
     <v-card>
@@ -60,7 +61,7 @@ export default {
   },
   methods: {
     closeDialog() {
-      this.$emit('close ')
+      this.$emit('close')
     },
   },
 }

@@ -115,6 +115,49 @@ const actions = {
     const { data: result } = await reviewApi.writeReviewForPost(postId, content)
     return result
   },
+
+  /** 게시물에 대한 리뷰 가져오기  */
+  async GET_REVIEWS_FOR_POST({ commit }, { postId, page }) {
+    console.log(commit)
+    const { data: reviewPageAndTotalCount } = await reviewApi.getReviewsForPost(
+      postId,
+      page,
+    )
+    return reviewPageAndTotalCount
+  },
+
+  /** 리뷰에 대한 자식 리뷰 가져오기 */
+  async GET_REVIEWS_FOR_REVIEW({ commit }, { postId, reviewId }) {
+    console.log(commit)
+    const { data: reviews } = await reviewApi.getReviewsForReview(
+      postId,
+      reviewId,
+    )
+    return reviews
+  },
+
+  /** 댓글에 대한 답글 작성 */
+  async WRITE_REVIEW_FOR_REVIEW({ commit }, { postId, reviewId, content }) {
+    console.log(commit)
+    const { data: result } = await reviewApi.writeReviewForReview(
+      postId,
+      reviewId,
+      content,
+    )
+    return result
+  },
+
+  /** 리뷰 수정하기 */
+  async UPDATE_REVIEW({ commit }, { reviewId, content }) {
+    console.log(commit)
+    await reviewApi.updateReview(reviewId, content)
+  },
+
+  /** 리뷰 삭제하기 */
+  async DELETE_REVIEW({ commit }, reviewId) {
+    console.log(commit)
+    await reviewApi.deleteReview(reviewId)
+  },
 }
 
 export default actions

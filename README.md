@@ -47,6 +47,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 * 2021-09-24 : vee-validate ^3.4.11
 * 2021-09-24 : js-joda ^1.11.0
 * 2021-10-19 : horizontal-scroll ^1.1.0
+* 2021-11-04 : dayjs
 
 
 

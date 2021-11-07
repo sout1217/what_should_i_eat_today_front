@@ -9,6 +9,7 @@ const mutations = {
   /** 내 정보 업데이트 */
   updateMe(state, member) {
     state.me = member
+    state.isAuth = true
     // 메인 페이지로 올 경우 로컬 스토리지가 비워짐
   },
 

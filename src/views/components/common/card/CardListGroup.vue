@@ -4,6 +4,7 @@
     <div class="h3 px-16" v-else>{{ groupName }}이 없습니다.</div>
 
     <card-list
+      style="min-height: 228px"
       :cards="cards"
       :model="model"
       :first="first"

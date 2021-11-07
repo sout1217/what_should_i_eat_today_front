@@ -115,13 +115,19 @@
           <h1 class="mr-4">{{ post.title }}</h1>
           <h6
             class="b3 grayscale-black-5 font-weight-light"
-            :title="post.createdAt | yyyymmdd"
+            :title="post.createdAt | yyyymmddhhmmss"
           >
-            {{ post.createdAt | untillNow }} 일 전
+            {{ post.createdAt | to }}
           </h6>
           <v-spacer />
-          <h6 v-if="!$store.state.me">
-            <v-btn x-small plain link :ripple="false">
+          <h6 v-if="post.member.name !== $store.state.me.name">
+            <v-btn
+              x-small
+              plain
+              link
+              :ripple="false"
+              @click="reportModal.dialog = true"
+            >
               <div
                 class="
                   b3
@@ -155,8 +161,10 @@
                   center
                 "
               >
-                <v-icon small class="mr-1"> mdi-delete</v-icon>
-                삭제
+                <v-icon small class="mr-1" @click="deletePost(post)">
+                  mdi-delete</v-icon
+                >
+                삭제 1
               </div>
             </v-btn>
           </h6>
@@ -165,12 +173,10 @@
           <dl>
             <dt class="mb-4">작성자</dt>
             <dd class="pl-8 d-flex align-center grayscale-black-5">
-              <v-img
-                v-ripple
-                dark
-                :src="post.member.profileImg"
-                max-width="36"
-                class="pointer rounded-circle mr-2"
+              <profile-info
+                :size="36"
+                :member="post.member"
+                @report="reportModal.dialog = true"
               />
               {{ post.member.name }}
             </dd>
@@ -244,277 +250,414 @@
     </v-row>
 
     <!-- section 3 -->
-    <v-row class="grayscale-black-5 font-weight-light">
+    <v-row class="grayscale-black-5 font-weight-light" ref="review">
       <!-- count -->
       <v-col cols="12" class="d-flex">
         <div>댓글</div>
-        <div class="pl-2">0개</div>
+        <div class="pl-2">{{ review.totalCount }} 개</div>
       </v-col>
       <!-- input -->
-      <v-col
-        cols="12"
-        class="bg-secondary-black-2 rounded-t-lg pa-6 pt-10 pb-10"
-      >
-        <div class="d-flex mb-5" style="gap: 0 16px">
-          <v-avatar size="40px">
-            <v-img
-              v-if="$store.state.me"
-              :src="$store.state.me.profileImg"
-              :alt="post.imageName"
-            />
-            <v-img v-else :src="post.imagePath" :alt="post.imageName" />
-          </v-avatar>
-
-          <div style="width: 100%">
-            <v-text-field
-              class="b1 font-weight-light pt-0 mt-0"
-              @input="editOpen"
-              v-model="reviewForm.edit.text"
-              placeholder="입력하세요"
-            />
-            <v-expand-transition mode="enter-class">
-              <v-card
-                v-show="reviewForm.edit.visible"
-                elevation="0"
-                color="transparent"
-                class="text-right"
-              >
-                <v-btn class="mr-4" color="primary" @click="writeReviewForPost"
-                  >댓글</v-btn
-                >
-                <v-btn @click="editClose" color="error">취소</v-btn>
-              </v-card>
-            </v-expand-transition>
-          </div>
-        </div>
-        <!-- reviews -->
-        <div class="d-flex b2" style="gap: 8px 0">
-          <div class="d-flex" style="gap: 0 16px">
+      <v-col cols="12" class="pb-0">
+        <v-card
+          :loading="reviewForm.isLoad"
+          color="bg-secondary-black-2"
+          class="rounded-t-lg pa-6 pt-10 pb-7"
+          min-height="300"
+        >
+          <div class="d-flex mb-5" style="gap: 0 16px">
             <v-avatar size="40px">
               <v-img
-                v-if="$store.state.me"
+                v-if="$store.state.isAuth"
                 :src="$store.state.me.profileImg"
                 :alt="post.imageName"
               />
-              <v-img v-else :src="post.imagePath" :alt="post.imageName" />
+              <v-img
+                v-else
+                :src="require('@/assets/profile.png')"
+                alt="anonymous"
+              />
             </v-avatar>
 
-            <div class="d-flex flex-column" style="gap: 4px 0">
-              <div class="d-flex align-baseline" style="gap: 0 12px">
-                <div class="b1">{{ $store.state.me.name }}</div>
-                <div class="b3">47분 전 (수정됨)</div>
-              </div>
-              <div>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab
-                aspernatur autem culpa cupiditate, debitis delectus dignissimos
-                dolores excepturi incidunt ipsa magni molestias nobis nostrum
-                possimus provident quasi quidem, soluta sunt.
-              </div>
-              <div class="d-flex align-center pt-1">
-                <div class="d-flex align-center mr-2">
+            <div style="width: 100%">
+              <v-text-field
+                v-if="$store.state.isAuth"
+                class="b1 font-weight-light pt-0 mt-0"
+                @input="editOpen(reviewForm.edit)"
+                v-model="reviewForm.edit.text"
+                placeholder="입력하세요1"
+                @keypress.enter.prevent="writeReviewForPost(reviewForm.edit)"
+              />
+              <v-text-field
+                v-else
+                class="b1 font-weight-light pt-0 mt-0"
+                v-model="reviewForm.edit.text"
+                @click="loginCheck"
+                placeholder="입력하세요2"
+              />
+              <v-expand-transition mode="enter-class">
+                <v-card
+                  v-show="reviewForm.edit.visible"
+                  elevation="0"
+                  color="transparent"
+                  class="text-right"
+                >
                   <v-btn
-                    width="24"
-                    height="24"
-                    light
-                    class="bg-grayscale-black-3"
-                    icon
+                    class="mr-4"
+                    color="primary"
+                    @click="writeReviewForPost(reviewForm.edit)"
                   >
-                    <v-icon class="secondary-black-2">
-                      mdi-hand-pointing-up
-                    </v-icon>
+                    댓글
                   </v-btn>
-                </div>
-                <div class="d-flex align-center mr-2">
-                  <v-btn
-                    width="24"
-                    height="24"
-                    light
-                    class="bg-grayscale-black-3"
-                    icon
-                  >
-                    <v-icon class="secondary-black-2">
-                      mdi-hand-pointing-down
-                    </v-icon>
+                  <v-btn @click="editClose(reviewForm.edit)" color="error">
+                    취소
                   </v-btn>
-                </div>
-                <v-btn small plain class="px-1">답글</v-btn>
-                <v-btn small plain class="px-1">수정</v-btn>
-                <v-btn small plain class="px-1">삭제</v-btn>
-              </div>
-              <div class="d-flex flex-column" style="gap: 12px 0">
-                <!-- reply view -->
-                <div class="d-flex">
-                  <v-btn plain class="px-0 rounded-xl">
-                    <v-icon>mdi-menu-down</v-icon>
-                    <div class="b2">답글 4개 보기</div>
-                  </v-btn>
-                </div>
-                <!-- review > reviews 1 -->
-                <div class="d-flex b2" style="gap: 8px 0">
-                  <div class="d-flex" style="gap: 0 16px">
-                    <v-avatar size="32px">
-                      <v-img
-                        v-if="$store.state.me"
-                        :src="$store.state.me.profileImg"
-                        :alt="post.imageName"
-                      />
-                      <v-img
-                        v-else
-                        :src="require('@/assets/profile.png')"
-                        :alt="post.imageName"
-                      />
-                    </v-avatar>
+                </v-card>
+              </v-expand-transition>
+            </div>
+          </div>
+          <div v-if="!review.reviews.length">
+            <h4 align="center">댓글이 없습니다 😢</h4>
+          </div>
+          <!-- reviews -->
+          <template v-for="(review, index) in review.reviews">
+            <div
+              :id="review.id"
+              class="d-flex b2 mb-5"
+              style="gap: 8px 0; width: 100%"
+              :key="index"
+            >
+              <div class="d-flex" style="gap: 0 16px; width: 100%">
+                <profile-info
+                  :size="40"
+                  :member="review.member"
+                  @report="reportModal.dialog = true"
+                />
 
-                    <div class="d-flex flex-column" style="gap: 4px 0">
-                      <div class="d-flex align-baseline" style="gap: 0 12px">
-                        <div class="b1">{{ $store.state.me.name }}</div>
-                        <div class="b3">47분 전 (수정됨)</div>
+                <div class="d-flex flex-column flex-grow-1" style="gap: 4px 0">
+                  <div v-if="!review.update.visible">
+                    <div class="d-flex align-baseline" style="gap: 0 12px">
+                      <div class="b1">{{ review.member.name }}</div>
+                      <div
+                        class="b3"
+                        :title="review.createdAt | yyyymmddhhmmss"
+                      >
+                        {{ review.createdAt | to }}
                       </div>
-                      <div>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing
-                        elit. Ab aspernatur autem culpa cupiditate, debitis
-                        delectus dignissimos dolores excepturi incidunt ipsa
-                        magni molestias nobis nostrum possimus provident quasi
-                        quidem, soluta sunt.
+                    </div>
+                    <div>
+                      {{ review.content }}
+                    </div>
+                    <div class="d-flex align-center pt-1">
+                      <div class="d-flex align-center mr-2">
+                        <v-btn
+                          width="24"
+                          height="24"
+                          light
+                          class="bg-grayscale-black-3"
+                          icon
+                        >
+                          <v-icon class="secondary-black-2">
+                            mdi-hand-pointing-up
+                          </v-icon>
+                        </v-btn>
                       </div>
-                      <div class="d-flex align-center pt-2 pb-1">
-                        <div class="d-flex align-center mr-2">
-                          <v-btn
-                            width="24"
-                            height="24"
-                            light
-                            class="bg-grayscale-black-3"
-                            icon
-                          >
-                            <v-icon class="secondary-black-2">
-                              mdi-hand-pointing-up
-                            </v-icon>
-                          </v-btn>
-                        </div>
-                        <div class="d-flex align-center mr-2">
-                          <v-btn
-                            width="24"
-                            height="24"
-                            light
-                            class="bg-grayscale-black-3"
-                            icon
-                          >
-                            <v-icon class="secondary-black-2">
-                              mdi-hand-pointing-down
-                            </v-icon>
-                          </v-btn>
-                        </div>
-                        <v-btn small plain class="px-1">답글</v-btn>
-                        <v-btn small plain class="px-1">수정</v-btn>
-                        <v-btn small plain class="px-1">삭제</v-btn>
+                      <div class="d-flex align-center mr-2">
+                        <v-btn
+                          width="24"
+                          height="24"
+                          light
+                          class="bg-grayscale-black-3"
+                          icon
+                        >
+                          <v-icon class="secondary-black-2">
+                            mdi-hand-pointing-down
+                          </v-icon>
+                        </v-btn>
+                      </div>
+                      <div v-if="review.member.email === $store.state.me.email">
+                        <v-btn
+                          small
+                          plain
+                          class="px-1"
+                          @click="openUpdateEdit(review)"
+                        >
+                          <span class="b2"> 수정2 </span>
+                        </v-btn>
+                        <v-btn
+                          small
+                          plain
+                          class="px-1"
+                          @click="openDeleteAlert(review)"
+                        >
+                          <span class="b2">삭제 2</span>
+                        </v-btn>
                       </div>
                     </div>
                   </div>
-                </div>
-                <!-- review > reviews 2 -->
-                <div class="d-flex b2" style="gap: 8px 0">
-                  <div class="d-flex" style="gap: 0 16px">
-                    <v-avatar size="32px">
-                      <v-img
-                        v-if="$store.state.me"
-                        :src="$store.state.me.profileImg"
-                        :alt="post.imageName"
-                      />
-                      <v-img
-                        v-else
-                        :src="post.imagePath"
-                        :alt="post.imageName"
-                      />
-                    </v-avatar>
-
-                    <div class="d-flex flex-column" style="gap: 4px 0">
-                      <div class="d-flex align-baseline" style="gap: 0 12px">
-                        <div class="b1">{{ $store.state.me.name }}</div>
-                        <div class="b3">47분 전 (수정됨)</div>
-                      </div>
-                      <div>
-                        <!-- 답변 대상 -->
-                        <a href="#" class="text-decoration-none">
-                          @{{ $store.state.me.name }}
-                        </a>
-                      </div>
-                      <div>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing
-                        elit. Ab aspernatur autem culpa cupiditate, debitis
-                        delectus dignissimos dolores excepturi incidunt ipsa
-                        magni molestias nobis nostrum possimus provident quasi
-                        quidem, soluta sunt.
-                      </div>
-                      <div class="d-flex align-center pt-2 pb-1">
-                        <div class="d-flex align-center mr-2">
-                          <v-btn
-                            width="24"
-                            height="24"
-                            light
-                            class="bg-grayscale-black-3"
-                            icon
-                          >
-                            <v-icon class="secondary-black-2">
-                              mdi-hand-pointing-up
-                            </v-icon>
-                          </v-btn>
-                        </div>
-                        <div class="d-flex align-center mr-2">
-                          <v-btn
-                            width="24"
-                            height="24"
-                            light
-                            class="bg-grayscale-black-3"
-                            icon
-                          >
-                            <v-icon class="secondary-black-2">
-                              mdi-hand-pointing-down
-                            </v-icon>
-                          </v-btn>
-                        </div>
-                        <v-btn small plain class="px-1">답글</v-btn>
-                        <v-btn small plain class="px-1">수정</v-btn>
-                        <v-btn small plain class="px-1">삭제</v-btn>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- input -->
-                <div class="d-flex mb-5" style="gap: 0 16px">
-                  <v-avatar size="32px">
-                    <v-img
-                      v-if="$store.state.me"
-                      :src="$store.state.me.profileImg"
-                      :alt="post.imageName"
-                    />
-                    <v-img v-else :src="post.imagePath" :alt="post.imageName" />
-                  </v-avatar>
-
-                  <div style="width: 100%">
+                  <div v-else>
                     <v-text-field
                       class="b1 font-weight-light pt-0 mt-0"
-                      @input="replyEditOpen"
-                      placeholder="입력하세요"
+                      v-model="review.update.text"
+                      placeholder="입력하세요123"
+                      @keypress.enter.prevent="updateReview(review)"
                     />
                     <v-expand-transition mode="enter-class">
                       <v-card
-                        v-show="reviewForm.replyEdit"
+                        v-show="review.update.visible"
                         elevation="0"
                         color="transparent"
                         class="text-right"
                       >
-                        <v-btn class="mr-4" color="primary">댓글</v-btn>
-                        <v-btn color="error">취소</v-btn>
+                        <v-btn
+                          class="mr-4"
+                          color="primary"
+                          @click="updateReview(review)"
+                        >
+                          수정
+                        </v-btn>
+                        <v-btn @click="editClose(review.update)" color="error">
+                          취소
+                        </v-btn>
                       </v-card>
                     </v-expand-transition>
+                  </div>
+                  <div class="d-flex flex-column" style="gap: 12px 0">
+                    <!-- reply view -->
+                    <div class="d-flex">
+                      <v-btn
+                        v-if="review.childCount"
+                        plain
+                        class="px-0 rounded-xl"
+                        @click="loadReviewsForReview(review)"
+                      >
+                        <v-icon>mdi-menu-down</v-icon>
+                        <div class="b2">
+                          답글 {{ review.childCount }}개 보기
+                        </div>
+                      </v-btn>
+                      <v-btn
+                        v-else
+                        plain
+                        class="px-0 rounded-xl"
+                        @click="openChildrenOfReviewWriteInput(review)"
+                      >
+                        <div class="b2">답변 작성</div>
+                      </v-btn>
+                    </div>
+                    <!-- input -->
+                    <div
+                      v-if="review.edit.visible"
+                      class="d-flex mb-5"
+                      style="gap: 0 16px"
+                    >
+                      <v-avatar size="32px">
+                        <v-img
+                          v-if="$store.state.isAuth"
+                          :src="$store.state.me.profileImg"
+                          :alt="post.imageName"
+                        />
+                        <v-img
+                          v-else
+                          :src="require('@/assets/profile.png')"
+                          alt="anonymous"
+                        />
+                      </v-avatar>
+
+                      <div class="flex-grow-1">
+                        <v-text-field
+                          class="b1 font-weight-light pt-0 mt-0 flex-1"
+                          @input="replyEditOpen"
+                          @click="loginCheck"
+                          placeholder="입력하세요3"
+                          v-model="review.edit.text"
+                          @keypress.enter.prevent="writeReviewForReview(review)"
+                        />
+                        <v-expand-transition mode="enter-class">
+                          <v-card
+                            v-show="review.edit.text"
+                            elevation="0"
+                            color="transparent"
+                            class="text-right"
+                          >
+                            <v-btn
+                              class="mr-4"
+                              color="primary"
+                              @click="writeReviewForReview(review)"
+                            >
+                              댓글
+                            </v-btn>
+                            <v-btn
+                              @click="editClose(review.edit)"
+                              color="error"
+                            >
+                              취소5
+                            </v-btn>
+                          </v-card>
+                        </v-expand-transition>
+                      </div>
+                    </div>
+                    <!-- review > child reviews -->
+                    <template v-for="(child, index) in review.child">
+                      <div
+                        v-if="review.edit.visible"
+                        class="d-flex b2"
+                        style="gap: 8px 0"
+                        :key="index"
+                      >
+                        <div class="d-flex flex-grow-1" style="gap: 0 16px">
+                          <profile-info
+                            v-if="child.member.profileImg"
+                            :size="32"
+                            :member="child.member"
+                            @report="reportModal.dialog = true"
+                          />
+                          <v-avatar v-else size="32px">
+                            <v-img
+                              :src="require('@/assets/profile.png')"
+                              alt="anonymous"
+                            />
+                          </v-avatar>
+
+                          <div
+                            class="d-flex flex-column flex-grow-1"
+                            style="gap: 4px 0"
+                          >
+                            <div v-if="!child.update.visible">
+                              <div
+                                class="d-flex align-baseline"
+                                style="gap: 0 12px"
+                              >
+                                <div class="b1">{{ child.member.name }}</div>
+                                <div class="b3">
+                                  {{ child.createdAt | to }}
+                                </div>
+                              </div>
+                              <div>
+                                <a :href="`#${child.parent.id}`">
+                                  @{{ child.parent.member.name }}
+                                </a>
+                              </div>
+                              <div>
+                                {{ child.content }}
+                              </div>
+
+                              <div class="d-flex align-center pt-2 pb-1">
+                                <div class="d-flex align-center mr-2">
+                                  <v-btn
+                                    width="24"
+                                    height="24"
+                                    light
+                                    class="bg-grayscale-black-3"
+                                    icon
+                                  >
+                                    <v-icon class="secondary-black-2">
+                                      mdi-hand-pointing-up
+                                    </v-icon>
+                                  </v-btn>
+                                </div>
+                                <div class="d-flex align-center mr-2">
+                                  <v-btn
+                                    width="24"
+                                    height="24"
+                                    light
+                                    class="bg-grayscale-black-3"
+                                    icon
+                                  >
+                                    <v-icon class="secondary-black-2">
+                                      mdi-hand-pointing-down
+                                    </v-icon>
+                                  </v-btn>
+                                </div>
+                                <div
+                                  v-if="
+                                    child.member.email === $store.state.me.email
+                                  "
+                                >
+                                  <v-btn
+                                    small
+                                    plain
+                                    class="px-1"
+                                    @click="openUpdateEdit(child)"
+                                  >
+                                    <span class="b2"> 수정5</span>
+                                  </v-btn>
+                                  <v-btn
+                                    small
+                                    plain
+                                    class="px-1"
+                                    @click="openDeleteAlert(child)"
+                                  >
+                                    <span class="b2"> 삭제 3 </span>
+                                  </v-btn>
+                                </div>
+                              </div>
+                            </div>
+                            <div v-else style="width: 100%">
+                              <v-text-field
+                                class="b1 font-weight-light pt-0 mt-0"
+                                v-model="child.update.text"
+                                placeholder="입력하세요123"
+                                @keypress.enter.prevent="updateReview(child)"
+                              />
+                              <v-expand-transition mode="enter-class">
+                                <v-card
+                                  v-show="child.update.visible"
+                                  elevation="0"
+                                  color="transparent"
+                                  class="text-right"
+                                >
+                                  <v-btn
+                                    class="mr-4"
+                                    color="primary"
+                                    @click="updateReview(child)"
+                                  >
+                                    수정
+                                  </v-btn>
+                                  <v-btn
+                                    @click="editClose(child.update)"
+                                    color="error"
+                                  >
+                                    취소
+                                  </v-btn>
+                                </v-card>
+                              </v-expand-transition>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
                   </div>
                 </div>
               </div>
             </div>
+          </template>
+          <div>
+            <v-pagination
+              v-if="review.totalPages > 1"
+              color="primary"
+              v-model="review.page"
+              :length="review.totalPages"
+              total-visible="10"
+            >
+            </v-pagination>
           </div>
-        </div>
+        </v-card>
       </v-col>
     </v-row>
+    <WriteReportModal
+      :dialog="reportModal.dialog"
+      @close="reportModal.dialog = false"
+    />
+    <Alert
+      :dialog="deleteAlert.dialog"
+      :message="deleteAlert.message"
+      :ok-action="deleteReview"
+      :close-action="closeDeleteAlert"
+      :cancel-action="closeDeleteAlert"
+      @cancel="closeDeleteAlert"
+      :ok="deleteAlert.ok"
+      :no="deleteAlert.no"
+    />
   </v-container>
 </template>
 
@@ -523,10 +666,18 @@ import CardListGroup from '@/views/components/common/card/CardListGroup'
 import Alert from '@/views/components/common/alert/Alert'
 import postApi from '@/api/member/post'
 import ShareGroup from '@/views/components/common/share/ShareList'
+import ProfileInfo from '@/views/components/common/profile/ProfileInfo'
+import WriteReportModal from '@/views/admin/modal/WriteReportModal'
 
 export default {
   name: 'PostDetailPage',
-  components: { ShareGroup, Alert, CardListGroup },
+  components: {
+    WriteReportModal,
+    ProfileInfo,
+    ShareGroup,
+    Alert,
+    CardListGroup,
+  },
   data() {
     return {
       post: {
@@ -633,9 +784,23 @@ export default {
           text: '',
         },
         replyEdit: false,
-        data: {
-          reviewForPost: '',
-        },
+        isLoad: false,
+      },
+      review: {
+        totalCount: 0,
+        page: 1,
+        totalPages: 1,
+        reviews: [],
+      },
+      reportModal: {
+        dialog: false,
+      },
+      deleteAlert: {
+        dialog: false,
+        message: '댓글을 정말 삭제 하시겠습니까?',
+        ok: '삭제',
+        no: '취소',
+        review: {},
       },
     }
   },
@@ -656,7 +821,11 @@ export default {
 
           this.loadRecentPostsOfCurrentFood(post.food.id)
         })
-        .catch(error => this.$toastError(error))
+        .catch(error => {
+          this.$toastError('게시글을 불러올 수 없습니다')
+          // this.$router.push('/404')
+          console.log(error)
+        })
     },
     /** 최근 Post 불러오기 */
     loadRecentlyPosts() {
@@ -688,13 +857,17 @@ export default {
             deleteAction: true,
           }))
 
-          // this.recentlyPosts.posts.push(...newPosts)
-          this.recentlyPosts.posts = [].concat(newPosts)
+          this.recentlyPosts.posts.push(...newPosts)
+          // this.recentlyPosts.posts = [].concat(newPosts)
         })
-        .catch(error => this.$toastError(error))
+        .catch(error => {
+          this.$toastError('최근 게시글을 불러 올 수 없습니다')
+          console.log(error)
+        })
     },
     /** 최근 Post 불러오기 (음식아이디 필요) */
-    loadRecentPostsOfCurrentFood(foodId) {
+    loadRecentPostsOfCurrentFood() {
+      const { id: foodId } = this.post.food
       const { page } = this.recentPostsOfCurrentFood
       this.$store
         .dispatch('GET_RECENT_POSTS_OF_CURRENT_FOOD', { foodId, page })
@@ -721,10 +894,13 @@ export default {
             deleteAction: true,
           }))
 
-          // this.recentPostsOfCurrentFood.posts.push(...newPosts)
-          this.recentPostsOfCurrentFood.posts = [].concat(newPosts)
+          this.recentPostsOfCurrentFood.posts.push(...newPosts)
+          // this.recentPostsOfCurrentFood.posts = [].concat(newPosts)
         })
-        .catch(error => this.$toastError(error))
+        .catch(error => {
+          this.$toastError('음식에 해당하는 최근 게시글을 불러올 수 없습니다')
+          console.log(error)
+        })
     },
     async doLike(card) {
       const { token } = this.$store.state
@@ -734,14 +910,23 @@ export default {
       }
 
       try {
-        if (card.first) await postApi.cancelLiked(card.id)
-        else await postApi.likePost(card.id)
-        this.init()
+        if (card.first) {
+          await postApi.cancelLiked(card.id)
+          this.likedUpdateCancelView(card.id)
+        } else {
+          await postApi.likePost(card.id)
+          this.likedUpdateAddView(card.id)
+        }
+
+        // this.init()
       } catch (error) {
-        this.$toastError(error)
+        this.$toastError('좋아요를 할 수 없습니다')
       }
     },
-    doRating() {},
+    doRating() {
+      this.infoDialog.message = '아직 구현되지 않은 기능입니다'
+      this.infoDialog.dialog = true
+    },
     async doFavorite(card) {
       const { token } = this.$store.state
 
@@ -754,7 +939,7 @@ export default {
 
         this.init()
       } catch (error) {
-        this.$toastError(error)
+        this.$toastError('찜을 할 수 없습니다')
       }
     },
     /** 현재 음식의 최근올라온 글 10건 더 조회 */
@@ -773,23 +958,39 @@ export default {
       this.infoDialog.dialog = false
     },
     init() {
+      this.recentlyPosts.posts = []
+      this.recentlyPosts.page = 0
+      this.recentlyPosts.pageEnd = false
+
+      this.recentPostsOfCurrentFood.posts = []
+      this.recentPostsOfCurrentFood.page = 0
+      this.recentPostsOfCurrentFood.pageEnd = false
+
       this.loadPost()
       this.loadRecentlyPosts()
+      this.loadReviewsForPost()
     },
-    editOpen() {
-      if (this.reviewForm.edit.text) this.reviewForm.edit.visible = true
-      else this.reviewForm.edit.visible = false
+    editOpen(input) {
+      if (input.text) input.visible = true
+      else input.visible = false
     },
-    editClose() {
-      this.reviewForm.edit.visible = false
-      this.reviewForm.edit.text = ''
+    editClose(input) {
+      input.visible = false
+      input.text = ''
     },
     replyEditOpen(val) {
       if (val) this.reviewForm.replyEdit = true
       else this.reviewForm.replyEdit = false
     },
     /** 글에 대한 댓글 작성 */
-    writeReviewForPost() {
+    writeReviewForPost(review) {
+      console.log('wrp-> ', review)
+
+      if (!this.$store.state.isAuth) return (this.infoDialog.dialog = true)
+
+      // 아무것도 입력안 한 경우
+      if (!review.text) return
+
       const data = {
         postId: this.$route.params.postId,
         content: this.reviewForm.edit.text,
@@ -799,11 +1000,245 @@ export default {
         .dispatch('WRITE_REVIEW_FOR_POST', data)
         .then(data => {
           console.log('write response', data)
-          this.editClose()
+          this.loadReviewsForPost()
+          this.$toastSuccess('작성되었습니다')
+          this.reviewForm.edit.text = ''
+          this.reviewForm.edit.visible = false
         })
         // 리뷰작성이 안될 때 해당 필드에 error message 출력하기
+        .catch(error => {
+          this.$toastError('댓글을 작성할 수 없습니다')
+          console.log(error)
+        })
+    },
+    /** post 에 대한 리뷰 가져오기 */
+    loadReviewsForPost() {
+      const { postId } = this.$route.params
+      let { page } = this.review
+      page--
+
+      this.$store
+        .dispatch('GET_REVIEWS_FOR_POST', { postId, page })
+        .then(reviewPageAndTotalCount => {
+          console.log('reviewPage!!->', reviewPageAndTotalCount)
+
+          const { totalCount } = reviewPageAndTotalCount
+          const { content: reviews, totalPages } =
+            reviewPageAndTotalCount.reviewPage
+
+          this.review.totalCount = totalCount
+          const newReviews = reviews.map(review => ({
+            ...review,
+            edit: { visible: false, text: '' },
+            update: { visible: false, text: '' },
+          }))
+
+          this.review.reviews = [].concat(newReviews)
+          this.review.totalPages = totalPages
+        })
+        .catch(error => {
+          this.$toastError('댓글을 가져올 수 없습니다')
+          console.log(error)
+        })
+    },
+    // todo : 새로고침 해야만 리뷰의 답글 개수가 올라감
+    loadReviewsForReview(review) {
+      this.openChildrenOfReviewWriteInput(review)
+
+      const data = {
+        postId: this.$route.params.postId,
+        reviewId: review.id,
+      }
+
+      return this.$store
+        .dispatch('GET_REVIEWS_FOR_REVIEW', data)
+        .then(childReviews => {
+          const beforeLoadChildCount = review.childCount
+
+          const newChildReviews = childReviews.map(review => ({
+            ...review,
+            update: {
+              text: '',
+              visible: false,
+            },
+          }))
+
+          review.child = [].concat(newChildReviews)
+
+          // 카운터 업데이트
+          review.childCount = review.child.length
+          this.review.totalCount += review.childCount - beforeLoadChildCount
+        })
         .catch(error => this.$toastError(error))
     },
+    /** 로그인하지 않은 경우 답변을 달 수 없다 */
+    loginCheck(event) {
+      if (!this.$store.state.isAuth) {
+        this.infoDialog.dialog = true
+        event.target.blur()
+        return false
+      }
+      return true
+    },
+    /** 댓글에 대한 답글 작성 */
+    writeReviewForReview(review) {
+      const { postId } = this.$route.params
+      const data = {
+        postId,
+        reviewId: review.id,
+        content: review.edit.text,
+      }
+      review.edit.text = ''
+      this.$store
+        .dispatch('WRITE_REVIEW_FOR_REVIEW', data)
+        .then(async data => {
+          console.log('review reply -> ', data)
+          await this.loadReviewsForReview(review)
+          this.openChildrenOfReviewWriteInput(review)
+          this.countUpdate(review)
+          this.$toastSuccess('작성되었습니다')
+        })
+        .catch(error => {
+          this.$toastError('답글을 작성할 수 없습니다')
+          console.log(error)
+        })
+    },
+    /** 답글 작성 폼 열기 닫기 */
+    openChildrenOfReviewWriteInput(review) {
+      console.log('실행함', review)
+      review.edit.visible = !review.edit.visible
+    },
+    /** 리뷰 수정하기 */
+    updateReview(review) {
+      const { id: reviewId } = review
+      const { text: content } = review.update
+
+      this.$store
+        .dispatch('UPDATE_REVIEW', {
+          reviewId,
+          content,
+        })
+        .then(() => {
+          this.$toastSuccess('수정되었습니다')
+          review.content = content
+          review.update.text = ''
+          review.update.visible = false
+        })
+        .catch(error => {
+          this.$toastError('수정을 할 수 없습니다')
+          console.log(error)
+        })
+    },
+    countUpdate(parent) {
+      console.log('p', parent)
+    },
+    /** 좋아요 업데이트 취소 보기 */
+    likedUpdateCancelView(postId) {
+      console.log('pppId->', postId)
+      /** Post */
+      if (this.$route.params.postId == postId) {
+        this.subLike(this.post)
+      }
+      /** Post Arr 1 */
+      this.recentPostsOfCurrentFood.posts
+        .filter(post => post.id === postId)
+        .forEach(post => this.subLike(post))
+      /** Post Arr 2*/
+      this.recentlyPosts.posts
+        .filter(post => post.id === postId)
+        .forEach(post => this.subLike(post))
+    },
+    /** 좋아요 빼기 */
+    subLike(post) {
+      post.isLikedByMe = false
+      post.first = false
+      post.firstCount -= 1
+      post.numberOfLikes -= 1
+    },
+    /** 좋아요 업데이트 추가 보기 */
+    likedUpdateAddView(postId) {
+      /** Post */
+      if (this.$route.params.postId == postId) {
+        this.addLike(this.post)
+      }
+      /** Post Arr 1 */
+      this.recentPostsOfCurrentFood.posts
+        .filter(post => post.id === postId)
+        .forEach(post => this.addLike(post))
+      /** Post Arr 2*/
+      this.recentlyPosts.posts
+        .filter(post => post.id === postId)
+        .forEach(post => this.addLike(post))
+    },
+    /** 좋아요 추가 */
+    addLike(post) {
+      post.isLikedByMe = true
+      post.first = true
+      post.firstCount += 1
+      post.numberOfLikes += 1
+    },
+    /** review 수정 폼 보이게 하기 */
+    openUpdateEdit(review) {
+      console.log(review)
+      review.update.visible = true
+      review.update.text = review.content
+    },
+    /** post 삭제 하기 */
+    deletePost(post) {
+      console.log(post)
+    },
+    /** review 삭제 하기 */
+    deleteReview() {
+      this.deleteAlert.dialog = false
+
+      const { review } = this.deleteAlert
+
+      const { id: reviewId } = review
+
+      this.$store
+        .dispatch('DELETE_REVIEW', reviewId)
+        .then(() => {
+          this.$toastSuccess('댓글을 삭제하였습니다')
+          this.deleteReviewView(review)
+        })
+        .catch(error => {
+          this.$toastError('댓글을 삭제할 수 없습니다')
+          console.log(error)
+        })
+    },
+    /** 삭제 alert 창 띄우기 */
+    openDeleteAlert(review) {
+      console.log('여기 찎어보자', review)
+      this.deleteAlert.review = review
+      this.deleteAlert.dialog = true
+    },
+    /** 삭제 alert 창 닫기 */
+    closeDeleteAlert() {
+      this.deleteAlert.dialog = false
+    },
+    /** review 삭제 된 경우 view update 하기 */
+    deleteReviewView(review) {
+      // 댓글 인 경우
+      if (!review.parent) {
+        const findIndex = this.review.reviews.findIndex(r => r.id === review.id)
+        this.review.reviews.splice(findIndex, 1)
+        this.review.totalCount--
+        // 답글 인 경우
+      } else {
+        this.review.reviews.forEach(p => {
+          if (p.id === review.parent.id) {
+            const findIndex = p.child.findIndex(pc => pc.id === review.id)
+            p.child.splice(findIndex, 1)
+            --p.childCount
+            this.review.totalCount--
+            p.return
+          }
+        })
+      }
+    },
+  },
+  created() {
+    this.review.page = Number(this.$route.query.page) || 1
   },
   mounted() {
     this.init()
@@ -811,7 +1246,11 @@ export default {
   watch: {
     '$route.params.postId': function () {
       window.scrollTo({ top: 0, behavior: 'smooth' })
+
       this.init()
+    },
+    'review.page': function () {
+      this.loadReviewsForPost()
     },
   },
 }
