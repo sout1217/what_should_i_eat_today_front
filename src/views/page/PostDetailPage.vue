@@ -120,30 +120,7 @@
             {{ post.createdAt | to }}
           </h6>
           <v-spacer />
-          <h6 v-if="post.member.name !== $store.state.me.name">
-            <v-btn
-              x-small
-              plain
-              link
-              :ripple="false"
-              @click="reportModal.dialog = true"
-            >
-              <div
-                class="
-                  b3
-                  red--text
-                  text--lighten-1
-                  font-weight-light
-                  d-flex
-                  center
-                "
-              >
-                <v-icon small class="mr-1"> mdi-account-alert</v-icon>
-                신고하기
-              </div>
-            </v-btn>
-          </h6>
-          <h6 v-else>
+          <h6 v-if="post.member.name == $store.state.me.name">
             <v-btn x-small plain link :ripple="false">
               <div class="b3 primary--text font-weight-light d-flex center">
                 <v-icon small class="mr-1"> mdi-pencil</v-icon>
@@ -165,6 +142,29 @@
                   mdi-delete</v-icon
                 >
                 삭제 1
+              </div>
+            </v-btn>
+          </h6>
+          <h6 v-else>
+            <v-btn
+              x-small
+              plain
+              link
+              :ripple="false"
+              @click="reportModal.dialog = true"
+            >
+              <div
+                class="
+                  b3
+                  red--text
+                  text--lighten-1
+                  font-weight-light
+                  d-flex
+                  center
+                "
+              >
+                <v-icon small class="mr-1"> mdi-account-alert</v-icon>
+                글 신고하기
               </div>
             </v-btn>
           </h6>
