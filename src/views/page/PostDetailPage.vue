@@ -151,7 +151,7 @@
               plain
               link
               :ripple="false"
-              @click="reportModal.dialog = true"
+              @click="postReport(post.id)"
             >
               <div
                 class="
@@ -176,7 +176,7 @@
               <profile-info
                 :size="36"
                 :member="post.member"
-                @report="reportModal.dialog = true"
+                @report="memberReport"
               />
               {{ post.member.name }}
             </dd>
@@ -330,7 +330,7 @@
                 <profile-info
                   :size="40"
                   :member="review.member"
-                  @report="reportModal.dialog = true"
+                  @report="memberReport"
                 />
 
                 <div class="d-flex flex-column flex-grow-1" style="gap: 4px 0">
@@ -374,7 +374,17 @@
                           </v-icon>
                         </v-btn>
                       </div>
-                      <div v-if="review.member.email === $store.state.me.email">
+                      <div v-if="review.member.email !== $store.state.me.email">
+                        <v-btn
+                          small
+                          plain
+                          class="px-1"
+                          @click="reviewReport(review.id)"
+                        >
+                          <span class="b2"> 신고 </span>
+                        </v-btn>
+                      </div>
+                      <div v-else>
                         <v-btn
                           small
                           plain
@@ -570,9 +580,19 @@
                                 </div>
                                 <div
                                   v-if="
-                                    child.member.email === $store.state.me.email
+                                    child.member.email !== $store.state.me.email
                                   "
                                 >
+                                  <v-btn
+                                    small
+                                    plain
+                                    class="px-1"
+                                    @click="reviewReport(child.id)"
+                                  >
+                                    <span class="b2"> 신고 </span>
+                                  </v-btn>
+                                </div>
+                                <div v-else>
                                   <v-btn
                                     small
                                     plain
@@ -645,8 +665,11 @@
       </v-col>
     </v-row>
     <WriteReportModal
+      :id="reportModal.id"
+      :reportType="reportModal.reportType"
       :dialog="reportModal.dialog"
       @close="reportModal.dialog = false"
+      @report="report"
     />
     <Alert
       :dialog="deleteAlert.dialog"
@@ -793,7 +816,9 @@ export default {
         reviews: [],
       },
       reportModal: {
+        reportType: '',
         dialog: false,
+        id: null,
       },
       deleteAlert: {
         dialog: false,
@@ -1075,7 +1100,9 @@ export default {
     loginCheck(event) {
       if (!this.$store.state.isAuth) {
         this.infoDialog.dialog = true
-        event.target.blur()
+        if (event != null) {
+          event.target.blur()
+        }
         return false
       }
       return true
@@ -1235,6 +1262,39 @@ export default {
           }
         })
       }
+    },
+    /** 신고하기 */
+    report(data) {
+      this.$store
+        .dispatch('DO_REPORT', data)
+        .then(() => {
+          this.$toastSuccess('신고되었습니다')
+        })
+        .catch(error => {
+          this.$toastError('신고를 할 수 없습니다')
+          console.log(error)
+        })
+
+      this.reportModal.dialog = false
+      this.reportModal.id = null
+      this.reportModal.reportType = ''
+    },
+    postReport(postId) {
+      console.log('postId -> ', postId)
+      this.reportModal.id = postId
+      this.reportModal.reportType = 'POST'
+      this.reportModal.dialog = true
+    },
+    memberReport(memberId) {
+      console.log('memberId ->', memberId)
+      this.reportModal.id = memberId
+      this.reportModal.reportType = 'PROFILE'
+      this.reportModal.dialog = true
+    },
+    reviewReport(reviewId) {
+      this.reportModal.id = reviewId
+      this.reportModal.reportType = 'REVIEW'
+      this.reportModal.dialog = true
     },
   },
   created() {

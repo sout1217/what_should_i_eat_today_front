@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     report() {
-      this.$emit('report', this.member)
+      this.$emit('report', this.member.id)
     },
   },
 }

@@ -9,60 +9,78 @@
     max-width="880"
     @click:outside="close"
   >
-    <v-card class="pa-10">
-      <v-card-actions class="d-fex flex-column align-start mb-3">
-        <template v-for="report in item">
-          <v-hover :key="report.value" v-slot="{ hover }">
-            <v-checkbox
-              dense
-              hide-details
-              v-model="selected"
-              :value="report.value"
-            >
-              <template v-slot:label>
-                <div class="rounded-lg" :class="{ 'on-hover': hover }">
-                  {{ report.label }}
-                </div>
-              </template>
-            </v-checkbox>
-          </v-hover>
-        </template>
-      </v-card-actions>
+    <validation-observer ref="observer">
+      <form>
+        <v-card class="pa-10">
+          <v-card-actions class="d-fex flex-column align-start mb-3">
+            <template v-for="report in item">
+              <v-hover :key="report.value" v-slot="{ hover }">
+                <v-checkbox
+                  dense
+                  hide-details
+                  v-model="selected"
+                  :value="report.value"
+                >
+                  <template v-slot:label>
+                    <div class="rounded-lg" :class="{ 'on-hover': hover }">
+                      {{ report.label }}
+                    </div>
+                  </template>
+                </v-checkbox>
+              </v-hover>
+            </template>
+          </v-card-actions>
 
-      <v-card-text>
-        <v-textarea
-          v-model="title"
-          outlined
-          flat
-          solo
-          rows="1"
-          label="입력하세요"
-          auto-grow
-          counter
-        >
-          <template v-slot:prepend>
-            <div class="t1" style="width: 70px">신고제목</div>
-          </template>
-        </v-textarea>
-        <v-textarea
-          v-model="content"
-          outlined
-          solo
-          flat
-          label="입력하세요"
-          counter
-          auto-grow
-        >
-          <template v-slot:prepend>
-            <div class="t1" style="width: 70px">신고사유</div>
-          </template>
-        </v-textarea>
-      </v-card-text>
-      <v-card-actions class="justify-end">
-        <v-btn @click="report" color="error"> 신고 </v-btn>
-        <v-btn @click="close" color="primary"> 취소 </v-btn>
-      </v-card-actions>
-    </v-card>
+          <v-card-text>
+            <validation-provider
+              rules="required|limit:1,50"
+              name="제목"
+              v-slot="{ errors }"
+            >
+              <v-textarea
+                v-model="title"
+                outlined
+                flat
+                solo
+                rows="1"
+                label="입력하세요"
+                auto-grow
+                counter
+                :error-messages="errors"
+              >
+                <template v-slot:prepend>
+                  <div class="t1" style="width: 70px">신고제목</div>
+                </template>
+              </v-textarea>
+            </validation-provider>
+            <validation-provider
+              rules="required|limit:1,255"
+              name="내용"
+              v-slot="{ errors }"
+            >
+              <v-textarea
+                v-model="content"
+                outlined
+                solo
+                flat
+                label="입력하세요"
+                counter
+                auto-grow
+                :error-messages="errors"
+              >
+                <template v-slot:prepend>
+                  <div class="t1" style="width: 70px">신고사유</div>
+                </template>
+              </v-textarea>
+            </validation-provider>
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn @click="report" color="error"> 신고 </v-btn>
+            <v-btn @click="close" color="primary"> 취소 </v-btn>
+          </v-card-actions>
+        </v-card>
+      </form>
+    </validation-observer>
   </v-dialog>
 </template>
 
@@ -73,6 +91,14 @@ export default {
     dialog: {
       type: Boolean,
       value: false,
+      require: true,
+    },
+    reportType: {
+      type: String,
+      require: true,
+    },
+    id: {
+      type: Number,
       require: true,
     },
   },
@@ -93,14 +119,25 @@ export default {
   methods: {
     /** 신고하기 */
     report() {
-      const data = {
-        title: this.title,
-        content: this.content,
-        selected: this.selected,
-      }
-
-      this.$emit('report', data)
-      this.clear()
+      this.$refs.observer
+        .validate()
+        .then(rs => {
+          if (!rs) return
+          const data = {
+            title: this.title,
+            content: this.content,
+          }
+          if (this.reportType === 'POST') {
+            data.postId = this.id
+          } else if (this.reportType === 'REVIEW') {
+            data.reviewId = this.id
+          } else if (this.reportType === 'PROFILE') {
+            data.reportedMemberId = this.id
+          }
+          this.$emit('report', data)
+          this.clear()
+        })
+        .catch(error => this.$toastError(error))
     },
     /** 닫기 */
     close() {
@@ -109,6 +146,7 @@ export default {
     },
     /** 데이터 초기화하기 */
     clear() {
+      this.$refs.observer.reset()
       this.title = ''
       this.content = ''
       this.selected = []
