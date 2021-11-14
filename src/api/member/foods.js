@@ -13,10 +13,14 @@ function getFoods(search, page = 0, size = 10) {
   })
 }
 
+function getFood(id) {
+  return axios.get(`/v1/foods/${id}`)
+}
+
 /** size 가 -1 인 경우 max page 로 설정하여 요청한다 */
 function isMaxPage(size) {
   const PER_PAGE_MAX = 2000
   return size === -1 ? PER_PAGE_MAX : size
 }
 
-export { getFoods }
+export { getFoods, getFood }
