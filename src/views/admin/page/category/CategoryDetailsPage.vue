@@ -225,11 +225,13 @@ export default {
 
       this.$refs.observer
         .validate()
-        .then(() => {
-          return this.$store.dispatch('UPDATE_CATEGORY', {
-            categoryId,
-            ...this.formData,
-          })
+        .then(rs => {
+          if (rs) {
+            return this.$store.dispatch('UPDATE_CATEGORY', {
+              categoryId,
+              ...this.formData,
+            })
+          }
         })
         .then(() => {
           this.$toastSuccess('수정되었습니다')

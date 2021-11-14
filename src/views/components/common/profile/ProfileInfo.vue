@@ -44,7 +44,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn plain text color="red" @click="report">
+          <v-btn v-if="!isMe" plain text color="red" @click="report">
             <span class="b3">신고하기</span>
           </v-btn>
         </v-card-actions>
@@ -73,7 +73,13 @@ export default {
   },
   methods: {
     report() {
-      this.$emit('report', this.member)
+      this.$emit('report', this.member.id)
+    },
+  },
+  computed: {
+    isMe() {
+      const authId = this.$store.state.me?.id || null
+      return authId === this.member.id
     },
   },
 }

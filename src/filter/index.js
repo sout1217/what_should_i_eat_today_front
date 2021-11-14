@@ -76,6 +76,7 @@ function yyyymmdd(arr) {
 }
 
 function yyyymmddhhmmss(arr) {
+  if (!arr) return
   const sliceDate = arr.slice(0, 3)
   const sliceTime = arr.slice(3)
   const d = LocalDate.of(...sliceDate)
@@ -120,8 +121,13 @@ function join(arr, delimiter = ', ') {
   return arr.join(delimiter)
 }
 
-function to(arr) {
-  return convert(arr).fromNow()
+function to({ createdAt, updatedAt }) {
+  if (!createdAt) return
+  const createdAtDayJS = convert(createdAt)
+  const updatedAtDayJS = convert(updatedAt)
+
+  if (createdAtDayJS.isSame(updatedAtDayJS)) return createdAtDayJS.fromNow()
+  else return updatedAtDayJS.fromNow() + ' (수정됨)'
 }
 
 /**
@@ -130,5 +136,6 @@ function to(arr) {
  * */
 function convert(arr) {
   if (!arr) return ''
+  if (arr.constructor.name === 'Date') return dayjs(arr)
   return dayjs(arr.slice(0, 6).join('-'), 'YYYY-M-D-H-m-s', 'ko')
 }

@@ -19,3 +19,7 @@ new Vue({
   store,
   vuetify,
 }).$mount('#app')
+
+if (process.env.NODE_ENV !== 'production') {
+  console.log('env -> ', process.env)
+}

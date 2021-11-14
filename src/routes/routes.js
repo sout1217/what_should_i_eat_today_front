@@ -17,6 +17,13 @@ const routes = [
     },
   },
   {
+    path: '/logout',
+    beforeEnter: (to, from, next) => {
+      store.commit('deleteToken')
+      next('/')
+    },
+  },
+  {
     path: '*',
     redirect: '/404',
   },

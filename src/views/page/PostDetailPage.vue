@@ -50,8 +50,8 @@
                 </template>
                 <div class="tooltip b3 d-flex flex-column align-center">
                   <div>좋아요</div>
-                  <div>{{ post.numberOfLikes | oneThousand }}</div>
                 </div>
+                <div>{{ post.numberOfLikes | oneThousand }}</div>
               </v-tooltip>
               <v-tooltip nudge-bottom="12" top color="bg-grayscale-black-1">
                 <template v-slot:activator="{ on, attrs }">
@@ -117,33 +117,10 @@
             class="b3 grayscale-black-5 font-weight-light"
             :title="post.createdAt | yyyymmddhhmmss"
           >
-            {{ post.createdAt | to }}
+            {{ post | to }}
           </h6>
           <v-spacer />
-          <h6 v-if="post.member.name !== $store.state.me.name">
-            <v-btn
-              x-small
-              plain
-              link
-              :ripple="false"
-              @click="reportModal.dialog = true"
-            >
-              <div
-                class="
-                  b3
-                  red--text
-                  text--lighten-1
-                  font-weight-light
-                  d-flex
-                  center
-                "
-              >
-                <v-icon small class="mr-1"> mdi-account-alert</v-icon>
-                신고하기
-              </div>
-            </v-btn>
-          </h6>
-          <h6 v-else>
+          <h6 v-if="post.member.name == $store.state.me.name">
             <v-btn x-small plain link :ripple="false">
               <div class="b3 primary--text font-weight-light d-flex center">
                 <v-icon small class="mr-1"> mdi-pencil</v-icon>
@@ -164,7 +141,30 @@
                 <v-icon small class="mr-1" @click="deletePost(post)">
                   mdi-delete</v-icon
                 >
-                삭제 1
+                삭제
+              </div>
+            </v-btn>
+          </h6>
+          <h6 v-else>
+            <v-btn
+              x-small
+              plain
+              link
+              :ripple="false"
+              @click="postReport(post.id)"
+            >
+              <div
+                class="
+                  b2
+                  red--text
+                  text--lighten-1
+                  font-weight-light
+                  d-flex
+                  center
+                "
+              >
+                <v-icon small class="mr-1"> mdi-account-alert</v-icon>
+                신고하기
               </div>
             </v-btn>
           </h6>
@@ -176,7 +176,7 @@
               <profile-info
                 :size="36"
                 :member="post.member"
-                @report="reportModal.dialog = true"
+                @report="memberReport"
               />
               {{ post.member.name }}
             </dd>
@@ -279,40 +279,56 @@
             </v-avatar>
 
             <div style="width: 100%">
-              <v-text-field
-                v-if="$store.state.isAuth"
-                class="b1 font-weight-light pt-0 mt-0"
-                @input="editOpen(reviewForm.edit)"
-                v-model="reviewForm.edit.text"
-                placeholder="입력하세요1"
-                @keypress.enter.prevent="writeReviewForPost(reviewForm.edit)"
-              />
-              <v-text-field
-                v-else
-                class="b1 font-weight-light pt-0 mt-0"
-                v-model="reviewForm.edit.text"
-                @click="loginCheck"
-                placeholder="입력하세요2"
-              />
-              <v-expand-transition mode="enter-class">
-                <v-card
-                  v-show="reviewForm.edit.visible"
-                  elevation="0"
-                  color="transparent"
-                  class="text-right"
+              <validation-provider
+                rules="limit:1,3000"
+                name="댓글"
+                v-slot="{ errors, valid }"
+                ref="reviewForPostValidation"
+              >
+                <v-textarea
+                  v-if="$store.state.isAuth"
+                  class="b1 font-weight-light pt-0 mt-0"
+                  counter
+                  auto-grow
+                  rows="1"
+                  @input="editOpen(reviewForm.edit)"
+                  v-model="reviewForm.edit.text"
+                  placeholder="입력하세요"
+                  @keypress.enter.prevent="writeReviewForPost(reviewForm.edit)"
+                  :error-messages="errors"
+                ></v-textarea>
+                <v-textarea
+                  v-else
+                  class="b1 font-weight-light pt-0 mt-0"
+                  counter
+                  auto-grow
+                  rows="1"
+                  v-model="reviewForm.edit.text"
+                  @click="loginCheck"
+                  placeholder="입력하세요"
+                  :error-messages="errors"
                 >
-                  <v-btn
-                    class="mr-4"
-                    color="primary"
-                    @click="writeReviewForPost(reviewForm.edit)"
+                </v-textarea>
+                <v-expand-transition mode="enter-class">
+                  <v-card
+                    v-show="reviewForm.edit.visible"
+                    elevation="0"
+                    color="transparent"
+                    class="text-right mt-4"
                   >
-                    댓글
-                  </v-btn>
-                  <v-btn @click="editClose(reviewForm.edit)" color="error">
-                    취소
-                  </v-btn>
-                </v-card>
-              </v-expand-transition>
+                    <v-btn
+                      class="mr-4"
+                      color="primary"
+                      @click="!valid || writeReviewForPost(reviewForm.edit)"
+                    >
+                      댓글
+                    </v-btn>
+                    <v-btn @click="editClose(reviewForm.edit)" color="error">
+                      취소
+                    </v-btn>
+                  </v-card>
+                </v-expand-transition>
+              </validation-provider>
             </div>
           </div>
           <div v-if="!review.reviews.length">
@@ -330,7 +346,7 @@
                 <profile-info
                   :size="40"
                   :member="review.member"
-                  @report="reportModal.dialog = true"
+                  @report="memberReport"
                 />
 
                 <div class="d-flex flex-column flex-grow-1" style="gap: 4px 0">
@@ -341,10 +357,10 @@
                         class="b3"
                         :title="review.createdAt | yyyymmddhhmmss"
                       >
-                        {{ review.createdAt | to }}
+                        {{ review | to }}
                       </div>
                     </div>
-                    <div>
+                    <div class="text-break">
                       {{ review.content }}
                     </div>
                     <div class="d-flex align-center pt-1">
@@ -374,14 +390,24 @@
                           </v-icon>
                         </v-btn>
                       </div>
-                      <div v-if="review.member.email === $store.state.me.email">
+                      <div v-if="review.member.email !== $store.state.me.email">
+                        <v-btn
+                          small
+                          plain
+                          class="px-1"
+                          @click="reviewReport(review.id)"
+                        >
+                          <span class="b2"> 신고 </span>
+                        </v-btn>
+                      </div>
+                      <div v-else>
                         <v-btn
                           small
                           plain
                           class="px-1"
                           @click="openUpdateEdit(review)"
                         >
-                          <span class="b2"> 수정2 </span>
+                          <span class="b2"> 수정 </span>
                         </v-btn>
                         <v-btn
                           small
@@ -389,7 +415,7 @@
                           class="px-1"
                           @click="openDeleteAlert(review)"
                         >
-                          <span class="b2">삭제 2</span>
+                          <span class="b2">삭제</span>
                         </v-btn>
                       </div>
                     </div>
@@ -464,36 +490,48 @@
                       </v-avatar>
 
                       <div class="flex-grow-1">
-                        <v-text-field
-                          class="b1 font-weight-light pt-0 mt-0 flex-1"
-                          @input="replyEditOpen"
-                          @click="loginCheck"
-                          placeholder="입력하세요3"
-                          v-model="review.edit.text"
-                          @keypress.enter.prevent="writeReviewForReview(review)"
-                        />
-                        <v-expand-transition mode="enter-class">
-                          <v-card
-                            v-show="review.edit.text"
-                            elevation="0"
-                            color="transparent"
-                            class="text-right"
-                          >
-                            <v-btn
-                              class="mr-4"
-                              color="primary"
-                              @click="writeReviewForReview(review)"
+                        <validation-provider
+                          rules="limit:1,3000"
+                          name="답글"
+                          v-slot="{ errors, valid }"
+                        >
+                          <v-textarea
+                            class="b1 font-weight-light pt-0 mt-0 flex-1"
+                            counter
+                            auto-grow
+                            rows="1"
+                            @input="replyEditOpen"
+                            @click="loginCheck"
+                            placeholder="입력하세요"
+                            v-model="review.edit.text"
+                            @keypress.enter.prevent="
+                              writeReviewForReview(review)
+                            "
+                            :error-messages="errors"
+                          ></v-textarea>
+                          <v-expand-transition mode="enter-class">
+                            <v-card
+                              v-show="review.edit.text"
+                              elevation="0"
+                              color="transparent"
+                              class="text-right mt-4"
                             >
-                              댓글
-                            </v-btn>
-                            <v-btn
-                              @click="editClose(review.edit)"
-                              color="error"
-                            >
-                              취소5
-                            </v-btn>
-                          </v-card>
-                        </v-expand-transition>
+                              <v-btn
+                                class="mr-4"
+                                color="primary"
+                                @click="!valid || writeReviewForReview(review)"
+                              >
+                                댓글
+                              </v-btn>
+                              <v-btn
+                                @click="editClose(review.edit)"
+                                color="error"
+                              >
+                                취소
+                              </v-btn>
+                            </v-card>
+                          </v-expand-transition>
+                        </validation-provider>
                       </div>
                     </div>
                     <!-- review > child reviews -->
@@ -529,7 +567,7 @@
                               >
                                 <div class="b1">{{ child.member.name }}</div>
                                 <div class="b3">
-                                  {{ child.createdAt | to }}
+                                  {{ child | to }}
                                 </div>
                               </div>
                               <div>
@@ -537,7 +575,7 @@
                                   @{{ child.parent.member.name }}
                                 </a>
                               </div>
-                              <div>
+                              <div class="text-break">
                                 {{ child.content }}
                               </div>
 
@@ -570,16 +608,26 @@
                                 </div>
                                 <div
                                   v-if="
-                                    child.member.email === $store.state.me.email
+                                    child.member.email !== $store.state.me.email
                                   "
                                 >
                                   <v-btn
                                     small
                                     plain
                                     class="px-1"
+                                    @click="reviewReport(child.id)"
+                                  >
+                                    <span class="b2"> 신고 </span>
+                                  </v-btn>
+                                </div>
+                                <div v-else>
+                                  <v-btn
+                                    small
+                                    plain
+                                    class="px-1"
                                     @click="openUpdateEdit(child)"
                                   >
-                                    <span class="b2"> 수정5</span>
+                                    <span class="b2"> 수정 </span>
                                   </v-btn>
                                   <v-btn
                                     small
@@ -587,7 +635,7 @@
                                     class="px-1"
                                     @click="openDeleteAlert(child)"
                                   >
-                                    <span class="b2"> 삭제 3 </span>
+                                    <span class="b2"> 삭제 </span>
                                   </v-btn>
                                 </div>
                               </div>
@@ -645,8 +693,11 @@
       </v-col>
     </v-row>
     <WriteReportModal
+      :id="reportModal.id"
+      :reportType="reportModal.reportType"
       :dialog="reportModal.dialog"
       @close="reportModal.dialog = false"
+      @report="report"
     />
     <Alert
       :dialog="deleteAlert.dialog"
@@ -654,6 +705,7 @@
       :ok-action="deleteReview"
       :close-action="closeDeleteAlert"
       :cancel-action="closeDeleteAlert"
+      @close="closeDeleteAlert"
       @cancel="closeDeleteAlert"
       :ok="deleteAlert.ok"
       :no="deleteAlert.no"
@@ -682,7 +734,6 @@ export default {
     return {
       post: {
         content: '',
-        createdAt: [0, 1, 1, 0, 0, 0, 0],
         food: {
           foodTags: [],
         },
@@ -793,7 +844,9 @@ export default {
         reviews: [],
       },
       reportModal: {
+        reportType: '',
         dialog: false,
+        id: null,
       },
       deleteAlert: {
         dialog: false,
@@ -822,9 +875,10 @@ export default {
           this.loadRecentPostsOfCurrentFood(post.food.id)
         })
         .catch(error => {
-          this.$toastError('게시글을 불러올 수 없습니다')
           // this.$router.push('/404')
-          console.log(error)
+          console.log(error.response)
+          console.log(error.response.data.messageKr)
+          this.$toastError('게시글을 불러올 수 없습니다')
         })
     },
     /** 최근 Post 불러오기 */
@@ -985,7 +1039,6 @@ export default {
     /** 글에 대한 댓글 작성 */
     writeReviewForPost(review) {
       console.log('wrp-> ', review)
-
       if (!this.$store.state.isAuth) return (this.infoDialog.dialog = true)
 
       // 아무것도 입력안 한 경우
@@ -1075,7 +1128,9 @@ export default {
     loginCheck(event) {
       if (!this.$store.state.isAuth) {
         this.infoDialog.dialog = true
-        event.target.blur()
+        if (event) {
+          event.target.blur()
+        }
         return false
       }
       return true
@@ -1123,6 +1178,7 @@ export default {
           review.content = content
           review.update.text = ''
           review.update.visible = false
+          review.updatedAt = new Date()
         })
         .catch(error => {
           this.$toastError('수정을 할 수 없습니다')
@@ -1235,6 +1291,41 @@ export default {
           }
         })
       }
+    },
+    /** 신고하기 */
+    report(data) {
+      this.$store
+        .dispatch('DO_REPORT', data)
+        .then(() => {
+          this.$toastSuccess('신고되었습니다')
+        })
+        .catch(error => {
+          this.$toastError('신고를 할 수 없습니다')
+          console.log(error)
+        })
+
+      this.reportModal.dialog = false
+      this.reportModal.id = null
+      this.reportModal.reportType = ''
+    },
+    postReport(postId) {
+      if (!this.loginCheck()) return
+
+      console.log('postId -> ', postId)
+      this.reportModal.id = postId
+      this.reportModal.reportType = 'POST'
+      this.reportModal.dialog = true
+    },
+    memberReport(memberId) {
+      console.log('memberId ->', memberId)
+      this.reportModal.id = memberId
+      this.reportModal.reportType = 'PROFILE'
+      this.reportModal.dialog = true
+    },
+    reviewReport(reviewId) {
+      this.reportModal.id = reviewId
+      this.reportModal.reportType = 'REVIEW'
+      this.reportModal.dialog = true
     },
   },
   created() {

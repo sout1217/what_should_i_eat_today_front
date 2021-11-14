@@ -5,6 +5,7 @@ import tagsApi from '@/api/admin/tags'
 import meApi from '@/api/member/me'
 import postApi from '@/api/member/post'
 import reviewApi from '@/api/member/review'
+import reportApi from '@/api/member/report'
 
 const actions = {
   /** 내 정보 조회 */
@@ -157,6 +158,11 @@ const actions = {
   async DELETE_REVIEW({ commit }, reviewId) {
     console.log(commit)
     await reviewApi.deleteReview(reviewId)
+  },
+  /** 신고하기 */
+  async DO_REPORT({ commit }, data) {
+    console.log(commit)
+    await reportApi.report(data)
   },
 }
 

@@ -10,6 +10,9 @@
             <a :href="`/posts/${post.id}`">
               <img :src="post.imagePath" :alt="post.title" />
             </a>
+            <div class="block-title h2">
+              {{ post.title }}
+            </div>
           </div>
         </template>
       </div>
@@ -112,9 +115,11 @@ export default {
                 html += `  <a href="/posts/${post.id}">`
                 html += `    <img src="${post.imagePath}" alt="${post.title}" />`
                 html += `  </a>`
+                html += `  <div class="block-title h2">`
+                html += `     ${post.title}`
+                html += `  </div>`
                 html += `</div>`
               })
-
               hsElem.insertAdjacentHTML('beforeend', html)
 
               this.hs.vars.scrollRight += this.addScrollRight
@@ -180,9 +185,24 @@ export default {
   background-color: #d1d1d1;
 }
 
-.block img:hover {
-  border-radius: 8px;
-  transform: scale(1.1);
-  filter: brightness(100%);
+.block-title {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  font-weight: lighter;
+  opacity: 0;
+  text-shadow: 3px 4px 2px #474747;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.block:hover {
+  img {
+    border-radius: 8px;
+    transform: scale(1.1);
+    filter: brightness(100%);
+  }
+  .block-title {
+    opacity: 1;
+  }
 }
 </style>
