@@ -4,9 +4,33 @@ export const FullPageLayout = {
   component: () => import('@/views/layouts/full/Index'),
   children: [
     {
+      path: '/401',
+      name: 'AuthenticationPage',
+      component: () => import('@/views/page/ErrorPage'),
+      meta: {
+        icon: 'mdi-view-dashboard',
+      },
+    },
+    {
+      path: '/402',
+      name: 'AuthorizePage',
+      component: () => import('@/views/page/ErrorPage'),
+      meta: {
+        icon: 'mdi-view-dashboard',
+      },
+    },
+    {
       path: '/404',
       name: 'NotFoundPage',
-      component: () => import('@/views/page/NotFoundPage'),
+      component: () => import('@/views/page/ErrorPage'),
+      meta: {
+        icon: 'mdi-view-dashboard',
+      },
+    },
+    {
+      path: '/500',
+      name: 'ServerErrorPage',
+      component: () => import('@/views/page/ErrorPage'),
       meta: {
         icon: 'mdi-view-dashboard',
       },

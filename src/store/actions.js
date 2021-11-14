@@ -4,6 +4,8 @@ import countriesApi from '@/api/admin/countries'
 import tagsApi from '@/api/admin/tags'
 import meApi from '@/api/member/me'
 import postApi from '@/api/member/post'
+import reviewApi from '@/api/member/review'
+import reportApi from '@/api/member/report'
 
 const actions = {
   /** 내 정보 조회 */
@@ -82,6 +84,85 @@ const actions = {
     await categoriesApi.updateFoodCategoryMapping(categoryId, param)
 
     // todo : 2021.10.12 백엔드 로직 만들기
+  },
+
+  /** All 최근 올라온 음식 글 가져오기 */
+  async GET_RECENTLY_POSTS({ commit }, page) {
+    console.log(commit)
+    const { data: postsPage } = await postApi.getRecentlyPosts(page)
+    return postsPage
+  },
+
+  /** POST 1개 가져오기 */
+  async GET_POST({ commit }, postId) {
+    console.log(commit)
+    const { data: post } = await postApi.getPost(postId)
+    return post
+  },
+
+  /** 현재 음식에 대한 최근 POST 가져오기 */
+  async GET_RECENT_POSTS_OF_CURRENT_FOOD({ commit }, { foodId, page }) {
+    console.log(commit)
+    const { data: post } = await postApi.getRecentPostsOfCurrentFood({
+      foodId,
+      page,
+    })
+    return post
+  },
+
+  /** 글에 대한 댓글 작성 */
+  async WRITE_REVIEW_FOR_POST({ commit }, { postId, content }) {
+    console.log(commit)
+    const { data: result } = await reviewApi.writeReviewForPost(postId, content)
+    return result
+  },
+
+  /** 게시물에 대한 리뷰 가져오기  */
+  async GET_REVIEWS_FOR_POST({ commit }, { postId, page }) {
+    console.log(commit)
+    const { data: reviewPageAndTotalCount } = await reviewApi.getReviewsForPost(
+      postId,
+      page,
+    )
+    return reviewPageAndTotalCount
+  },
+
+  /** 리뷰에 대한 자식 리뷰 가져오기 */
+  async GET_REVIEWS_FOR_REVIEW({ commit }, { postId, reviewId }) {
+    console.log(commit)
+    const { data: reviews } = await reviewApi.getReviewsForReview(
+      postId,
+      reviewId,
+    )
+    return reviews
+  },
+
+  /** 댓글에 대한 답글 작성 */
+  async WRITE_REVIEW_FOR_REVIEW({ commit }, { postId, reviewId, content }) {
+    console.log(commit)
+    const { data: result } = await reviewApi.writeReviewForReview(
+      postId,
+      reviewId,
+      content,
+    )
+    return result
+  },
+
+  /** 리뷰 수정하기 */
+  async UPDATE_REVIEW({ commit }, { reviewId, content }) {
+    console.log(commit)
+    await reviewApi.updateReview(reviewId, content)
+  },
+
+  /** 리뷰 삭제하기 */
+  async DELETE_REVIEW({ commit }, reviewId) {
+    console.log(commit)
+    await reviewApi.deleteReview(reviewId)
+  },
+  /** 신고하기 */
+  async DO_REPORT({ commit }, data) {
+    console.log(commit)
+    await reportApi.report(data)
   },
 }
 

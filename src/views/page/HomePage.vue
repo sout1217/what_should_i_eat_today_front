@@ -7,9 +7,12 @@
       <div class="image-container">
         <template v-for="(post, index) in posts">
           <div class="block" :key="index">
-            <a href="#">
+            <a :href="`/posts/${post.id}`">
               <img :src="post.imagePath" :alt="post.title" />
             </a>
+            <div class="block-title h2">
+              {{ post.title }}
+            </div>
           </div>
         </template>
       </div>
@@ -22,8 +25,12 @@ import HorizontalScroll from 'horizontal-scroll/src'
 export default {
   name: 'HomePage',
   async mounted() {
-    const posts = await this.$store.dispatch('GET_RANDOM_POSTS')
-    this.posts = [].concat(posts)
+    try {
+      const posts = await this.$store.dispatch('GET_RANDOM_POSTS')
+      this.posts = [].concat(posts)
+    } catch (error) {
+      this.$toastError('서버에 요청할 수 없습니다')
+    }
 
     /** 화면이 다 그려진 후 스크롤 이벤트 실행 */
     this.$nextTick(() => {
@@ -61,7 +68,8 @@ export default {
       const hsElem = document.querySelector('.horizontal-scroll')
       const subPosition = 300
 
-      window.addEventListener('wheel', event => {
+      // window 전역 설정되어 오류 발생
+      hsElem.addEventListener('wheel', event => {
         const currentPosition = Math.abs(
           hsElem.style.transform.substring(
             hsElem.style.transform.indexOf('(') + 1,
@@ -104,12 +112,14 @@ export default {
 
               data.forEach(post => {
                 html += `<div class="block" style="display: inline-block;" >`
-                html += `  <a href="#">`
+                html += `  <a href="/posts/${post.id}">`
                 html += `    <img src="${post.imagePath}" alt="${post.title}" />`
                 html += `  </a>`
+                html += `  <div class="block-title h2">`
+                html += `     ${post.title}`
+                html += `  </div>`
                 html += `</div>`
               })
-
               hsElem.insertAdjacentHTML('beforeend', html)
 
               this.hs.vars.scrollRight += this.addScrollRight
@@ -175,9 +185,24 @@ export default {
   background-color: #d1d1d1;
 }
 
-.block img:hover {
-  border-radius: 8px;
-  transform: scale(1.1);
-  filter: brightness(100%);
+.block-title {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  font-weight: lighter;
+  opacity: 0;
+  text-shadow: 3px 4px 2px #474747;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.block:hover {
+  img {
+    border-radius: 8px;
+    transform: scale(1.1);
+    filter: brightness(100%);
+  }
+  .block-title {
+    opacity: 1;
+  }
 }
 </style>

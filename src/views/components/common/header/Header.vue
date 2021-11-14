@@ -56,17 +56,17 @@ export default {
   data() {
     return {
       popoverItems: [
-        { name: '글 작성', href: '#' },
+        { name: '글 작성', href: '/post/add' },
         { name: '마이페이지', href: '/mypage' },
         { name: '소식 모아보기', href: '#' },
         { name: '설정', href: '#' },
-        { name: '로그아웃', href: '#' },
+        { name: '로그아웃', href: '/logout' },
       ],
     }
   },
   async mounted() {
     try {
-      await this.$store.dispatch('GET_ME')
+      if (this.$store.state.token) await this.$store.dispatch('GET_ME')
     } catch (error) {
       this.$store.commit('deleteToken')
       // this.$toastError('인증 실패')

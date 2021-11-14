@@ -2,6 +2,9 @@
 export const AdminLayout = {
   path: '/admin',
   component: () => import('@/views/admin/layouts/default/Index'),
+  meta: {
+    auth: true,
+  },
   children: [
     {
       path: '/',
