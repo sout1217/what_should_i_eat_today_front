@@ -7,7 +7,7 @@
       :items="items"
       :search-input.sync="search"
       hide-selected
-      label="음식명을 입력하세요"
+      label="Search for an option"
       @input.native="searchText = $event.target.value"
       multiple
       small-chips
@@ -58,22 +58,13 @@
         </v-list-item-action>
       </template>
     </v-combobox>
-    <AddFoodModal
-      :category-id="false"
-      :dialog="false"
-      @closeModal="closeModal"
-    />
   </v-container>
 </template>
 
 <script>
-import { getFoods } from '@/api/member/foods'
-import AddFoodModal from '@/views/components/common/food/AddFoodModal'
+import { getTags } from '@/api/member/tag'
 export default {
-  name: 'FoodComboBox',
-  components: {
-    AddFoodModal,
-  },
+  name: 'TagComboBox',
   data() {
     return {
       chips: [],
@@ -121,13 +112,13 @@ export default {
       this.chips = [...this.chips]
     },
 
-    async loadFoods() {
-      const result = await getFoods(this.searchText, 0, 10).then(({ data }) => {
+    async loadTags() {
+      const result = await getTags(this.searchText, 0, 10).then(({ data }) => {
         this.items = []
-        data.content.forEach(food => {
+        data.content.forEach(tag => {
           this.items.push({
-            text: food.name,
-            value: food.id,
+            text: tag.name,
+            value: tag.id,
             color: this.colors[Math.floor(Math.random() * this.colors.length)],
           })
         })
@@ -179,14 +170,7 @@ export default {
     model(val, prev) {
       if (val.length === prev.length) return
 
-      if (prev.length > 0) val = val.filter(s => s.value != prev[0].value)
-
       this.model = val.map(v => {
-        if (typeof v === 'object') {
-          this.$emit('choice', v.value)
-
-          console.log(v)
-        }
         // 새로운 것 입력
         if (typeof v === 'string') {
           v = {

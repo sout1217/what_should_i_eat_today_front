@@ -77,6 +77,17 @@ function getRecentPostsOfCurrentFood({ foodId, page }) {
   return instanceWithAuth.get(`v1/posts/foods/${foodId}`, { params: { page } })
 }
 
+/** 포스트 업로드 하기 */
+function uploadPost(form) {
+  let form_data = new FormData()
+
+  for (let key in form) {
+    form_data.append(key, form[key])
+  }
+
+  return instanceWithAuth.post(`v1/posts`, form_data)
+}
+
 export default {
   getPostLikedByMe,
   getPostFavoriteByMe,
@@ -93,4 +104,5 @@ export default {
   getRecentlyPosts,
   getPost,
   getRecentPostsOfCurrentFood,
+  uploadPost,
 }
