@@ -50,8 +50,8 @@
                 </template>
                 <div class="tooltip b3 d-flex flex-column align-center">
                   <div>좋아요</div>
+                  <div>{{ post.numberOfLikes | oneThousand }}</div>
                 </div>
-                <div>{{ post.numberOfLikes | oneThousand }}</div>
               </v-tooltip>
               <v-tooltip nudge-bottom="12" top color="bg-grayscale-black-1">
                 <template v-slot:activator="{ on, attrs }">

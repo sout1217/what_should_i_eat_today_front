@@ -5,6 +5,7 @@
  * */
 import axios from 'axios'
 import { setInterceptors } from '@/api/common/interceptor'
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 function getInstance() {
   return axios.create({
