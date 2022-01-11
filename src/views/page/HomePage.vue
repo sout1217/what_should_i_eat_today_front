@@ -25,6 +25,9 @@ import HorizontalScroll from 'horizontal-scroll/src'
 export default {
   name: 'HomePage',
   async mounted() {
+    const { message } = this.$route.params
+    if (message) this.$toastError(message)
+
     try {
       const posts = await this.$store.dispatch('GET_RANDOM_POSTS')
       this.posts = [].concat(posts)

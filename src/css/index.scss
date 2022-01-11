@@ -368,6 +368,9 @@ html::-webkit-scrollbar-track {
   .v-toast__item--error {
     background-color: $system-error;
   }
+  .v-toast__text {
+    line-height: initial !important;
+  }
 }
 
 // xs

@@ -73,7 +73,7 @@ export const AdminLayout = {
       name: 'Report',
       component: () => import('@/views/admin/page/report/Report'),
       meta: {
-        icon: 'mdi-view-dashboard',
+        icon: 'mdi-alarm-light',
         title: '신고관리',
         fullPath: '/admin/report',
         visible: true,
@@ -85,7 +85,7 @@ export const AdminLayout = {
       name: 'Qna',
       component: () => import('@/views/admin/page/qna/Qna'),
       meta: {
-        icon: 'mdi-view-dashboard',
+        icon: 'mdi-comment-processing',
         title: 'Qna 관리',
         fullPath: '/admin/qna',
         visible: true,
